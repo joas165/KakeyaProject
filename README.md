@@ -7,10 +7,21 @@ conditional endpoint estimates.
 
 ## Main results
 
-The endpoint estimates are conditional on the geometric and selection data
-collected in `Kakeya.Eighty9.LocalizedDyadicInputs`. In particular, the
-lower-incidence and representative-row hypotheses are stated explicitly;
-the project does not claim an unconditional Kakeya conjecture result.
+At each finite level, the generic lemma
+`Kakeya.Eighty9.sameBallRepresentative_iff_lowerIncidence_of_parent`
+proves that lower incidence is equivalent to representing the parent-based
+same-ball relation by one piece per selected tube. This equivalence assumes
+finite indices, a surjective parent map, and pairwise-disjoint nonempty pieces.
+The numerical row-at-most-one bound follows from that representative
+description and disjointness. In the endpoint API, the representative
+description for the concrete same-ball relation is exposed as
+`SameBallIsRepresentativeAtLevels`, and
+`sameBallRowBoundAtLevels_of_representative` proves its row bound.
+
+The endpoint estimates remain conditional on the geometric and selection
+data collected in `Kakeya.Eighty9.LocalizedDyadicInputs`, as well as the
+applicable per-level incidence condition; this is not an unconditional proof
+of the Kakeya conjecture.
 
 Notable declarations include:
 
@@ -21,7 +32,9 @@ Notable declarations include:
 - `Kakeya.Eighty9.full_conditional_kakeya_of_composed_range`, which obtains
   lower incidence from range coverage of the composed piece map.
 - `Kakeya.Eighty9.full_conditional_kakeya_of_same_ball_representative`, which
-  derives the row bound from the explicitly required representative condition.
+  uses the proved representative-row bound; that bound follows from
+  `Kakeya.Eighty9.sameBallRowBoundAtLevels_of_representative` and
+  pairwise-disjoint pieces.
 - `Kakeya.TubeBall.unitTube_ball_volume_le_explicit_arbitrary_direction`,
   which gives an orientation-independent tube-ball volume estimate.
 
