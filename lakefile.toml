@@ -1,0 +1,18 @@
+name = "KakeyaEighty4"
+version = "0.1.0"
+defaultTargets = ["Kakeya"]
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.35.0"
+
+[leanOptions]
+pp.unicode.fun = true
+relaxedAutoImplicit = false
+weak.linter.mathlibStandardSet = true
+weak.linter.style.header = false
+maxSynthPendingDepth = 3
+
+[[lean_lib]]
+name = "Kakeya"
