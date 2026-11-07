@@ -7,7 +7,6 @@ Print the axioms used by the library's main analytic, combinatorial,
 geometric, and conditional endpoint results. This file is an audit aid:
 `lake build` checks that every audited declaration exists and is well-typed.
 -/
-
 -- Conditional analytic setup and finite tube multiplicity.
 #print axioms Kakeya.Conditional.chi
 #print axioms Kakeya.Conditional.chi_integrable
@@ -21,7 +20,6 @@ geometric, and conditional endpoint results. This file is an audit aid:
 #print axioms Kakeya.Eighty4.tubeMultiplicity_measurable
 #print axioms Kakeya.Eighty4.tubeMultiplicity_nonneg
 #print axioms Kakeya.Eighty4.tubeMoment_integrable
-
 -- Dyadic decomposition and logarithmic summation.
 #print axioms Kakeya.Eighty4.DyadicIndex
 #print axioms Kakeya.Eighty4.dyadicDepth
@@ -36,7 +34,6 @@ geometric, and conditional endpoint results. This file is an audit aid:
 #print axioms Kakeya.Eighty4.concreteDyadicBand_condition
 #print axioms Kakeya.Eighty9.logarithmic_moment_from_level_budgets
 #print axioms Kakeya.Eighty9.logarithmic_norm_from_level_budgets
-
 -- Incidence counting and the canonical lower-incidence predicate.
 #print axioms Kakeya.Seventy7.weight
 #print axioms Kakeya.Seventy7.degree
@@ -54,7 +51,17 @@ geometric, and conditional endpoint results. This file is an audit aid:
 #print axioms Kakeya.Eighty9.reindexed_card_le_of_lower_incidence
 #print axioms Kakeya.Eighty9.reindexed_budget_of_lower_incidence
 #print axioms Kakeya.Eighty9.reindexed_level_of_lower_incidence
-
+-- Ninety21 Hall matching and the enlarged tube-label counting bridge.
+#print axioms Kakeya.Ninety21.nonintersecting_bijection_of_greedy
+#print axioms Kakeya.Ninety21.localized_nonintersecting_bijection
+#print axioms Kakeya.Ninety21.tube_row_card_le_one
+#print axioms Kakeya.Ninety21.tube_indices_subset_of_columns
+#print axioms Kakeya.Ninety21.scaled_count_from_bijection
+#print axioms Kakeya.Ninety21.scaled_count_from_selected_incidence
+#print axioms Kakeya.Ninety21.exists_scaled_bijection_of_greedy
+#print axioms Kakeya.Ninety21.transported_mass_sum
+#print axioms Kakeya.Ninety21.localized_level_bound_of_bijection
+#print axioms Kakeya.Ninety21.localized_level_bound_of_double_counted_bijection
 -- Finite Vitali selection, greedy gains, and geometric reductions.
 #print axioms Kakeya.exists_separated_centers_cover
 #print axioms Kakeya.exists_disjoint_equal_balls_cover
@@ -69,7 +76,6 @@ geometric, and conditional endpoint results. This file is an audit aid:
 #print axioms Kakeya.Eighty9.localized_cover_transfers_to_vitali
 #print axioms Kakeya.Eighty9.exists_vitali_with_nonempty_localized_pieces
 #print axioms Kakeya.Eighty9.localized_unitTube_ball_volume_le_of_frame
-
 -- Conditional endpoint theorems. Geometric and incidence inputs remain explicit.
 #print axioms Kakeya.Eighty9.LocalizedDyadicInputs
 #print axioms Kakeya.Eighty9.LowerIncidenceAtLevels
@@ -92,7 +98,6 @@ geometric, and conditional endpoint results. This file is an audit aid:
 #print axioms Kakeya.Eighty9.full_conditional_kakeya_of_same_ball_incidence
 #print axioms Kakeya.Eighty9.full_conditional_kakeya_moment_of_same_ball_incidence
 #print axioms Kakeya.Eighty9.full_conditional_kakeya_of_same_ball_representative
-
 -- Tube-ball volume bounds in straight and arbitrary orientations.
 #print axioms Kakeya.TubeBall.straightTube_inter_ball_volume_le
 #print axioms Kakeya.TubeBall.straightTube_inter_ball_volume_le_explicit

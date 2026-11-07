@@ -21,7 +21,7 @@ public import Kakeya.FinalTubeSum
 public import Kakeya.Geometry
 public import Kakeya.GreedyDecay
 public import Kakeya.Ninety21Bijection
+public import Kakeya.Ninety21CountingBridge
 public import Kakeya.Ninety21TubeIndexCounting
 public import Kakeya.SelectionComparison
-
 @[expose] public section
