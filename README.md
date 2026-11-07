@@ -52,9 +52,7 @@ representatives outside the selected family to the remaining pieces.
 matching argument from the lower and upper degree bounds.
 
 The tube-index counting module proves the row bound directly over distinct
-tube indices. Connecting the representatives to localized mass capture remains
-separate. See [NINETY21_STATUS.md](NINETY21_STATUS.md) for precise hypotheses,
-declarations, and validation.
+tube indices.
 
 ## Build
 
