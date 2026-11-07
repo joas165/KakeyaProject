@@ -743,12 +743,7 @@
 		\#\{r\in\{1,\ldots,N\}:
 		P\cap T_r^\delta\ne\varnothing\}.
 		\]
-		
-		Suppose that
-		\[
-		d(P)\le N-\frac{4N}{q}
-		\qquad(P\in\mathcal P).
-		\]
+
 		
 		Then there exists an injective map
 		\[
@@ -888,22 +883,22 @@
 	So according to \ref{thm:restricted-bijection} we have 
 	then have the bijection, and we have
 	\[
-	\#\{r\in B' :T_{\ell(k)}^{\delta} \cap  G_{\ell(k)} \cap T_r^{\delta} \cap G_{r} \neq \emptyset\} \geq 1, 
+	\#\{r\in B' :T_{\ell}^{\delta} \cap  G_{\ell} \cap T_r^{\delta} \cap G_{r} \neq \emptyset\} \geq 1, 
 	\]
-	since we can choose $\ell(k) = r.$
+	since we can choose $\ell = r.$
 	In addition we have 
 	\[
-	\#\{\ell(k) \in D':T_{\ell(k)}^{\delta} \cap G_{\ell(k)} \cap T_{r}^{\delta} \cap G_{r}\neq \emptyset\} \leq 1
+	\#\{\ell \in D':T_{\ell}^{\delta} \cap G_{\ell} \cap T_{r}^{\delta} \cap G_{r}\neq \emptyset\} \leq 1
 	\] for all $r \in B'$ by the global disjointness of $G_{i}$, and that there are no copies of tubes in $D$ by \ref{thm:hall-representatives} in relevant scales $2^m >> 1.$  
 	Thus, by double counting,
 	\[
 	\begin{aligned}
 		|D| \leq |D'|
 		&\leq \sum_{\ell\in D'}
-		\#\{j\in B' \cap D :T_{\ell(k)}^{\delta} \cap G_{\ell(k)} \cap T_j^{\delta} \cap G_{j} \neq \emptyset\} \\
+		\#\{j\in B' \cap D :T_{\ell}^{\delta} \cap G_{\ell} \cap T_j^{\delta} \cap G_{j} \neq \emptyset\} \\
 		&=
 		\sum_{j \in B' \cap D}
-		\#\{\ell(k) \in D:T_{\ell(k)}^{\delta} \cap G_{\ell(k)} \cap T_{j}^{\delta} \cap G_j \neq \emptyset\} \\
+		\#\{\ell \in D:T_{\ell}^{\delta} \cap G_{\ell} \cap T_{j}^{\delta} \cap G_j \neq \emptyset\} \\
 		&= |B'| \\
 		&= |B| + \left\lceil \frac{4N}{q} \right \rceil \\
 		&\leq |K| + \left \lceil \frac{4N}{q} \right\rceil\\
