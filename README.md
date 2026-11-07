@@ -42,6 +42,20 @@ The individual modules cover the conditional moment setup, dyadic levels,
 greedy covers and gains, Vitali selection and reindexing, incidence bounds,
 and tube-ball geometry. Import `Kakeya` to load the complete library.
 
+## Ninety21 additions
+
+`Kakeya.Ninety21.localized_nonintersecting_bijection` proves the manuscript's
+Theorem 4.4 bijection from its finite size and degree hypotheses. The resulting
+equivalence fixes the selected indices and assigns distinct nonintersecting
+representatives outside the selected family to the remaining pieces.
+`Kakeya.Ninety21.intersecting_matching_of_degree_bounds` proves the other Hall
+matching argument from the lower and upper degree bounds.
+
+The tube-index counting module proves the row bound directly over distinct
+tube indices. Connecting the representatives to localized mass capture remains
+separate. See [NINETY21_STATUS.md](NINETY21_STATUS.md) for precise hypotheses,
+declarations, and validation.
+
 ## Build
 
 Install the Lean version in `lean-toolchain`, then run:
