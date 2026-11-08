@@ -1,0 +1,1533 @@
+
+\documentclass[11pt, letterpaper]{nyjm}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+
+% Custom commands
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Sn}{S^{n-1}}
+\newcommand{\Tdo}{T^{\delta}_{\omega}}
+\newcommand{\Sph}{\mathbb{S}^{n-1}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\range}{\operatorname{range}}
+\newcommand{\rep}{\operatorname{rep}}
+\newcommand{\LowerIncidence}{\operatorname{LowerIncidence}}
+
+\title{The Kakeya Maximal Function Conjecture and the Dyadic Bound}
+
+\author{Johan Aspegren}
+\email{jaspegren@outlook.com}
+\date{October 29, 2026}
+
+\subjclass[2020]{Primary 42B37; Secondary 28A75}
+\keywords{Kakeya Conjecture, Harmonic Analysis, Incidence Geometry}
+
+\begin{document}
+	
+	\begin{abstract}
+		We use a dyadic $L_2$-bound to prove the Kakeya maximal function conjecture. We study the Kakeya maximal function conjecture through a dyadic \(L^2\) reduction and localized incidence counting. Combining greedy tube selection, Hall's matching theorem, and geometric packing estimates, we reduce the conjectured bound to a localized mass comparison and an incidence counting estimate.  
+	\end{abstract}
+	
+	\maketitle
+	
+	\tableofcontents
+	
+	\section{Introduction}
+	%------------------------------------------------------------
+	
+	We define a line $l_i$ as
+	\[
+	l_i := \{ y \in \R^n \mid \exists t \in \R,\ y = a_i + t\omega_i \},
+	\]
+	where $\omega_i \in S^{n-1}.$
+	We define the $\delta$-tubes as $\delta$-neighborhoods of lines on $B(0,1)$ that
+	intersect the ball $B(0, 1/2)$:
+	\[
+	T^{\delta}_i := \{ x \in B(0,1) \mid |x - y| < \delta,\ y \in l_i
+	\text{ and } B(0,1/2) \cap l_i \neq \emptyset \}.
+	\]
+	So that lengths of our $\delta$-tubes are bounded also from below. The
+	\emph{order of intersection} is defined as the number of tubes intersecting in an
+	intersection. We define $A \lesssim B$ to mean that there exists a constant $C_n$
+	depending only on $n$ such that $A \leq C_n B$. We say that tubes are
+	$\delta$-\emph{separated} if their angles are $\delta$-separated. Moreover, let
+	$f \in L^1_{\mathrm{loc}}(\R^n)$. For each tube in $B(0,1)$ define $a$ as its
+	center of mass. Define the \emph{Kakeya maximal function}
+	\[
+	f^*_\delta : S^{n-1} \to \R \quad \text{via} \quad
+	f^*_\delta(\omega) = \sup_{a \in \R^n} \frac{1}{|T^{\delta}_\omega(a)|}
+	\int_{T^{\delta}_\omega(a)} |f(y)|\, dy.
+	\]
+	In this paper any constant can depend on dimension $n$. In the study of the Kakeya
+	maximal function conjecture we are aiming at the following bounds:
+	\begin{equation}\label{eq:maxfunc}
+		\| f^*_\delta \|_p \leq C_\epsilon \delta^{-n/p + 1 - \epsilon} \| f \|_p,
+	\end{equation}
+	for all $\epsilon > 0$ and some $n \leq p \leq \infty$. A very important
+	reformulation of the problem by Tao is the following. A bound of the form
+	\eqref{eq:maxfunc} follows from a bound of the form
+	\begin{equation}\label{eq:tao}
+		\left\| \sum_{\omega \in \Omega} \mathbf{1}_{T_\omega(a_\omega)}(x) \right\|_{p/(p-1)}
+		\leq C_\epsilon \delta^{-n/p + 1 - \epsilon},
+	\end{equation}
+	for all $\epsilon > 0$, and for any set of $N \leq \delta^{1-n}$ $\delta$-separated
+	$\delta$-tubes. See for example \cite{Kroc} or \cite{Tao99}. It is enough to
+	consider the case $p = n$ and the rest of the cases will follow via interpolation
+	\cite{Kroc, Tao99}. In this paper any constant can depend on dimension $n$. Our
+	main theorem is the following.
+	
+	\begin{theorem}\label{thm:main}
+		Let there be $N \sim \delta^{1-n}$ $\delta$-tubes that are $\delta$-separated.
+		Then we have that
+		\[
+		\left\| \sum_{\omega \in \Omega} \mathbf{1}_{T_\omega(a_\omega)}(x)
+		\right\|_{n/(n-1)} \lesssim (\ln N)^{(n-1)/n}.
+		\]
+	\end{theorem}
+	
+	The case $n = 2$ of the Kakeya maximal function conjecture is well known to be
+	true \cite{Kroc}. The case $n = 1$ is trivial.
+	A formalization project for this paper in Lean 4 is available at
+	\cite{Aspegren2026Lean}.
+	%------------------------------------------------------------
+	\section{Previously Known Results}
+	%------------------------------------------------------------
+	
+	We will use the following bound for the pairwise intersections of $\delta$-tubes.
+	
+	\begin{lemma}[C\'ordoba]\label{lem:cordoba}
+		For any pair of directions $\omega_i, \omega_j \in S^{n-1}$ and any pair of
+		points $a, b \in \R^n \cap B(0,1)$, we have
+		\[
+		|T^{\delta}_{\omega_i}(a) \cap T^{\delta}_{\omega_j}(b)|
+		\lesssim \frac{\delta^n}{|\omega_i - \omega_j|}.
+		\]
+	\end{lemma}
+	
+	A proof can be found for example in \cite{Kroc}. For any (spherical) cap
+	$\Omega \subset S^{n-1}$ with $|\Omega| \gtrsim \delta^{n-1}$, $\delta > 0$,
+	define its $\delta$-\emph{entropy} $N_\delta(\Omega)$ as the maximum possible
+	cardinality of a $\delta$-separated subset of $\Omega$.
+	
+	\begin{lemma}\label{lem:entropy}
+		In the notation just defined,
+		\[
+		N_\delta(\Omega) \sim \frac{|\Omega|}{\delta^{n-1}}.
+		\]
+	\end{lemma}
+	
+	Again, a proof can essentially be found in \cite{Kroc}.
+	
+	We also need the following lemma.
+	\begin{lemma}[Vitali covering lemma for balls of equal radius]
+		\label{lem:vitali-equal}
+		Let $\rho>0$ and let $\{B(x_\alpha,\rho)\}_{\alpha\in\mathcal A}$ be a family of balls in $\mathbb R^n$
+		of the same radius (all open or all closed). Then there is $\mathcal S\subseteq\mathcal A$ such that
+		\begin{enumerate}
+			\item[(i)] the balls $B(x_\alpha,\rho)$, $\alpha\in\mathcal S$, are pairwise disjoint,
+			\item[(ii)] $\mathcal S$ is countable, and
+			\item[(iii)] for every $\alpha\in\mathcal A$ there is $\beta\in\mathcal S$ with
+			$|x_\alpha-x_\beta|\le2\rho$ (in particular $B(x_\alpha,\rho)\subseteq B(x_\beta,3\rho)$). Hence
+			\[
+			\bigcup_{\alpha\in\mathcal A}B(x_\alpha,\rho)\subseteq\bigcup_{\beta\in\mathcal S}B(x_\beta,3\rho),
+			\qquad
+			\Bigl|\bigcup_{\alpha\in\mathcal A}B(x_\alpha,\rho)\Bigr|\le3^n\sum_{\beta\in\mathcal S}|B(x_\beta,\rho)|.
+			\]
+		\end{enumerate}
+		If $\mathcal A$ is finite, $\mathcal S$ can be taken to be any maximal pairwise disjoint subfamily.
+	\end{lemma}
+	
+	\begin{proof}
+		By Zorn's lemma there is a maximal pairwise disjoint subfamily $\mathcal S\subseteq\mathcal A$
+		(the union of a chain of pairwise disjoint subfamilies is pairwise disjoint, so chains have upper
+		bounds). For finite $\mathcal A$ this is just a greedy choice. This gives (i).
+		
+		(ii) Each ball has nonempty interior, so it contains a point of $\mathbb Q^n$ in its interior.
+		Disjoint balls contain distinct such points, so $\mathcal S$ injects into $\mathbb Q^n$.
+		
+		(iii) Let $\alpha\in\mathcal A$. If $\alpha\in\mathcal S$ take $\beta=\alpha$. Otherwise, by maximality of
+		$\mathcal S$, $B(x_\alpha,\rho)$ meets some $B(x_\beta,\rho)$ with $\beta\in\mathcal S$. Pick $y$ in the
+		intersection. Then
+		\[
+		|x_\alpha-x_\beta|\le|x_\alpha-y|+|y-x_\beta|\le2\rho,
+		\]
+		and for $z\in B(x_\alpha,\rho)$,
+		\[
+		|z-x_\beta|\le|z-x_\alpha|+|x_\alpha-x_\beta|\le\rho+2\rho=3\rho .
+		\]
+		For open balls the inequalities are strict in the first step and the conclusion holds with the
+		open ball $B(x_\beta,3\rho)$; for closed balls with the closed one. The measure bound follows from
+		countable subadditivity and $|B(x_\beta,3\rho)|=3^n|B(x_\beta,\rho)|$.
+	\end{proof}
+	%------------------------------------------------------------
+	\section{The Generalized Lemma}
+	%-------------------------------------------------------
+	
+	For the Kakeya set define the  dyadic level sets as 
+	\[
+	F_m := \left\{ x \in \R^n \;\middle|\; 2^{m} \leq \sum_{i=1}^{N}
+	\mathbf{1}_{T_i}(x) < 2^{m+1} \right\}.
+	\]
+	
+	\begin{lemma}[Generalized C\'ordoba lemma] \label{lem:corgeneralized}
+		We have 
+		
+		\[
+		\bigcap_{i=1}^{\sim 2^{k}} T_i^{\delta} \subset B(a,C2^{-k/(n-1)})  
+		\]
+	\end{lemma}
+	
+	\begin{proof}
+		Let us suppose that
+		\[
+		2^k=\delta^{-\beta},
+		\qquad 0<\beta\leq n-1,
+		\]
+		and let us suppose that a tube $T_j$ intersecting
+		$T_i\cap E_{2^k}$ has its direction outside of a cap of size
+		$\sim\delta^{n-1-\beta}$ on the unit sphere. Then the angle between
+		$T_j$ and $T_i$ is greater than $\sim\delta^{1-\beta/(n-1)}$.
+		Thus, the intersection 
+		$\bigcap_{i=1}^{2^k}T_i \subset T_i \cap T_j \subset B(a,C2^{-k/(n-1)}).$ 
+		So we can suppose that the directions in the intersection
+		$E_{2^k}\cap T_i\cap T_j$ belong to a cap of size
+		$\sim\delta^{n-1-\beta}$. However, the cap contains $2^k$ tube
+		directions. 
+		Thus, for any tube $T_i$ in the intersection, there exists
+		a tube $T_j$ such that the angle between $T_i$ and $T_j$ is
+		$\sim\delta^{1-\beta/(n-1)}$ and again \\ $\bigcap_{i=1}^{2^k}T_i \subset T_i \cap T_j \subset B(a,C2^{-k/(n-1)})$ is valid.
+		Thus we proved the lemma \ref{lem:corgeneralized}.
+		
+		
+	\end{proof}
+	
+	
+	
+	\section{The Proof}
+	
+	
+	Now, 
+	\begin{equation} \label{eq:final1}
+		\begin{aligned}	
+			&\left\| \sum_{i=1}^{N} \mathbf{1}_{T_i(a_i)}(x)
+			\right\|_{n/(n-1)}^{n/(n-1)} \\
+			&\sim \int_{B(0,1)}(\sum_{i=1}^{N} \mathbf{1}_{T_i(a_i)}(x))^{n/(n-1)} \\
+			&\sim \sum_m \int_{F_m}(\sum_{i=1}^{N} \mathbf{1}_{T_i(a_i)}(x))^{n/(n-1)} \\
+			&\sim \sum_m 2^{-m(2-n/(n-1))}\int_{F_m}(\sum_{i=1}^{N} \mathbf{1}_{T_i(a_i)}(x))^{2} \\
+			&\sim \sum_m 2^{-m(2-n/(n-1))}\sum_{j=1}^{N}\sum_{i=1}^{N}|T^\delta_i(a_i) \cap T^\delta_j(a_j) \cap F_m|, 
+		\end{aligned}
+	\end{equation} 
+	where we used the dyadic decomposition.
+	Moreover, when looking at the last term inside the parentheses in \eqref{eq:final1} we have the dyadic $L_2$-bound 
+	\begin{equation} \label{eq:final2}
+		\begin{aligned}	
+			&\sum_{j=1}^{N}\sum_{i=1}^{N}|T^\delta_i(a_i) \cap T^\delta_j(a_j) \cap F_m| \\
+			& = \sum_{j=1}^{N}\sum_{i=1}^{N} \sum_{l}|T^\delta_i(a_i) \cap T^\delta_j(a_j)\cap B(b_{l},C2^{-m/(n-1)}) \cap F_{ml}|
+			,
+		\end{aligned}
+	\end{equation}
+	where we used the generalized lemma of C{\'o}rdoba \ref{lem:corgeneralized}, and that the intersection is unique if it exists, and included in a ball $B(b_{ij},C2^{-m/(n-1)}).$ Moreover we used that   
+	\[
+	F_m = \bigcup_l\bigcap_{k=1}^{\sim 2^m} T_{k,l}^{\delta}, 
+	\]
+	where the partition is disjoint.
+	Each intersection center of  $\bigcap_{k=1}^{\sim 2^m} T_{k,l}^{\delta}$ was chosen as the center point $b_{l},$ and each $F_{ml}$ represents an individual intersection $\bigcap_{k=1}^{\sim 2^m} T_{k,l}^{\delta}.$ 
+	
+	\begin{theorem}[Greedy tube selection and averaging]
+		\label{thm:greedy-selection}
+		
+		Let $q=2^m$, and let
+		$T_1^\delta,\ldots,T_N^\delta$ be the original
+		$\delta$-tubes. Define the dyadic multiplicity
+		level set
+		\[
+		F_m=
+		\left\{
+		x\in\mathbb R^n:
+		q\leq\sum_{i=1}^N
+		\mathbf{1}_{T_i^\delta}(x)<2q
+		\right\}.
+		\]
+		
+		Assume that $|F_m|>0$.
+		
+		Then there exist distinct tube indices
+		$j_1,\ldots,j_K$, where
+		\[
+		K=\left\lceil\frac Nq\right\rceil,
+		\qquad Kq\leq 2N,
+		\]
+		such that
+		\[
+		\boxed{
+			|F_m|\lesssim
+			\sum_{k=1}^K
+			|T_{j_k}^\delta\cap F_m|.
+		}
+		\]
+		
+		Moreover, the tubes can be selected greedily
+		so that their newly covered pieces
+		\[
+		Q_k:=
+		T_{j_k}^\delta\cap
+		\left(
+		F_m\setminus
+		\bigcup_{r=1}^{k-1}T_{j_r}^\delta
+		\right)
+		\]
+		are pairwise disjoint and satisfy
+		\[
+		|Q_1|\geq |Q_2|\geq\cdots\geq |Q_K|.
+		\]
+		
+		In fact, the stronger estimate
+		\[
+		\boxed{
+			|F_m|\leq
+			\frac{1}{1-e^{-1}}
+			\sum_{k=1}^K|Q_k|
+		}
+		\]
+		holds.
+		
+	\end{theorem}
+	
+	\begin{proof}
+		
+		Set
+		\[
+		F_m^{(0)}=F_m.
+		\]
+		
+		For each $k\geq1$, choose $j_k$ so that
+		\[
+		|T_{j_k}^\delta\cap F_m^{(k-1)}|
+		=
+		\max_{1\leq i\leq N}
+		|T_i^\delta\cap F_m^{(k-1)}|.
+		\]
+		
+		Define
+		\[
+		Q_k=T_{j_k}^\delta\cap F_m^{(k-1)}
+		\]
+		and
+		\[
+		F_m^{(k)}
+		=
+		F_m^{(k-1)}\setminus Q_k.
+		\]
+		
+		The sets $Q_k$ are pairwise disjoint
+		by construction.
+		
+		Since
+		\[
+		F_m^{(k)}\subseteq F_m^{(k-1)},
+		\]
+		we have
+		\[
+		\begin{aligned}
+			|Q_{k+1}|
+			&=
+			\max_{1\leq i\leq N}
+			|T_i^\delta\cap F_m^{(k)}|\\
+			&\leq
+			\max_{1\leq i\leq N}
+			|T_i^\delta\cap F_m^{(k-1)}|\\
+			&=|Q_k|.
+		\end{aligned}
+		\]
+		
+		Thus,
+		\[
+		|Q_1|\geq|Q_2|\geq\cdots.
+		\]
+		
+		Next, by the dyadic multiplicity condition,
+		\[
+		q\leq
+		\sum_{i=1}^N\mathbf{1}_{T_i^\delta}(x)
+		<2q
+		\qquad (x\in F_m).
+		\]
+		
+		Consequently,
+		\[
+		\begin{aligned}
+			N|Q_k|
+			&=
+			N\max_{1\leq i\leq N}
+			|T_i^\delta\cap F_m^{(k-1)}|\\
+			&\geq
+			\sum_{i=1}^N
+			|T_i^\delta\cap F_m^{(k-1)}|\\
+			&=
+			\int_{F_m^{(k-1)}}
+			\sum_{i=1}^N
+			\mathbf{1}_{T_i^\delta}(x)\,dx\\
+			&\geq q|F_m^{(k-1)}|.
+		\end{aligned}
+		\]
+		
+		Hence,
+		\[
+		\boxed{
+			|Q_k|\geq
+			\frac qN|F_m^{(k-1)}|.
+		}
+		\]
+		
+		It follows that
+		\[
+		\begin{aligned}
+			|F_m^{(k)}|
+			&=
+			|F_m^{(k-1)}|-|Q_k|\\
+			&\leq
+			\left(1-\frac qN\right)
+			|F_m^{(k-1)}|.
+		\end{aligned}
+		\]
+		
+		Iterating gives
+		\[
+		\begin{aligned}
+			|F_m^{(k)}|
+			&\leq
+			\left(1-\frac qN\right)^k|F_m|\\
+			&\leq e^{-kq/N}|F_m|.
+		\end{aligned}
+		\]
+		
+		Choose
+		\[
+		K=\left\lceil\frac Nq\right\rceil.
+		\]
+		
+		Since $F_m$ is nonempty and $q\leq N$,
+		\[
+		Kq\leq N+q\leq 2N.
+		\]
+		
+		Furthermore,
+		\[
+		|F_m^{(K)}|
+		\leq e^{-Kq/N}|F_m|
+		\leq e^{-1}|F_m|.
+		\]
+		
+		Since the pieces $Q_k$ are disjoint,
+		\[
+		\begin{aligned}
+			\sum_{k=1}^K|Q_k|
+			&=
+			|F_m|-|F_m^{(K)}|\\
+			&\geq
+			(1-e^{-1})|F_m|.
+		\end{aligned}
+		\]
+		
+		Therefore,
+		\[
+		\boxed{
+			|F_m|
+			\leq
+			\frac{1}{1-e^{-1}}
+			\sum_{k=1}^K|Q_k|.
+		}
+		\]
+		
+		Finally, since
+		\[
+		Q_k\subseteq T_{j_k}^\delta\cap F_m,
+		\]
+		we obtain
+		\[
+		\begin{aligned}
+			|F_m|
+			&\lesssim\sum_{k=1}^K|Q_k|\\
+			&\leq
+			\sum_{k=1}^K
+			|T_{j_k}^\delta\cap F_m|.
+		\end{aligned}
+		\]
+		
+		This proves the theorem.
+	\end{proof}
+	
+	Next,
+	\begin{equation} \label{eq:final3}
+		\begin{aligned}	
+			&(2^m)^2|F_m| \sim \sum_{j=1}^{N}\sum_{i=1}^{N}\sum_{l}|T^\delta_i(a_i) \cap T^\delta_j(a_j)\cap B(b_{l},C2^{-m/(n-1)}) \cap F_{ml}| \\ 
+			&\sim 2^m\sum_{i=1}^{N}\sum_{l=1}^{\alpha_i}|T^\delta_i(a_i) \cap B(b_{il},C2^{-m/(n-1)}) \cap F_{ml}| \\
+			&\sim (2^m)^2\sum_{i=1}^{K}\sum_{l=1}^{\alpha_i}|T^\delta_i(a_i) \cap B(b_{il},C2^{-m/(n-1)}) \cap F_{ml} \cap G_i| \\
+			&\sim  (2^{m})^2\sum_{j=1}^{M}|T^\delta_j(a_j) \cap B(b_{j},3C2^{-m/(n-1)}) \cap F_m \cap G_j|,		
+		\end{aligned}
+	\end{equation}
+	where $K$ pieces are chosen as in \ref{thm:greedy-selection}. However, while  re-indexing in the last sum, \emph{a priori} we may need to choose some tubes multiple times.
+	However we can represent each piece in the important cases with distinct $\delta$-tubes. 
+	\begin{theorem}[Distinct tube representatives via Hall's theorem]
+		\label{thm:hall-representatives}
+		
+		Let $n\ge 3$, $q=2^m$, and let
+		$T_1^\delta,\ldots,T_N^\delta$ be the original tubes.
+		
+		Let $\mathcal P$ be a finite family of nonempty
+		localized pieces contained in the dyadic level set $F_m$.
+		
+		
+		For each $P\in\mathcal P$, define
+		\[
+		\mathcal N(P)
+		:=
+		\{r\in\{1,\ldots,N\}:
+		P\cap T_r^\delta\neq\emptyset\}.
+		\]
+		
+		Assume that each piece intersects at least $q$ original
+		tubes, so that
+		\[
+		|\mathcal N(P)|\ge q
+		\qquad(P\in\mathcal P).
+		\]
+		
+		Suppose further that each original tube intersects
+		at most $Cq^{1/(n-1)}$ distinct pieces:
+		\[
+		\#\{P\in\mathcal P:
+		P\cap T_r^\delta\neq\emptyset\}
+		\le Cq^{1/(n-1)}
+		\qquad(1\le r\le N).
+		\]
+		
+		If
+		\[
+		q^{(n-2)/(n-1)}\ge C,
+		\]
+		then there exists an injective map
+		\[
+		\sigma:\mathcal P\longrightarrow\{1,\ldots,N\}
+		\]
+		such that
+		\[
+		P\cap T_{\sigma(P)}^\delta\neq\emptyset
+		\qquad(P\in\mathcal P).
+		\]
+		In particular, distinct localized pieces admit
+		distinct original tube representatives.
+	\end{theorem}
+	
+	\begin{proof}
+		Let $\mathcal S\subseteq\mathcal P$ be nonempty and define
+		\[
+		\mathcal N(\mathcal S)
+		:=
+		\bigcup_{P\in\mathcal S}\mathcal N(P).
+		\]
+		
+		Double counting the incidences between the pieces
+		in $\mathcal S$ and the original tubes gives
+		\[
+		\begin{aligned}
+			q|\mathcal S|
+			&\le \sum_{P\in\mathcal S}|\mathcal N(P)|\\
+			&=
+			\sum_{r\in\mathcal N(\mathcal S)}
+			\#\{P\in\mathcal S:
+			P\cap T_r^\delta\neq\emptyset\}\\
+			&\le
+			Cq^{1/(n-1)}|\mathcal N(\mathcal S)|.
+		\end{aligned}
+		\]
+		
+		Consequently,
+		\[
+		\boxed{
+			|\mathcal N(\mathcal S)|
+			\ge
+			\frac{q^{(n-2)/(n-1)}}{C}
+			|\mathcal S|.
+		}
+		\]
+		
+		Since $q^{(n-2)/(n-1)}\ge C$, we obtain
+		\[
+		|\mathcal N(\mathcal S)|\ge|\mathcal S|.
+		\]
+		
+		The same inequality is trivial for the empty set.
+		Thus Hall's marriage condition holds for every
+		$\mathcal S\subseteq\mathcal P$.
+		
+		By Hall's marriage theorem, there exists an
+		injective selection
+		\[
+		\sigma:\mathcal P\longrightarrow\{1,\ldots,N\},
+		\qquad
+		\sigma(P)\in\mathcal N(P).
+		\]
+		
+		Hence
+		\[
+		P\cap T_{\sigma(P)}^\delta\neq\emptyset
+		\]
+		for every $P\in\mathcal P$.
+	\end{proof}
+	\begin{corollary}[Intersection-compatible bijection fixing selected tubes]
+		\label{cor:restricted-intersection-bijection}
+		
+		Let $B\subseteq\{1,\ldots,N\}$ be the selected tube
+		indices, and let $\mathcal P$ be a finite family of
+		nonempty localized trimmed pieces.
+		
+		For each $P\in\mathcal P$, define
+		\[
+		\mathcal N_B(P)
+		:=
+		\{r\in\{1,\ldots,N\}\setminus B:
+		P\cap T_r^\delta\ne\varnothing\}.
+		\]
+		
+		Suppose that, for some constants $a\ge b>0$,
+		\[
+		|\mathcal N_B(P)|\ge a
+		\qquad(P\in\mathcal P),
+		\]
+		and
+		\[
+		\#\{P\in\mathcal P:
+		P\cap T_r^\delta\ne\varnothing\}
+		\le b
+		\qquad(r\notin B).
+		\]
+		
+		Then there exists an injective map
+		\[
+		\sigma:\mathcal P
+		\longrightarrow \{1,\ldots,N\}\setminus B
+		\]
+		such that
+		\[
+		P\cap T_{\sigma(P)}^\delta\ne\varnothing
+		\qquad(P\in\mathcal P).
+		\]
+		
+		Consequently, setting
+		\[
+		D:=B\cup\sigma(\mathcal P),
+		\]
+		there exists a bijection
+		\[
+		\Phi:B\sqcup\mathcal P\longrightarrow D
+		\]
+		fixing every index in $B$, with
+		\[
+		|D|=|B|+|\mathcal P|.
+		\]
+		
+	\end{corollary}
+	
+	\begin{proof}
+		For every nonempty $S\subseteq\mathcal P$,
+		double counting the incidences gives
+		\[
+		a|S|
+		\le \sum_{P\in S}|\mathcal N_B(P)|
+		\le b\left|
+		\bigcup_{P\in S}\mathcal N_B(P)
+		\right|.
+		\]
+		
+		Since $a\ge b>0$, it follows that
+		\[
+		\left|
+		\bigcup_{P\in S}\mathcal N_B(P)
+		\right|
+		\ge |S|.
+		\]
+		
+		Thus Hall's marriage condition holds, and
+		there exists an injective map
+		\[
+		\sigma:\mathcal P
+		\longrightarrow\{1,\ldots,N\}\setminus B
+		\]
+		satisfying
+		\[
+		\sigma(P)\in\mathcal N_B(P)
+		\qquad(P\in\mathcal P).
+		\]
+		
+		In particular,
+		\[
+		P\cap T_{\sigma(P)}^\delta\ne\varnothing.
+		\]
+		
+		Because $\sigma$ is injective and
+		$\sigma(\mathcal P)\cap B=\varnothing$,
+		the map
+		\[
+		\Phi:B\sqcup\mathcal P\longrightarrow D
+		\]
+		defined by
+		\[
+		\Phi(\ell)=\ell\quad(\ell\in B),
+		\qquad
+		\Phi(P)=\sigma(P)\quad(P\in\mathcal P)
+		\]
+		is bijective.
+		
+		Consequently,
+		\[
+		|D|=|B|+|\mathcal P|.
+		\]
+	\end{proof}
+	
+	
+	The argument for the upper $b$ bound is that you can cover the unit tube with very few balls of radius $C2^{-m/(n-1)}$: 
+	\[
+	\max_i \alpha_i \leq C^{-1}2^{m/(n-1)} \leq c2^{m},
+	\]
+	but we need to track constants.
+	\begin{lemma}[Disjoint balls meeting a tube]
+		Let $n\ge2$, let $I\subset\mathbb{R}^n$ be a line segment
+		of length $L$, and define
+		\[
+		T^\delta=\{x\in\mathbb{R}^n:\operatorname{dist}(x,I)<\delta\}.
+		\]
+		Let $B_1,\ldots,B_M$ be pairwise disjoint balls of radius $R$,
+		where $0<\delta\le R$. Then
+		\[
+		\#\{j:T^\delta\cap B_j\ne\varnothing\}
+		\le K_n\left(1+\frac{L}{R}\right),
+		\]
+		where $K_n$ depends only on the dimension.
+		In particular, if $L=1$ and $R\le1$, then
+		\[
+		\#\{j:T^\delta\cap B_j\ne\varnothing\}\le \frac{2K_n}{R}.
+		\]
+	\end{lemma}
+	
+	\begin{proof}
+		Let $\mathcal{J}=\{j:T^\delta\cap B_j\ne\varnothing\}$.
+		For each $j\in\mathcal{J}$, choose $x_j\in T^\delta\cap B_j$.
+		If $y\in B_j$, then
+		\[
+		\operatorname{dist}(y,I)
+		\le |y-x_j|+\operatorname{dist}(x_j,I)
+		<2R+\delta\le3R.
+		\]
+		Consequently,
+		\[
+		\bigcup_{j\in\mathcal{J}}B_j
+		\subseteq\{x:\operatorname{dist}(x,I)<3R\}.
+		\]
+		The set on the right is contained in a cylinder of length
+		$L+6R$ and cross-sectional radius $3R$.
+		Writing $\omega_d$ for the volume of the unit ball in
+		$\mathbb{R}^d$, disjointness gives
+		\[
+		\#\mathcal{J}\,\omega_n R^n
+		\le \omega_{n-1}(3R)^{n-1}(L+6R).
+		\]
+		Dividing by $\omega_n R^n$ proves the result.
+	\end{proof}
+	
+	So we have the both conditions for the lemma for the relevant scales.
+	We prove the last equation of\eqref{eq:final3}.
+	According to greedy-selection \ref{thm:greedy-selection} we have the following cover of a major portion of $F_m$: 
+	\[
+	\begin{aligned}
+		&\bigcup_{\ell\in B}\bigcup_{i_\ell}
+		T_\ell^\delta
+		\cap B(b_{\ell i_\ell},R)
+		\cap F_m
+		\cap G_\ell\\
+		&\quad\subseteq
+		\bigcup_{\ell\in B}\bigcup_{j=1}^{m_\ell}
+		T_\ell^\delta
+		\cap B(b_{\ell, j},3R)
+		\cap F_m
+		\cap G_\ell\\
+		&\quad=
+		\bigcup_{k\in D}
+		T_{\ell(k)}^\delta
+		\cap B(b_{k(\ell,j)},3R)
+		\cap G_{\ell(k)}
+		\cap F_m,
+	\end{aligned}
+	\]
+	where
+	\[
+	R=Cq^{-1/(n-1)},\qquad q=2^m,
+	\]
+	and $m_\ell$ denotes the number of balls selected by
+	the Vitali covering theorem for the tube $\ell\in B$.
+	The set $D$ is obtained by bijectively re-indexing the
+	selected tube-ball pairs, when the suitable bijection exists.
+	For the existence conditions for suitable bijection we need the following lemma.
+	We first define 
+	\[
+	\mathcal A
+	:=
+	\{(\ell,j):\ell\in B',\ 1\le j\le m_\ell\}
+	\]
+	be the set of selected tube-ball pairs.
+	Define a bijective re-indexing for the Vitali- balls
+	\[
+	k:\mathcal A\longrightarrow D,
+	\qquad
+	(\ell,j)\longmapsto k(\ell,j),
+	\]
+	with inverse
+	\[
+	k^{-1}(k_0)
+	=
+	(\ell(k_0),j(k_0)),
+	\qquad k_0\in D.
+	\]
+	In particular,
+	\[
+	b_{k(\ell,j)}=b_{\ell,j},
+	\qquad
+	b_{k_0}=b_{\ell(k_0),j(k_0)}.
+	\]
+	
+	
+	\begin{lemma}[Packing of exceptional Vitali balls]
+		\label{lem:exceptional-vitali}
+		
+		Let $n\ge 3$, $N\asymp\delta^{1-n}$,
+		and let $T_1^\delta,\ldots,T_N^\delta$
+		have pairwise $\delta$-separated directions.
+		
+		Let $q=2^m\le N$, and set
+		\[
+		R=Aq^{-1/(n-1)},\qquad
+		\delta\le R\le 1,
+		\]
+		where $A>0$ is fixed.
+		
+		Let
+		\[
+		\mathcal V=\{V_j=B(b_j,R):j\in J\}
+		\]
+		be a finite family of pairwise disjoint
+		Vitali balls meeting $F_m$.
+		
+		For each $j$ in a subfamily
+		$J_{\mathrm{exc}}\subseteq J$, suppose
+		there is a nonempty piece
+		$P_j\subseteq V_j\cap F_m$ satisfying
+		\[
+		d(P_j):=
+		\#\{r\le N:P_j\cap T_r^\delta
+		\ne\varnothing\}>\frac N2.
+		\]
+		
+		Then
+		\[
+		\boxed{|J_{\mathrm{exc}}|\le C_{n,A},}
+		\]
+		where the constant also depends on
+		the fixed constants in
+		$N\asymp\delta^{1-n}$.
+	\end{lemma}
+	
+	\begin{proof}
+		Write
+		\[
+		I_j=\{r\le N:P_j\cap T_r^\delta
+		\ne\varnothing\}.
+		\]
+		Thus $|I_j|>N/2$ for every
+		$j\in J_{\mathrm{exc}}$.
+		
+		Choose a sufficiently large constant
+		$L$, depending only on the dimension
+		and the fixed geometric constants.
+		
+		If
+		\[
+		|b_i-b_j|\ge LR,
+		\]
+		then every tube intersecting both
+		$P_i$ and $P_j$ has direction within
+		angle $O(L^{-1})$ of the unoriented
+		line joining $b_i$ and $b_j$.
+		
+		The angular packing estimate for
+		$\delta$-separated directions gives
+		\[
+		|I_i\cap I_j|
+		\le C_n(1+(L\delta)^{-1})^{n-1}.
+		\]
+		
+		Since $N\asymp\delta^{1-n}$,
+		we may choose $L$ sufficiently large
+		and then $\delta$ sufficiently small
+		so that
+		\[
+		|I_i\cap I_j|\le \frac N6.
+		\]
+		
+		Suppose that three exceptional
+		ball centers $b_1,b_2,b_3$
+		are pairwise separated by at least $LR$.
+		
+		By inclusion-exclusion,
+		\[
+		\begin{aligned}
+			\sum_{i=1}^3|I_i|
+			&\le
+			\left|\bigcup_{i=1}^3 I_i\right|
+			+\sum_{1\le i<j\le3}|I_i\cap I_j|\\
+			&\le N+3\frac N6\\
+			&=\frac{3N}{2}.
+		\end{aligned}
+		\]
+		
+		But each $|I_i|>N/2$, so
+		\[
+		\sum_{i=1}^3|I_i|>\frac{3N}{2},
+		\]
+		a contradiction.
+		
+		Consequently, a maximal
+		$LR$-separated subfamily of
+		exceptional ball centers contains
+		at most two centers.
+		
+		Every exceptional center lies within
+		distance $LR$ of one of these centers.
+		
+		Since the original radius-$R$
+		Vitali balls are pairwise disjoint,
+		volume packing in the resulting
+		two balls of radius $(L+1)R$ gives
+		\[
+		|J_{\mathrm{exc}}|
+		\le 2(L+1)^n.
+		\]
+		
+		For $\delta$ outside the sufficiently
+		small range used above, $N$ is bounded.
+		Since $q\le N$, the radius $R$ is then
+		bounded below. All balls meet
+		$F_m\subseteq B(0,1)$, so ordinary
+		volume packing supplies a uniform
+		bound in this remaining range.
+		
+		Thus
+		\[
+		|J_{\mathrm{exc}}|\le C_{n,A}.
+		\]
+	\end{proof}
+	
+	\begin{remark}
+		We need the existence of the bijection. However, it is possible that all $N$ tubes intersect one tube. Then $B$ would be just one tube with many intersections and a bijection would not be necessarily possible. These kind of cases are exacly the dominant piece cases.    
+	\end{remark}
+	
+	Next, we do a elementary estimate. Let $\mathcal P$ be a finite family of nonempty
+	localized trimmed pieces. Then 
+	\begin{equation} \label{eq:elementary-bound}
+		|P| \leq C_nNq^{-1}q^{1/(n-1)} \leq \frac{N}{4},
+	\end{equation}
+	when $q >> 1.$ We just need to over count the intersections in each tube, and the elementary bound follows. The following is one of our main results. 
+	
+	\begin{theorem}
+		[Existence of an intersection-compatible bijection]
+		\label{thm:restricted-bijection}
+		
+		Let $n\ge3$, $q=2^m\ge8$, $q\le N$,
+		and let $T_1^\delta,\ldots,T_N^\delta$
+		be the original tubes, with
+		$N\asymp\delta^{1-n}$ and pairwise
+		$\delta$-separated directions.
+		
+		Let $B\subseteq\{1,\ldots,N\}$
+		be the greedily selected tube indices,
+		so that
+		\[
+		|B|\le\frac{2N}{q}.
+		\]
+		
+		Let $\mathcal V=\{V_j:j\in J\}$
+		be a globally disjoint family of
+		Vitali balls of radius
+		\[
+		R=Aq^{-1/(n-1)},\qquad
+		\delta\le R\le1.
+		\]
+		
+		Let $\mathcal P$ be a finite family
+		of nonempty localized trimmed pieces.
+		For every $P\in\mathcal P$, suppose
+		there are labels
+		$\ell(P)\in B$ and $j(P)\in J$ with
+		\[
+		P\subseteq
+		T_{\ell(P)}^\delta
+		\cap G_{\ell(P)}
+		\cap F_m\cap V_{j(P)}.
+		\]
+		
+		Assume that
+		\[
+		P\longmapsto(\ell(P),j(P))
+		\]
+		is injective.
+		
+		Define
+		\[
+		d(P)=
+		\#\{r\le N:P\cap T_r^\delta
+		\ne\varnothing\}
+		\]
+		and partition
+		\[
+		\mathcal P_0=
+		\{P\in\mathcal P:d(P)\le N/2\},
+		\]
+		\[
+		\mathcal P_{\mathrm{exc}}=
+		\{P\in\mathcal P:d(P)>N/2\}.
+		\]
+		
+		Suppose that
+		\[
+		|\mathcal P_0|\le\frac N4.
+		\]
+		
+		Then
+		\[
+		|\mathcal P_{\mathrm{exc}}|
+		\le C_{n,A}|B|
+		\lesssim\frac Nq.
+		\]
+		
+		Moreover, after adjoining
+		$M=|\mathcal P_{\mathrm{exc}}|$
+		auxiliary tubes outside $B(0,2)$,
+		there exists an injective map
+		\[
+		\sigma:\mathcal P\longrightarrow
+		\{1,\ldots,N+M\}\setminus B
+		\]
+		such that
+		\[
+		P\cap T_{\sigma(P)}^\delta
+		=\varnothing
+		\qquad(P\in\mathcal P).
+		\]
+		
+		Consequently, there exist sets
+		\[
+		B\subseteq B'\subseteq D
+		\]
+		and a bijection
+		\[
+		\Phi:B\sqcup\mathcal P\longrightarrow D
+		\]
+		fixing every index in $B$, with
+		\[
+		|B'|=|B|+M
+		\lesssim\frac Nq.
+		\]
+	\end{theorem}
+	
+	\begin{proof}
+		By Lemma~\ref{lem:exceptional-vitali},
+		the number of Vitali balls containing
+		at least one exceptional piece is at
+		most $C_{n,A}$.
+		
+		For each such ball, the injectivity of
+		\[
+		P\longmapsto(\ell(P),j(P))
+		\]
+		implies that at most $|B|$ pieces
+		are assigned to that ball.
+		
+		Therefore,
+		\[
+		M=|\mathcal P_{\mathrm{exc}}|
+		\le C_{n,A}|B|
+		\le 2C_{n,A}\frac Nq.
+		\]
+		
+		We first construct representatives
+		for the ordinary pieces.
+		
+		For $P\in\mathcal P_0$, define
+		\[
+		A(P):=
+		\{r\in\{1,\ldots,N\}\setminus B:
+		P\cap T_r^\delta=\varnothing\}.
+		\]
+		
+		By definition of $d(P)$,
+		\[
+		|A(P)|\ge N-d(P)-|B|.
+		\]
+		
+		Since $d(P)\le N/2$ and
+		\[
+		|B|\le\frac{2N}{q}\le\frac N4,
+		\]
+		we have
+		\[
+		|A(P)|\ge\frac N4.
+		\]
+		
+		For every nonempty
+		$S\subseteq\mathcal P_0$,
+		\[
+		\begin{aligned}
+			\left|\bigcup_{P\in S}A(P)\right|
+			&\ge\max_{P\in S}|A(P)|\\
+			&\ge\frac N4\\
+			&\ge|S|.
+		\end{aligned}
+		\]
+		
+		Thus Hall's marriage condition holds.
+		
+		There is consequently an injection
+		\[
+		\sigma_0:\mathcal P_0
+		\hookrightarrow\{1,\ldots,N\}\setminus B
+		\]
+		satisfying
+		\[
+		P\cap T_{\sigma_0(P)}^\delta
+		=\varnothing.
+		\]
+		
+		Next, introduce $M$ additional labels
+		\[
+		E=\{N+1,\ldots,N+M\}.
+		\]
+		
+		Choose the corresponding auxiliary
+		tubes outside $B(0,2)$.
+		They are disjoint from every
+		$P\subseteq F_m\subseteq B(0,1)$.
+		
+		Since $|E|=|\mathcal P_{\mathrm{exc}}|$,
+		choose a bijection
+		\[
+		\sigma_{\mathrm{exc}}:
+		\mathcal P_{\mathrm{exc}}\longrightarrow E.
+		\]
+		
+		Then
+		\[
+		P\cap T_{\sigma_{\mathrm{exc}}(P)}^\delta
+		=\varnothing
+		\]
+		for every exceptional piece.
+		
+		Combining the two maps gives an injection
+		\[
+		\sigma:\mathcal P\longrightarrow
+		\{1,\ldots,N+M\}\setminus B.
+		\]
+		
+		Define
+		\[
+		B':=B\cup E
+		\]
+		and
+		\[
+		D:=B\cup\sigma(\mathcal P).
+		\]
+		
+		Since $\sigma_{\mathrm{exc}}$ is onto $E$,
+		we have
+		\[
+		B\subseteq B'\subseteq D.
+		\]
+		
+		Furthermore,
+		\[
+		\begin{aligned}
+			|B'|
+			&=|B|+M\\
+			&\le(1+C_{n,A})|B|\\
+			&\le2(1+C_{n,A})\frac Nq.
+		\end{aligned}
+		\]
+		
+		Finally, define
+		\[
+		\Phi:B\sqcup\mathcal P\longrightarrow D
+		\]
+		by
+		\[
+		\Phi(\ell)=\ell\quad(\ell\in B),
+		\qquad
+		\Phi(P)=\sigma(P)\quad(P\in\mathcal P).
+		\]
+		
+		Since $\sigma$ is injective and its
+		image is disjoint from $B$, this
+		map is bijective.
+		
+		This completes the proof.
+	\end{proof}
+	
+	Let
+	\[
+	\mathcal A
+	:=
+	\{(\ell,j):\ell\in B',\ 1\le j\le m_\ell\}
+	\]
+	be the set of selected tube-ball pairs.
+	Redefine the bijective re-indexing for the Vitali- balls in accordance with the theorem \ref{thm:restricted-bijection}:
+	\[
+	\kappa:\mathcal A\longrightarrow D,
+	\qquad
+	(\ell,j)\longmapsto \kappa(\ell,j),
+	\]
+	with inverse
+	\[
+	\kappa^{-1}(\kappa_0)
+	=
+	(\ell(k_0),j(\kappa_0)),
+	\qquad \kappa_0 \in D'
+	\]
+	In particular,
+	\[
+	b_{\kappa(\ell,j)}=b_{\ell,j},
+	\qquad
+	b_{\kappa_0}=b_{\ell(\kappa_0),j(\kappa_0)}.
+	\]
+	
+	So we have
+	\[
+	\#\{r\in B' :T_{\ell}^{\delta} \cap  G_{\ell} \cap T_r^{\delta} \cap G_{r} \neq \emptyset\} \geq 1, 
+	\]
+	since we can choose $\ell = r.$
+	In addition we have 
+	\[
+	\#\{\ell \in D':T_{\ell}^{\delta} \cap G_{\ell} \cap T_{r}^{\delta} \cap G_{r}\neq \emptyset\} \leq 1
+	\] for all $r \in B'$ by the global disjointness of $G_{i}$, and that there are no copies of tubes in $D$ by the corollary  \ref{cor:restricted-intersection-bijection} in relevant scales $2^m >> 1.$  
+	We use the theorem \ref{thm:restricted-bijection} only for counting.
+	Thus, by double counting,
+	\[
+	\begin{aligned}
+		|D|
+		&\leq \sum_{\ell\in D'}
+		\#\{j\in B' \cap D :T_{\ell}^{\delta} \cap G_{\ell} \cap T_j^{\delta} \cap G_{j} \neq \emptyset\} \\
+		&=
+		\sum_{j \in B' \cap D}
+		\#\{\ell \in D:T_{\ell}^{\delta} \cap G_{\ell} \cap T_{j}^{\delta} \cap G_j \neq \emptyset\} \\
+		&= |B'| \\
+		&\leq |B| + \left\lceil \frac{2C_{n,A}N}{q} \right \rceil \\
+		&\leq |K| + \left \lceil \frac{2C_{n,A}N}{q} \right\rceil\\
+		&\lesssim \frac{N}{2^m},
+	\end{aligned}
+	\]
+	where we used $|B| \leq K,$ and 
+	in the last line we used the greedy selection theorem \ref{thm:greedy-selection}. 
+	So we have $|D| \lesssim 2^{-m}N.$
+	
+	So we have 
+	\begin{equation}
+		|F_m| \lesssim \sum_ {j=1}^{|D|}|T^\delta_j(a_j) \cap B(b_{j},3C2^{-m/(n-1)}) \cap G_j \cap F_m| \lesssim \delta^{n-1}|D|2^{-m/(n-1)} \lesssim 2^{-mn/(n-1)} 
+	\end{equation}
+	So the Theorem~\ref{thm:main} holds after a simple calculation from \eqref{eq:final1}, \eqref{eq:final2},\eqref{eq:final3}, and above:
+	\[
+	\ln N \sim \sum_m 2^{-m(2-n/(n-1))} 2^{m}2^{-m/(n-1)}
+	\gtrsim \left\| \sum_{i=1}^{N} \mathbf{1}_{T_i(a_i)}(x)
+	\right\|_{n/(n-1)}^{n/(n-1)}.
+	\] 
+	
+	\section{Appendixes}
+	\appendix
+	Some of this results are used in the Lean project \cite{Aspegren2026Lean}.
+	We establish three elementary results on selected-incidence counting: a weighted selection comparison, an equivalence between lower intersection incidence and representative-map surjectivity for nonempty disjoint pieces, and a surjectivity criterion for representative maps via composition. 
+	
+	Finite incidence arguments arise naturally when a large family of sets is
+	reduced to a smaller family while retaining information about their
+	overlaps. A common situation is that geometric objects, such as tubes,
+	are indexed by $j\in\{1,\ldots,N\}$, while the intersections or localized
+	pieces associated with these objects carry a second index.  The resulting
+	double-indexed union is conveniently reindexed by a single finite set,
+	but a change of indices must not be confused with a reduction in the
+	number of pieces.
+	
+	This note isolates three elementary principles behind such arguments.
+	The first is a weighted \emph{selection comparison}: provided every
+	piece remains incident to at least one selected object and original
+	incidence multiplicities are bounded, the selected family controls the
+	total incidence weight. The second identifies the precise meaning of
+	lower intersection incidence for nonempty, pairwise-disjoint pieces:
+	it is equivalent to surjectivity of a map selecting a representative
+	piece. The third relates this surjectivity to a composition: if the
+	piece map is injective and the composite representative-to-piece-set
+	map is onto the range of the piece map, then the representative map is
+	onto the piece labels.
+	
+	The arguments developed in this paper are based on
+	finite incidence counting, combinatorial inequalities,
+	and properties of injective and surjective mappings.
+	For general background on combinatorial counting
+	methods, we refer to \cite{vanLintWilson}.
+	The geometric setting of doubly indexed disjoint
+	families is related to the broader framework of
+	discrete geometry; see \cite{Matousek}.
+	
+	\section{Selection comparison}
+	
+	Let $\calP$ be a finite set of labels for measurable pieces. The
+	measure-theoretic structure is not used below; only a nonnegative weight
+	$c_P$ associated with each $P\in\calP$ is needed.
+	
+	\begin{theorem}[Selection comparison]\label{thm:comparison}
+		For each $j\in\{1,\ldots,N\}$, let $\calP_j\subseteq\calP$ be an
+		original incidence family. Assign weights $c_P\geq 0$ and put
+		\[
+		w_j:=\sum_{P\in\calP_j}c_P,
+		\qquad
+		r_P:=\#\bigl\{j\in\{1,\ldots,N\}:P\in\calP_j\bigr\}.
+		\]
+		Suppose that, for some $q\geq1$ and $C>0$,
+		\[
+		r_P\leq Cq\qquad(P\in\calP).
+		\]
+		Let $A\subseteq\{1,\ldots,N\}$ be a selected family such that every
+		piece belongs to at least one selected incidence family:
+		\[
+		s_P:=\#\{j\in A:P\in\calP_j\}\geq1
+		\qquad(P\in\calP).
+		\]
+		Then
+		\begin{equation}\label{eq:selection-comparison}
+			\boxed{\displaystyle
+				\sum_{j=1}^{N}w_j\leq Cq\sum_{j\in A}w_j.}
+		\end{equation}
+	\end{theorem}
+	
+	\begin{proof}
+		For each $P\in\calP$, the assumptions give
+		$r_P\leq Cq\leq Cq\,s_P$. As $c_P\geq0$, finite double counting yields
+		\begin{align*}
+			\sum_{j=1}^{N}w_j
+			&=\sum_{j=1}^{N}\sum_{P\in\calP_j}c_P
+			=\sum_{P\in\calP}r_Pc_P\\
+			&\leq Cq\sum_{P\in\calP}s_Pc_P
+			=Cq\sum_{j\in A}\sum_{P\in\calP_j}c_P
+			=Cq\sum_{j\in A}w_j.
+		\end{align*}
+	\end{proof}
+	
+	\noindent
+	In particular, if each piece belongs to \emph{exactly one} selected
+	family, then $s_P=1$; however, the proof only requires $s_P\geq1$.
+	An upper bound $s_P\leq1$ alone does not establish
+	\eqref{eq:selection-comparison}.
+	
+	\section{Lower intersection incidence}
+	
+	Let $P$, $J$ and $X$ be sets, and let
+	\[
+	E:P\longrightarrow\mathcal P(X),\qquad
+	\rep:J\longrightarrow P.
+	\]
+	Here $E(p)$ is the piece indexed by $p$, while $\rep(j)$ selects a
+	piece label for the representative index $j$. Define
+	\begin{equation}\label{eq:lower-incidence}
+		\LowerIncidence(E,\rep)
+		\quad\Longleftrightarrow\quad
+		\forall p\in P\ \exists j\in J:\ 
+		E(p)\cap E(\rep(j))\ne\varnothing.
+	\end{equation}
+	
+	\begin{theorem}[Lower incidence is equivalent to representative
+		surjectivity]\label{thm:lower-surjectivity}
+		Suppose that each $E(p)$ is nonempty and that the pieces are pairwise
+		disjoint in the indexed sense:
+		\[
+		E(p)\ne\varnothing\quad(p\in P),\qquad
+		p\ne p'\ \Longrightarrow\ E(p)\cap E(p')=\varnothing.
+		\]
+		Then
+		\begin{equation}\label{eq:iff-surj}
+			\boxed{
+				\LowerIncidence(E,\rep)
+				\quad\Longleftrightarrow\quad
+				\rep:J\twoheadrightarrow P.}
+		\end{equation}
+		Furthermore, for every $j\in J$ and $p\in P$,
+		\begin{equation}\label{eq:exact-incidence}
+			E(p)\cap E(\rep(j))\ne\varnothing
+			\quad\Longleftrightarrow\quad p=\rep(j).
+		\end{equation}
+	\end{theorem}
+	
+	\begin{proof}
+		If $p=\rep(j)$, then
+		$E(p)\cap E(\rep(j))=E(p)\ne\varnothing$.
+		Conversely, if this intersection is nonempty, pairwise disjointness
+		forces $p=\rep(j)$. This establishes \eqref{eq:exact-incidence}.
+		
+		Suppose $\LowerIncidence(E,\rep)$. For arbitrary $p\in P$,
+		choose $j\in J$ with
+		$E(p)\cap E(\rep(j))\ne\varnothing$. By
+		\eqref{eq:exact-incidence}, $p=\rep(j)$; hence $\rep$ is surjective.
+		
+		Conversely, if $\rep$ is surjective, then for every $p\in P$ we can
+		choose $j\in J$ with $\rep(j)=p$. Since $E(p)$ is nonempty,
+		$E(p)\cap E(\rep(j))=E(p)\ne\varnothing$. This proves lower incidence.
+	\end{proof}
+	
+	\noindent
+	Equation \eqref{eq:exact-incidence} also gives an exact row count:
+	when $P$ is finite, for every fixed $j\in J$,
+	\[
+	\#\{p\in P:E(p)\cap E(\rep(j))\ne\varnothing\}=1.
+	\]
+	
+	
+	\section{Surjectivity of the composed piece map}
+	
+	The natural codomain for the composition $E\circ\rep$ is not all of
+	$\mathcal P(X)$, but the range
+	\[
+	\range(E):=\{E(p):p\in P\}\subseteq\mathcal P(X).
+	\]
+	Thus the induced composite is
+	\[
+	\widetilde{E\circ\rep}:J\longrightarrow\range(E),
+	\qquad j\longmapsto E(\rep(j)).
+	\]
+	
+	\begin{theorem}[Surjective composition with injective outer
+		map]\label{thm:composite}
+		Let $E:P\to\mathcal P(X)$ be injective, and let
+		$\rep:J\to P$ be any map. If the induced composition
+		\[
+		\widetilde{E\circ\rep}:J\longrightarrow\range(E)
+		\]
+		is surjective, then $\rep$ is surjective.
+	\end{theorem}
+	
+	\begin{proof}
+		Fix $p\in P$. Since $E(p)\in\range(E)$, surjectivity of
+		$\widetilde{E\circ\rep}$ supplies $j\in J$ such that
+		\[
+		E(\rep(j))=E(p).
+		\]
+		Injectivity of $E$ gives $\rep(j)=p$. Thus every $p\in P$ lies in
+		the range of $\rep$, which proves its surjectivity.
+	\end{proof}
+	
+	\noindent
+	\textbf{Connection between the three theorems.}
+	Nonempty, pairwise-disjoint indexed pieces make $E$ injective: if
+	$E(p)=E(p')$ and $p\ne p'$, the two nonempty equal sets would be
+	disjoint, a contradiction. Hence, in that setting, surjectivity of
+	$\widetilde{E\circ\rep}$ implies surjectivity of $\rep$ by
+	Theorem~\ref{thm:composite}, and then lower incidence by
+	Theorem~\ref{thm:lower-surjectivity}. When these intersections encode the
+	selected incidence families of Theorem~\ref{thm:comparison}, the
+	resulting column coverage supplies its hypothesis $s_P\geq1$.
+	
+	
+	
+	\section*{Acknowledgments}
+	
+	The author used OpenAI's ChatGPT, and Anthropic's Claude, to assist with
+	mathematical discussions, proof review, LaTeX
+	preparation, and Lean 4 formalization.
+	The mathematical arguments and responsibility
+	for their correctness remain with the author.
+	
+	\begin{thebibliography}{3}
+		
+		\bibitem{Aspegren2026Lean}
+		J. Aspegren,
+		\emph{KakeyaProject: Formalization of the Kakeya maximal function argument in Lean 4},
+		GitHub repository, 2026.
+		\url{https://github.com/joas165/KakeyaProject}.
+		
+		
+		\bibitem{Kroc}
+		
+		{\scshape Kroc, E.} 
+		
+		The Kakeya problem. 
+		
+		Available at 
+		
+		\url{http://ekroc.weebly.com/uploads/2/1/6/3/21633182/mscessay-final.pdf}.
+		
+		\bibitem{vanLintWilson}
+		J. H. van Lint and R. M. Wilson,
+		\textit{A Course in Combinatorics},
+		2nd ed., Cambridge University Press, 2001.
+		
+		\bibitem{Matousek}
+		J. Matou\v{s}ek,
+		\textit{Lectures on Discrete Geometry},
+		Graduate Texts in Mathematics, Vol. 212,
+		Springer, New York, 2002.
+		
+		\bibitem{Tao99}
+		
+		{\scshape Tao, Terence.}
+		
+		Lecture notes for harmonic analysis course. 
+		
+		University of California, Los Angeles, 1999. 
+		
+		Available at 
+		
+		\url{http://math.ucla.edu/~tao/254b.1.99s/}.
+		
+		
+		
+		
+	\end{thebibliography}
+	
+	
+	\end{document}
+	
+	\backmatter
+	
+	\section*{Declarations}
+	
+	\bmhead{Funding}
+	
+	The author received no funding for this work.
+	
+	\bmhead{Conflict of interest/Competing interests}
+	
+	The author declares no conflict of interest.
+	
+	\bmhead{Ethics approval and consent to participate}
+	
+	Not applicable.
+	
+	\bmhead{Consent for publication}
+	
+	Not applicable.
+	
+	\bmhead{Data availability}
+	
+	Not applicable.
