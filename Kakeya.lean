@@ -25,4 +25,5 @@ public import Kakeya.Ninety21CountingBridge
 public import Kakeya.Ninety21TubeIndexCounting
 public import Kakeya.SelectionComparison
 public import Kakeya.Ninety64TrimmedBijection
+public import Kakeya.Ninety94ExtendedMap
 @[expose] public section

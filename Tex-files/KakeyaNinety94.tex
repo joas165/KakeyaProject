@@ -702,7 +702,7 @@
 	\max_i \alpha_i \leq C^{-1}2^{m/(n-1)} \leq c2^{m},
 	\]
 	but we need to track constants.
-	\begin{lemma}[Disjoint balls meeting a tube]
+	\begin{lemma}[Disjoint balls meeting a tube] \label{lem:disjoint-ball-tube}
 		Let $n\ge2$, let $I\subset\mathbb{R}^n$ be a line segment
 		of length $L$, and define
 		\[
@@ -936,11 +936,7 @@
 		|J_{\mathrm{exc}}|\le C_{n,A}.
 		\]
 	\end{proof}
-	
-	\begin{remark}
-		We need the existence of the bijection. However, it is possible that all $N$ tubes intersect one tube. Then $B$ would be just one tube with many intersections and a bijection would not be necessarily possible. These kind of cases are exacly the dominant piece cases.    
-	\end{remark}
-	
+		
 	Next, we do a elementary estimate. Let $\mathcal P$ be a finite family of nonempty
 	localized trimmed pieces. Then 
 	\begin{equation} \label{eq:elementary-bound}
@@ -1215,37 +1211,44 @@
 	b_{\kappa(\ell,j)}=b_{\ell,j},
 	\qquad
 	b_{\kappa_0}=b_{\ell(\kappa_0),j(\kappa_0)}.
-	\]
-	
+	\] 
 	So we have
 	\[
-	\#\{r\in B' :T_{\ell}^{\delta} \cap  G_{\ell} \cap T_r^{\delta} \cap G_{r} \neq \emptyset\} \geq 1, 
+	\begin{aligned}
+	\#\{\ell \in B \sqcup \sigma \mathcal P: \Phi(\ell) = r\} 
+	= 1, 
+	\end{aligned}
 	\]
-	since we can choose $\ell = r.$
-	In addition we have 
+	for all $r \in  B \sqcup \mathcal P,$
+	using the mapping given by the theorem \ref{thm:restricted-bijection},
+	We extend the bijection $\Phi$ to the original tube
+	indices $\ell=1,\ldots,N$ by the incidence rule
 	\[
-	\#\{\ell \in D':T_{\ell}^{\delta} \cap G_{\ell} \cap T_{r}^{\delta} \cap G_{r}\neq \emptyset\} \leq 1
-	\] for all $r \in B'$ by the global disjointness of $G_{i}$, and that there are no copies of tubes in $D$ by the corollary  \ref{cor:restricted-intersection-bijection} in relevant scales $2^m >> 1.$  
-	We use the theorem \ref{thm:restricted-bijection} only for counting.
+	\widehat{\Phi}(\ell)=r
+	\quad\Longleftrightarrow\quad
+	T_\ell^\delta\cap P_r\cap G_r\ne\varnothing,
+	\qquad r\in D.
+	\]
+	Here $T_\ell^\delta$ is an original, untrimmed tube,
+	whereas $P_r\subseteq F_m\cap G_r$ is a retained
+	localized piece.
+	The uniqueness of the target $r$ follows from the greedy selection \ref{thm:greedy-selection}.  
 	Thus, by double counting,
 	\[
 	\begin{aligned}
-		|D|
-		&\leq \sum_{\ell\in D'}
-		\#\{j\in B' \cap D :T_{\ell}^{\delta} \cap G_{\ell} \cap T_j^{\delta} \cap G_{j} \neq \emptyset\} \\
-		&=
-		\sum_{j \in B' \cap D}
-		\#\{\ell \in D:T_{\ell}^{\delta} \cap G_{\ell} \cap T_{j}^{\delta} \cap G_j \neq \emptyset\} \\
-		&= |B'| \\
-		&\leq |B| + \left\lceil \frac{2C_{n,A}N}{q} \right \rceil \\
-		&\leq |K| + \left \lceil \frac{2C_{n,A}N}{q} \right\rceil\\
-		&\lesssim \frac{N}{2^m},
+		q|\mathcal P|
+		&\leq 
+	    \sum_{r \in \sigma \mathcal P}
+		\#\{\ell \in \{1,\ldots,N+M\}: \Phi(\ell) = r\}  \\
+		&= 
+		\sum_{r = 1}^{N+M}
+		\#\{\ell \in \sigma \mathcal P: \Phi(\ell) = r\}  \\
+		&\leq N + M \\
+		&\lesssim N
+		,
 	\end{aligned}
 	\]
-	where we used $|B| \leq K,$ and 
-	in the last line we used the greedy selection theorem \ref{thm:greedy-selection}. 
 	So we have $|D| \lesssim 2^{-m}N.$
-	
 	So we have 
 	\begin{equation}
 		|F_m| \lesssim \sum_ {j=1}^{|D|}|T^\delta_j(a_j) \cap B(b_{j},3C2^{-m/(n-1)}) \cap G_j \cap F_m| \lesssim \delta^{n-1}|D|2^{-m/(n-1)} \lesssim 2^{-mn/(n-1)} 
