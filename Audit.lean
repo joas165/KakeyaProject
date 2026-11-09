@@ -3,9 +3,8 @@ import Kakeya
 /-!
 # Axiom audit
 
-Print the axioms used by the library's main analytic, combinatorial,
-geometric, and conditional endpoint results. This file is an audit aid:
-`lake build` checks that every audited declaration exists and is well-typed.
+Run `lake build` followed by `lake env lean Audit.lean` to check
+the audited declarations and print their axiom dependencies.
 -/
 -- Conditional analytic setup and finite tube multiplicity.
 #print axioms Kakeya.Conditional.chi
@@ -110,3 +109,26 @@ geometric, and conditional endpoint results. This file is an audit aid:
 #print axioms Kakeya.TubeBall.transverse_closedBall_volume
 #print axioms Kakeya.TubeBall.unitTube_ball_volume_le_explicit_arbitrary_direction
 #print axioms Kakeya.TubeBall.localized_unitTube_ball_volume_le_explicit_arbitrary_direction
+
+-- Intersection-compatible Hall matching.
+#print axioms Kakeya.Ninety21.intersecting_matching_of_degree_bounds
+#print axioms Kakeya.Ninety21.extend_matching_to_bijection
+
+-- Actual trimmed-piece bijections and exceptional-piece counts.
+#print axioms Kakeya.Ninety64.theorem42_matching
+#print axioms Kakeya.Ninety64.theorem42_actual_piece_bijection
+#print axioms Kakeya.Ninety64.theorem42_restricted_matching
+#print axioms Kakeya.Ninety64.theorem42_bijection_fixing_selected
+#print axioms Kakeya.Ninety64.exceptional_piece_count_of_pair_injective
+#print axioms Kakeya.Ninety64.exceptional_piece_count_of_packing
+#print axioms Kakeya.Ninety64.exceptional_piece_scaled_budget
+
+-- Extended original-tube map and its counting bounds.
+#print axioms Kakeya.Ninety94.extensionHit_iff_original
+#print axioms Kakeya.Ninety94.extendedMap_eq_some_iff
+#print axioms Kakeya.Ninety94.extendedMap_eq_some_of_hit
+#print axioms Kakeya.Ninety94.original_degree_ge
+#print axioms Kakeya.Ninety94.extendedMap_fiber_ge
+#print axioms Kakeya.Ninety94.q_mul_card_le_original
+#print axioms Kakeya.Ninety94.q_mul_reindexed_card_le_original
+#print axioms Kakeya.Ninety94.greedy_gain_common_point_unique
