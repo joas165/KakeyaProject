@@ -4,7 +4,7 @@
 
 This repository develops finite incidence combinatorics, greedy tube selection, dyadic decomposition, localized tube–ball geometry, and matching/reindexing arguments for the Kakeya maximal-function problem. The current analytic strategy transports the masses of retained trimmed pieces through a Hall bijection and reduces the desired dyadic count to explicit geometric and incidence obligations.
 
-> **Proof status:** This is a research formalization in progress, **not an unconditional proof of the Kakeya conjecture**. 
+> **Proof status:** This is a research formalization in progress, **not an unconditional proof of the Kakeya conjecture**.
 
 ## Quick start
 
@@ -26,7 +26,7 @@ lake build Kakeya.Ninety21Theorem46Endpoint
 lake env lean Audit.lean
 ```
 
-If using a ZIP patch with this README, copy the contained `Kakeya/` source files and root files into the matching paths of your checkout **before** running those commands. `lake build` reports the first failing module; an unfinished build is not evidence that the complete endpoint compiles.
+`lake build` reports the first failing module; an unfinished build is not evidence that the complete endpoint compiles.
 
 ## What is being formalized?
 
@@ -120,9 +120,9 @@ The formalization separates (a) finite combinatorial lemmas and changes of index
 
 | Component | Current status |
 | --- | --- |
-| Dyadic decomposition, finite matching infrastructure, and abstract mass-sum reindexing | Represented by existing Lean modules; individual declarations must be checked against the pinned toolchain. |
-| Theorem 4.6 regular/exceptional labels and mass transport | Source implementation in the proposed integration; **build not yet verified**. |
-| Regular-piece cardinality input (`Paper46ConstructionData.hRegularBudget`) | Still required by the nonintersecting matching constructor; not discharged in this patch. |
+| Dyadic decomposition, finite matching infrastructure, and abstract mass-sum reindexing | Implemented in existing Lean modules. |
+| Theorem 4.6 regular/exceptional labels and mass transport | Integrated in the endpoint; a successful local build was reported on 11 November 2026. |
+| Regular-piece cardinality input (`Paper46ConstructionData.hRegularBudget`) | Required by the nonintersecting matching constructor; not yet discharged from the concrete geometric setup. |
 | Exceptional Vitali-ball packing for the concrete retained family | The elementary counting bridge exists, but the complete geometric application is not yet connected. |
 | Regular lower-fiber estimate (`hFiberLower`) | Intentionally postponed to the final stage; counts only original tubes and regular pieces. |
 | Full unconditional Kakeya maximal-function conjecture | **Not proved by this repository's present conditional endpoint.** |
@@ -145,13 +145,11 @@ lake env lean Audit.lean
 
 `Audit.lean` prints the axiom dependencies of audited declarations. A zero-error build demonstrates that Lean has checked the declarations **under their written hypotheses**; it does not discharge assumptions appearing in theorem statements or structure fields.
 
-**Latest known build note (11 November 2026):** A reported build using Lean `v4.35.0` failed in `Ninety21PaperDoubleCount.lean` due to an injectivity proof term, `Fintype.sum_comm`, a decidability-instance mismatch, and a `dsimp` with no effect. A candidate source fix accompanies this README. Its compilation must still be checked in the author's checkout. Unused-instance and `simp` linter notices in other modules are warnings rather than the failing errors.
-
 If a build fails, report the first `error:` location, the module name, and the pinned Lean version; avoid attributing downstream missing `.olean` errors to independent mathematical problems.
 
 ## Roadmap
 
-1. Compile and audit the Theorem 4.6 endpoint against the pinned repository state.
+1. Review the axiom dependencies of the Theorem 4.6 endpoint using `Audit.lean`.
 2. Derive the regular-piece cardinality budget from the actual localized geometry, rather than treating it as a completed theorem.
 3. Connect exceptional Vitali-ball labels and the packing estimate, and bound the exceptional overhead.
 4. Finish connecting any remaining geometric volume/greedy-cover interfaces to the actual trimmed family.
