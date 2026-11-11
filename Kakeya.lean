@@ -26,4 +26,9 @@ public import Kakeya.Ninety21TubeIndexCounting
 public import Kakeya.SelectionComparison
 public import Kakeya.Ninety64TrimmedBijection
 public import Kakeya.Ninety94ExtendedMap
+public import Kakeya.Ninety21Endpoint
+public import Kakeya.Ninety21ConcreteIntegration
+public import Kakeya.Ninety21PaperDoubleCount
+public import Kakeya.Ninety21Theorem46Hall
+public import Kakeya.Ninety21Theorem46Endpoint
 @[expose] public section

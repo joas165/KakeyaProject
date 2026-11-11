@@ -1,3 +1,4 @@
+module
 import Kakeya
 
 /-!
@@ -132,3 +133,81 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety94.q_mul_card_le_original
 #print axioms Kakeya.Ninety94.q_mul_reindexed_card_le_original
 #print axioms Kakeya.Ninety94.greedy_gain_common_point_unique
+
+-- Ninety21 distinct-tube-count route to the logarithmic endpoint.
+#print axioms Kakeya.Ninety21.SelectedIncidenceDyadicInputs
+#print axioms Kakeya.Ninety21.dyadic_level_budget_of_selected_incidence
+#print axioms Kakeya.Ninety21.uniform_level_budget_of_selected_incidence
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_moment_of_selected_incidence
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_of_selected_incidence
+
+-- Single retained-piece mass sum, with greedy capture discharged.
+#print axioms Kakeya.Ninety21.SelectedIncidenceDyadicData
+#print axioms Kakeya.Ninety21.GreedyCaptureAtLevels
+#print axioms Kakeya.Ninety21.piece_mass_capture_of_greedy_cover
+#print axioms Kakeya.Ninety21.inputs_of_greedy_cover
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_moment_of_greedy_cover
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_of_greedy_cover
+
+-- Hall matches the same pieces. The 4N count remains a separate proof obligation.
+#print axioms Kakeya.Ninety21.exists_hall_reindexing
+#print axioms Kakeya.Ninety21.hall_reindexed_card
+#print axioms Kakeya.Ninety21.data_of_trimmed_hall
+#print axioms Kakeya.Ninety21.hallPiece_at_equiv
+#print axioms Kakeya.Ninety21.hallEquiv42_intersects
+#print axioms Kakeya.Ninety21.hallPiece_mass_sum
+#print axioms Kakeya.Ninety21.greedy_of_trimmed_hall
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_moment_of_trimmed_hall
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_of_trimmed_hall
+
+-- Original-tube degree splits the ACTUAL retained pieces by the paper's N/2 threshold.
+-- Exceptional pieces are excluded from the lower-fiber assumption.
+#print axioms Kakeya.Ninety21.paperOriginalTubeDegree
+#print axioms Kakeya.Ninety21.paperRegularPieces
+#print axioms Kakeya.Ninety21.paperExceptionalPieces
+#print axioms Kakeya.Ninety21.mem_paperRegularPieces
+#print axioms Kakeya.Ninety21.mem_paperExceptionalPieces
+#print axioms Kakeya.Ninety21.paper_regular_exceptional_partition
+#print axioms Kakeya.Ninety21.paper_regular_exceptional_card
+#print axioms Kakeya.Ninety21.paperExceptional_parent_selected
+#print axioms Kakeya.Ninety21.paperExceptional_trimmed
+#print axioms Kakeya.Ninety21.paperRegularIndex
+#print axioms Kakeya.Ninety21.paperRegularIndex_injective
+#print axioms Kakeya.Ninety21.paperRegularIndices
+#print axioms Kakeya.Ninety21.paperRegularIndices_subset_hall
+#print axioms Kakeya.Ninety21.paperRegularIndexEquiv
+#print axioms Kakeya.Ninety21.paperRegularIndices_card
+#print axioms Kakeya.Ninety21.paperOriginalTubeMapReg
+#print axioms Kakeya.Ninety21.paper_double_count_fibers
+#print axioms Kakeya.Ninety21.paper_regular_count_of_fibers
+#print axioms Kakeya.Ninety21.paper_hall_count_with_exceptional_remainder
+
+-- Theorem 4.6's actual nonintersecting original/auxiliary bijection.
+#print axioms Kakeya.Ninety21.exists_paper46_hall_equiv
+#print axioms Kakeya.Ninety21.hallEquiv
+#print axioms Kakeya.Ninety21.hallEquiv_selected_fixed
+#print axioms Kakeya.Ninety21.hallEquiv_regular_nonintersecting
+#print axioms Kakeya.Ninety21.hallEquiv_exceptional_auxiliary
+
+#print axioms Kakeya.Ninety21.paper46RegularIndex_injective
+#print axioms Kakeya.Ninety21.paper46_regular_count_of_fibers
+
+-- End-to-end Theorem 4.6 label and analytic integration.
+-- Regular fibers involve ORIGINAL tubes only; exceptional contribution stays explicit.
+#print axioms Kakeya.Ninety21.paper46SelectedSourceEquiv
+#print axioms Kakeya.Ninety21.paper46RemainingSourceEquiv
+#print axioms Kakeya.Ninety21.paper46AnalyticEquiv
+#print axioms Kakeya.Ninety21.paper46AnalyticPiece_at_equiv
+#print axioms Kakeya.Ninety21.paper46_analytic_mass_sum
+#print axioms Kakeya.Ninety21.paper46_analytic_card
+#print axioms Kakeya.Ninety21.paper46_analytic_piece_volume
+#print axioms Kakeya.Ninety21.paper46_analytic_capture
+#print axioms Kakeya.Ninety21.paper46_analytic_count_with_exceptional
+#print axioms Kakeya.Ninety21.Paper46LargeLevelInputs
+#print axioms Kakeya.Ninety21.paper46ExceptionalOverhead
+#print axioms Kakeya.Ninety21.paper46_all_level_source_count
+#print axioms Kakeya.Ninety21.paper46_source_capture
+#print axioms Kakeya.Ninety21.paper46_analytic_level_budget
+#print axioms Kakeya.Ninety21.paper46_analytic_uniform_level_budget
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_moment_of_paper46
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_of_paper46
