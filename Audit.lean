@@ -205,9 +205,15 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.paper46_analytic_count_with_exceptional
 #print axioms Kakeya.Ninety21.Paper46LargeLevelInputs
 #print axioms Kakeya.Ninety21.paper46ExceptionalOverhead
-#print axioms Kakeya.Ninety21.paper46_all_level_source_count
+#print axioms Kakeya.Ninety21.paper46_large_level_source_count
 #print axioms Kakeya.Ninety21.paper46_source_capture
 #print axioms Kakeya.Ninety21.paper46_analytic_level_budget
 #print axioms Kakeya.Ninety21.paper46_analytic_uniform_level_budget
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_moment_of_paper46
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_of_paper46
+
+#print axioms Kakeya.Ninety21.paper46_small_level_budget
+#print axioms Kakeya.Ninety21.paper46EndpointBudget
+
+#print axioms Kakeya.Ninety21.paper_regular_budget_of_tube_ball_count
+#print axioms Kakeya.Ninety21.paper_exceptional_scaled_budget

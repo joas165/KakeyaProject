@@ -3,26 +3,12 @@ public import Kakeya.Ninety21Endpoint
 public import Kakeya.Ninety64TrimmedBijection
 
 /-!
-# Matching and tube-index counting integration
+# Retained pieces, localization balls, and Hall reindexing
 
-Hall constructs an intersection-compatible reindexing of the actual retained
-source pieces. Their masses and greedy coverage are preserved under relabeling.
-
-The numerical count is NOT obtained by assigning each original tube to at
-most one piece, or by comparing the number of remaining pieces with the
-selected tubes. Unique trimmed ownership does not imply `TubeWiseUnique`.
-Hall gives an exact bijective relabeling and the identity `|D| = |B| + |P|`,
-but does not by itself prove `q * |D| <= 4N`.
-
-`hHallRight` is the localization-ball packing bound at scale
-`C q^(1/(n-1))`. `exists_ball_hall_reindexing` applies Hall to those balls.
-The retained-piece Hall application separately requires `hPieceHallRight`;
-no one-piece-per-ball assumption is made.
-
-The exact same-family distinct-label estimate is an *open geometric counting
-obligation* (`hTubeCount`) at the interface. The endpoint remains conditional
-on this unproved input; no replacement family or illicit cardinal inequality
-is inserted. The single retained-piece mass endpoint is unchanged.
+`RetainedDyadicData` supplies the source family for the Theorem 4.6 endpoint.
+`BallLocalizedDyadicData` adds localization balls and their tube-count bound.
+`TrimmedHallDyadicData` adds the right-degree bound used by Theorem 4.2.
+Hall relabeling preserves the source sets and their mass sum.
 -/
 
 @[expose] public section
@@ -34,10 +20,8 @@ attribute [local instance] Classical.propDecidable
 
 variable {X T K : Type*} [MeasurableSpace X] [Fintype T]
 
-/-- Source data BEFORE Hall reindexing. `P` denotes remaining source labels;
-the complete retained piece family has type `B ⊕ P`. No equivalence or
-selected-incidence row/column proof is an input. -/
-structure TrimmedHallDyadicData
+/-- Retained source family indexed by selected labels and remaining piece labels. -/
+structure RetainedDyadicData
     (μ : Measure X) (tubes : T → Set X) (n : ℕ) where
   B : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → Finset T
   P : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → Finset K
@@ -50,28 +34,6 @@ structure TrimmedHallDyadicData
   hTrimmed : ∀ m p,
     sourcePiece m (Sum.inr p) ⊆ tubes (parent m p) ∩ gain m (parent m p)
   hLevel : ∀ m s, sourcePiece m s ⊆ Kakeya.Eighty4.concreteDyadicBand tubes m
-  /-- Localization balls, indexed independently of source-piece labels.
-  In this abstract measurable-space interface their geometry is supplied by
-  the caller; the packing estimate below remains an explicit obligation. -/
-  ballCount : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℕ
-  ball : ∀ m, Fin (ballCount m) → Set X
-  sourceBall : ∀ m, ({r : T // r ∈ B m} ⊕ {p : K // p ∈ P m}) → Fin (ballCount m)
-  hSourceBall : ∀ m s, sourcePiece m s ⊆ ball m (sourceBall m s)
-  hBallOccupied : ∀ m i,
-    (ball m i ∩ Kakeya.Eighty4.concreteDyadicBand tubes m).Nonempty
-  ballPackingConstant : ℝ
-  hBallPackingConstant : 0 ≤ ballPackingConstant
-  /-- Counts localization BALLS met by an original tube, not source pieces. -/
-  hHallRight : ∀ m r,
-    (∑ i : Fin (ballCount m),
-      if (ball m i ∩ tubes r).Nonempty then (1 : ℝ) else 0) ≤
-      ballPackingConstant * (Kakeya.Eighty4.dyadicScale (Fintype.card T) m) ^
-        ((1 : ℝ) / ((n : ℝ) - 1))
-  /-- Separate, still-open obligation for matching the SAME retained pieces.
-  Ball packing alone does not bound the number of pieces in each ball. -/
-  hPieceHallRight : ∀ m r,
-    (∑ s, if (sourcePiece m s ∩ tubes r).Nonempty then (1 : ℝ) else 0) ≤
-      Kakeya.Eighty4.dyadicScale (Fintype.card T) m
   radius : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℝ
   C : ℝ
   deltaPow : ℝ
@@ -88,12 +50,50 @@ structure TrimmedHallDyadicData
     (Kakeya.Eighty4.dyadicScale (Fintype.card T) m) ^
       ((1 : ℝ) / ((n : ℝ) - 1)) * radius m ≤ radiusCap
 
+/-- Retained pieces with localization balls and a tube–ball counting bound. -/
+structure BallLocalizedDyadicData
+    (μ : Measure X) (tubes : T → Set X) (n : ℕ)
+    extends RetainedDyadicData (K := K) μ tubes n where
+  /-- Finite localization-ball family. -/
+  ballCount : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℕ
+  ball : ∀ m, Fin (ballCount m) → Set X
+  sourceBall : ∀ m, ({r : T // r ∈ B m} ⊕ {p : K // p ∈ P m}) → Fin (ballCount m)
+  hSourceBall : ∀ m s, sourcePiece m s ⊆ ball m (sourceBall m s)
+  hBallOccupied : ∀ m i,
+    (ball m i ∩ Kakeya.Eighty4.concreteDyadicBand tubes m).Nonempty
+  ballPackingConstant : ℝ
+  hBallPackingConstant : 0 ≤ ballPackingConstant
+  /-- Number of localization balls meeting an original tube. -/
+  hHallRight : ∀ m r,
+    (∑ i : Fin (ballCount m),
+      if (ball m i ∩ tubes r).Nonempty then (1 : ℝ) else 0) ≤
+      ballPackingConstant * (Kakeya.Eighty4.dyadicScale (Fintype.card T) m) ^
+        ((1 : ℝ) / ((n : ℝ) - 1))
+
+instance (μ : Measure X) (tubes : T → Set X) (n : ℕ) :
+    Coe (BallLocalizedDyadicData (K := K) μ tubes n)
+      (RetainedDyadicData (K := K) μ tubes n) where
+  coe := BallLocalizedDyadicData.toRetainedDyadicData
+
+/-- Additional right-degree bound for the intersecting Theorem 4.2 matching. -/
+structure TrimmedHallDyadicData
+    (μ : Measure X) (tubes : T → Set X) (n : ℕ)
+    extends BallLocalizedDyadicData (K := K) μ tubes n where
+  hPieceHallRight : ∀ m r,
+    (∑ s, if (sourcePiece m s ∩ tubes r).Nonempty then (1 : ℝ) else 0) ≤
+      Kakeya.Eighty4.dyadicScale (Fintype.card T) m
+
+instance (μ : Measure X) (tubes : T → Set X) (n : ℕ) :
+    Coe (TrimmedHallDyadicData (K := K) μ tubes n)
+      (RetainedDyadicData (K := K) μ tubes n) where
+  coe := fun s => s.toBallLocalizedDyadicData.toRetainedDyadicData
+
 /-- Hall on occupied localization balls, using the ball-to-tube relation.
 The scale comparison is explicit (it need not hold at every small level).
 This theorem does not replace or merge the retained source-piece family. -/
 theorem exists_ball_hall_reindexing
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : BallLocalizedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (hScale : s.ballPackingConstant *
       (Kakeya.Eighty4.dyadicScale (Fintype.card T) m) ^
@@ -274,7 +274,7 @@ theorem hallPiece_mass_sum
 /-- Greedy premises stated on the original retained sets, before Hall. -/
 structure SourceGreedyAtLevels
     (μ : Measure X) [IsFiniteMeasure μ] (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n) where
+    (s : RetainedDyadicData (K := K) μ tubes n) where
   Q : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℕ → Set X
   hScaleLe : ∀ m, Kakeya.Eighty4.dyadicScale (Fintype.card T) m ≤
     (Fintype.card T : ℝ)
@@ -299,7 +299,7 @@ The recurrence and greedy union are unchanged. -/
 noncomputable def greedy_of_trimmed_hall
     (μ : Measure X) [IsFiniteMeasure μ] (tubes : T → Set X) (n : ℕ)
     (s : TrimmedHallDyadicData (K := K) μ tubes n)
-    (c : SourceGreedyAtLevels μ tubes n s)
+    (c : SourceGreedyAtLevels μ tubes n s.toBallLocalizedDyadicData.toRetainedDyadicData)
     (hTubeCount : ∀ m,
       Kakeya.Eighty4.dyadicScale (Fintype.card T) m *
         ((hallReindexing μ tubes n s m).val.card : ℝ) ≤
@@ -332,7 +332,7 @@ theorem full_conditional_kakeya_moment_of_trimmed_hall
     (μ : Measure X) [IsFiniteMeasure μ] (tubes : T → Set X)
     (n : ℕ) (hn : 2 ≤ n)
     (s : TrimmedHallDyadicData (K := K) μ tubes n)
-    (c : SourceGreedyAtLevels μ tubes n s)
+    (c : SourceGreedyAtLevels μ tubes n s.toBallLocalizedDyadicData.toRetainedDyadicData)
     (hTubeCount : ∀ m,
       Kakeya.Eighty4.dyadicScale (Fintype.card T) m *
         ((hallReindexing μ tubes n s m).val.card : ℝ) ≤
@@ -352,7 +352,7 @@ theorem full_conditional_kakeya_of_trimmed_hall
     (μ : Measure X) [IsFiniteMeasure μ] (tubes : T → Set X)
     (n : ℕ) (hn : 2 ≤ n)
     (s : TrimmedHallDyadicData (K := K) μ tubes n)
-    (c : SourceGreedyAtLevels μ tubes n s)
+    (c : SourceGreedyAtLevels μ tubes n s.toBallLocalizedDyadicData.toRetainedDyadicData)
     (hTubeCount : ∀ m,
       Kakeya.Eighty4.dyadicScale (Fintype.card T) m *
         ((hallReindexing μ tubes n s m).val.card : ℝ) ≤

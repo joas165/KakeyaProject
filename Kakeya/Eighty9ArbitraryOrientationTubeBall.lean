@@ -85,11 +85,8 @@ theorem unitTube_transverse_coordinate_bound {n : ℕ}
       ((p + t • v + w) - p) = (⟨w, hwperp⟩ : sᗮ) := by
     rw [hshift, map_add, hvzero, hwself, zero_add]
   have hnorm' : ‖(⟨w, hwperp⟩ : sᗮ)‖ ≤ δ := by
-    -- Submodule elements carry the norm of their underlying vector.
     change ‖w‖ ≤ δ
     exact hnorm
-  -- A set-comprehension membership is not yet an exposed coordinate equation.
-  -- Reduce it once, then rewrite the projection by the already proved identity.
   change (directionCoordinates p v (p + t • v + w)).2 ∈
     Metric.closedBall (0 : sᗮ) δ
   rw [directionCoordinates_snd p v (p + t • v + w), hproj]

@@ -94,10 +94,7 @@ additional statement needed when `e (Sum.inl r)` must be `r`.
 
 /-! ## Restricted Hall construction for the optional fixed-selected corollary -/
 
--- The restricted incidence relation is proved first. Keeping the matching
--- separate from the equivalence construction makes Lean elaboration smaller.
 set_option maxHeartbeats 1000000 in
--- This finite Hall specialization needs additional elaboration heartbeats.
 open Classical in
 /-- Hall's theorem applied to the ORIGINAL tubes outside the reserved set `B`.
     This is a genuinely intersecting matching of the actual trimmed pieces. -/
@@ -117,10 +114,6 @@ theorem theorem42_restricted_matching
   classical
   let hit : P → T → Prop :=
     fun p r => r ∉ B ∧ (piece p ∩ tube r).Nonempty
-  -- The pre-existing Hall theorem elaborates its filter with the classical
-  -- decidability instance for the *opaque* local relation `hit`.
-  -- Give that instance explicitly, so Lean does not instead synthesize
-  -- `instDecidableAnd` after unfolding the body of `hit`.
   have hL : ∀ p : P,
       q ≤ ((@Finset.filter T (hit p)
         (fun r => Classical.propDecidable (hit p r)) Finset.univ).card : ℝ) := by
@@ -163,7 +156,6 @@ theorem theorem42_restricted_matching
   exact hhit p
 
 set_option maxHeartbeats 1000000 in
--- Extending the dependent matching equivalence requires a local heartbeat limit.
 open Classical in
 /-- Optional fixed-selected-index form of Theorem 4.2.
     The matching has already been proved separately, so here we only extend

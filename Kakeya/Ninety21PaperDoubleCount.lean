@@ -23,7 +23,7 @@ nonintersecting representative image sigma(P_reg) of Theorem 4.6.
 This module proves q*|P_reg| <= N, partitions the actual source family, and
 obtains q*|D| <= 3*N + q*|P_exc|. It DOES NOT claim the exceptional packing
 bound or the final 4N budget. Those require the actual Vitali-ball data,
-which `TrimmedHallDyadicData` does not yet encode.
+which `RetainedDyadicData` does not yet encode.
 -/
 
 @[expose] public section
@@ -38,7 +38,7 @@ variable {X T K : Type*} [MeasurableSpace X] [Fintype T]
 /-- Number of ORIGINAL tubes meeting an actual remaining retained piece. -/
 noncomputable def paperOriginalTubeDegree
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (p : {k : K // k ∈ s.P m}) : ℕ := by
   classical
@@ -48,7 +48,7 @@ noncomputable def paperOriginalTubeDegree
 /-- The paper's `P_m^reg`: precisely the actual pieces with d(P) ≤ N/2. -/
 noncomputable def paperRegularPieces
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
     Finset {k : K // k ∈ s.P m} := by
   classical
@@ -58,7 +58,7 @@ noncomputable def paperRegularPieces
 /-- The paper's `P_m^exc`: precisely the actual pieces with d(P) > N/2. -/
 noncomputable def paperExceptionalPieces
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
     Finset {k : K // k ∈ s.P m} := by
   classical
@@ -67,7 +67,7 @@ noncomputable def paperExceptionalPieces
 
 theorem mem_paperRegularPieces
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (p : {k : K // k ∈ s.P m}) :
     p ∈ paperRegularPieces μ tubes n s m ↔
@@ -77,7 +77,7 @@ theorem mem_paperRegularPieces
 
 theorem mem_paperExceptionalPieces
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (p : {k : K // k ∈ s.P m}) :
     p ∈ paperExceptionalPieces μ tubes n s m ↔
@@ -88,7 +88,7 @@ theorem mem_paperExceptionalPieces
 /-- Every actual retained piece is in exactly one of the two classes. -/
 theorem paper_regular_exceptional_partition
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
     Disjoint (paperRegularPieces μ tubes n s m)
         (paperExceptionalPieces μ tubes n s m) ∧
@@ -112,7 +112,7 @@ theorem paper_regular_exceptional_partition
 /-- In particular, the split does not create or discard any retained pieces. -/
 theorem paper_regular_exceptional_card
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
     (paperRegularPieces μ tubes n s m).card +
       (paperExceptionalPieces μ tubes n s m).card = (s.P m).card := by
@@ -130,7 +130,7 @@ theorem paper_regular_exceptional_card
 No new parent function or piece family is introduced by classification. -/
 theorem paperExceptional_parent_selected
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (p : {p : {k : K // k ∈ s.P m} //
       p ∈ paperExceptionalPieces μ tubes n s m}) :
@@ -139,7 +139,7 @@ theorem paperExceptional_parent_selected
 /-- The exceptional pieces are still the same localized trimmed subsets. -/
 theorem paperExceptional_trimmed
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (p : {p : {k : K // k ∈ s.P m} //
       p ∈ paperExceptionalPieces μ tubes n s m}) :
@@ -154,7 +154,7 @@ noncomputable def paperRegularIndex
     (s : TrimmedHallDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (p : {p : {k : K // k ∈ s.P m} //
-      p ∈ paperRegularPieces μ tubes n s m}) : T :=
+      p ∈ paperRegularPieces μ tubes n s.toBallLocalizedDyadicData.toRetainedDyadicData m}) : T :=
   (hallEquiv42 μ tubes n s m (Sum.inr p.val)).val
 
 /-- Regular pieces have distinct representatives because Hall is a bijection. -/
@@ -201,11 +201,11 @@ noncomputable def paperRegularIndexEquiv
     (s : TrimmedHallDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
     {p : {k : K // k ∈ s.P m} //
-      p ∈ paperRegularPieces μ tubes n s m} ≃
+      p ∈ paperRegularPieces μ tubes n s.toBallLocalizedDyadicData.toRetainedDyadicData m} ≃
       {r : T // r ∈ paperRegularIndices μ tubes n s m} := by
   classical
   let f : {p : {k : K // k ∈ s.P m} //
-      p ∈ paperRegularPieces μ tubes n s m} →
+      p ∈ paperRegularPieces μ tubes n s.toBallLocalizedDyadicData.toRetainedDyadicData m} →
       {r : T // r ∈ paperRegularIndices μ tubes n s m} :=
     fun p => ⟨paperRegularIndex μ tubes n s m p,
       Finset.mem_image.mpr ⟨p, Finset.mem_univ _, rfl⟩⟩
@@ -229,7 +229,7 @@ theorem paperRegularIndices_card
     (s : TrimmedHallDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
     (paperRegularIndices μ tubes n s m).card =
-      (paperRegularPieces μ tubes n s m).card := by
+      (paperRegularPieces μ tubes n s.toBallLocalizedDyadicData.toRetainedDyadicData m).card := by
   classical
   have hc := Fintype.card_congr (paperRegularIndexEquiv μ tubes n s m)
   simpa only [Fintype.card_coe] using hc.symm
@@ -246,7 +246,7 @@ noncomputable def paperOriginalTubeMapReg
       r ∈ paperRegularIndices μ tubes n s m} := by
   classical
   exact if h : ∃ p : {p : {k : K // k ∈ s.P m} //
-      p ∈ paperRegularPieces μ tubes n s m},
+      p ∈ paperRegularPieces μ tubes n s.toBallLocalizedDyadicData.toRetainedDyadicData m},
       (s.sourcePiece m (Sum.inr p.val) ∩ tubes t).Nonempty
     then some (paperRegularIndexEquiv μ tubes n s m (Classical.choose h))
     else none
@@ -289,7 +289,7 @@ theorem paper_regular_count_of_fibers
           if paperOriginalTubeMapReg μ tubes n s m ell = some r
           then (1 : ℝ) else 0) :
     Kakeya.Eighty4.dyadicScale (Fintype.card T) m *
-      ((paperRegularPieces μ tubes n s m).card : ℝ) ≤
+      ((paperRegularPieces μ tubes n s.toBallLocalizedDyadicData.toRetainedDyadicData m).card : ℝ) ≤
         (Fintype.card T : ℝ) := by
   classical
   have hf := paper_double_count_fibers
@@ -314,31 +314,39 @@ theorem paper_hall_count_with_exceptional_remainder
       (((hallReindexing μ tubes n s m).val.card : ℝ)) ≤
         3 * (Fintype.card T : ℝ) +
           Kakeya.Eighty4.dyadicScale (Fintype.card T) m *
-            ((paperExceptionalPieces μ tubes n s m).card : ℝ) := by
+            ((paperExceptionalPieces μ tubes n
+              s.toBallLocalizedDyadicData.toRetainedDyadicData m).card : ℝ) := by
   classical
   let q := Kakeya.Eighty4.dyadicScale (Fintype.card T) m
   have hReg := paper_regular_count_of_fibers μ tubes n s m hFiberLower
   have hGreedy := s.hGreedy m
   have hPart : ((s.P m).card : ℝ) =
-      ((paperRegularPieces μ tubes n s m).card : ℝ) +
-      ((paperExceptionalPieces μ tubes n s m).card : ℝ) := by
-    exact_mod_cast (paper_regular_exceptional_card μ tubes n s m).symm
+      ((paperRegularPieces μ tubes n s.toBallLocalizedDyadicData.toRetainedDyadicData m).card : ℝ) +
+      ((paperExceptionalPieces μ tubes n
+        s.toBallLocalizedDyadicData.toRetainedDyadicData m).card : ℝ) := by
+    exact_mod_cast (paper_regular_exceptional_card μ tubes n
+      s.toBallLocalizedDyadicData.toRetainedDyadicData m).symm
   have hHall : ((hallReindexing μ tubes n s m).val.card : ℝ) =
       ((s.B m).card : ℝ) + ((s.P m).card : ℝ) := by
     exact_mod_cast hall_reindexed_card μ tubes n s m
   change q * ((hallReindexing μ tubes n s m).val.card : ℝ) ≤
     3 * (Fintype.card T : ℝ) +
-      q * ((paperExceptionalPieces μ tubes n s m).card : ℝ)
+      q * ((paperExceptionalPieces μ tubes n
+        s.toBallLocalizedDyadicData.toRetainedDyadicData m).card : ℝ)
   calc
     q * ((hallReindexing μ tubes n s m).val.card : ℝ) =
         q * ((s.B m).card : ℝ) + q * ((s.P m).card : ℝ) := by rw [hHall]; ring
     _ = q * ((s.B m).card : ℝ) +
-        q * ((paperRegularPieces μ tubes n s m).card : ℝ) +
-          q * ((paperExceptionalPieces μ tubes n s m).card : ℝ) := by
+        q * ((paperRegularPieces μ tubes n
+          s.toBallLocalizedDyadicData.toRetainedDyadicData m).card : ℝ) +
+          q * ((paperExceptionalPieces μ tubes n
+            s.toBallLocalizedDyadicData.toRetainedDyadicData m).card : ℝ) := by
             rw [hPart]; ring
     _ ≤ 3 * (Fintype.card T : ℝ) +
-        q * ((paperExceptionalPieces μ tubes n s m).card : ℝ) := by
-          have hReg' : q * ((paperRegularPieces μ tubes n s m).card : ℝ) ≤
+        q * ((paperExceptionalPieces μ tubes n
+          s.toBallLocalizedDyadicData.toRetainedDyadicData m).card : ℝ) := by
+          have hReg' : q * ((paperRegularPieces μ tubes n
+            s.toBallLocalizedDyadicData.toRetainedDyadicData m).card : ℝ) ≤
               (Fintype.card T : ℝ) := hReg
           have hGreedy' : q * ((s.B m).card : ℝ) ≤
               2 * (Fintype.card T : ℝ) := hGreedy

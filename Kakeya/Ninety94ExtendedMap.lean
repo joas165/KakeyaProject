@@ -30,8 +30,6 @@ once that condition is supplied, without a `sorry` or an extra axiom.
 
 namespace Kakeya.Ninety94
 
--- Finite incidence filters involve arbitrary set membership.
--- Make classical decidability available even in theorem statements.
 attribute [local instance] Classical.propDecidable
 
 variable {L K X T : Type*}
@@ -179,8 +177,6 @@ theorem q_mul_card_le_original [Fintype K]
     exact hUnique l k j
       ((Finset.mem_bipartiteBelow R).mp hk).2
       ((Finset.mem_bipartiteBelow R).mp hj).2
-  -- Count the same bipartite incidences from both sides, over Nat.
-  -- This avoids the ordered-ring hypotheses of card_nsmul_le_card_nsmul.
   have hLower :
       (Finset.univ : Finset K).card * q ≤
         ∑ k ∈ (Finset.univ : Finset K),

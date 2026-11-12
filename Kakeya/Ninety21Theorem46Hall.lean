@@ -34,28 +34,28 @@ variable {X T K : Type*} [MeasurableSpace X] [Fintype T]
     geometric d(P) <= N/2 class. -/
 abbrev PaperRegularLabel
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :=
   {p : {k : K // k ∈ s.P m} // p ∈ paperRegularPieces μ tubes n s m}
 
 /-- The genuine exceptional pieces, carrying d(P) > N/2. -/
 abbrev PaperExceptionalLabel
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :=
   {p : {k : K // k ∈ s.P m} // p ∈ paperExceptionalPieces μ tubes n s m}
 
 /-- Original tube indices plus one label for each ACTUAL exceptional piece. -/
 abbrev PaperExtendedLabel
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :=
   T ⊕ PaperExceptionalLabel μ tubes n s m
 
 /-- Selected indices embedded into the extended label set. -/
 noncomputable def paperSelectedExtended
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
     Finset (PaperExtendedLabel μ tubes n s m) := by
   classical
@@ -66,7 +66,7 @@ noncomputable def paperSelectedExtended
     estimate and must be PROVED upstream; it is not derived from Hall. -/
 structure Paper46ConstructionData
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) where
   q : ℕ
   hq : 8 ≤ q
@@ -79,7 +79,7 @@ structure Paper46ConstructionData
     maps each exceptional piece to its own AUXILIARY label. -/
 theorem exists_paper46_hall_equiv
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m) :
     ∃ (D : Finset (PaperExtendedLabel μ tubes n s m))
@@ -186,7 +186,7 @@ theorem exists_paper46_hall_equiv
     `... ≃ {r : T // r ∈ D}`. -/
 noncomputable def paper46LabelSet
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m) :
     Finset (PaperExtendedLabel μ tubes n s m) :=
@@ -194,7 +194,7 @@ noncomputable def paper46LabelSet
 
 noncomputable def hallEquiv
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m) :
     ({r : PaperExtendedLabel μ tubes n s m //
@@ -209,7 +209,7 @@ noncomputable def hallEquiv
 /-- Properties follow from the same witness selected by hallEquiv. -/
 theorem hallEquiv_selected_fixed
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m)
     (r : {r : PaperExtendedLabel μ tubes n s m //
@@ -221,7 +221,7 @@ theorem hallEquiv_selected_fixed
 
 theorem hallEquiv_exceptional_auxiliary
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m)
     (p : PaperExceptionalLabel μ tubes n s m) :
@@ -233,7 +233,7 @@ theorem hallEquiv_exceptional_auxiliary
 
 theorem hallEquiv_regular_nonintersecting
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m)
     (p : PaperRegularLabel μ tubes n s m) :
@@ -252,7 +252,7 @@ theorem hallEquiv_regular_nonintersecting
     by the old intersection-compatible Hall image. -/
 noncomputable def paper46RegularIndex
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m)
     (p : PaperRegularLabel μ tubes n s m) : T :=
@@ -260,7 +260,7 @@ noncomputable def paper46RegularIndex
 
 theorem paper46RegularIndex_spec
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m)
     (p : PaperRegularLabel μ tubes n s m) :
@@ -274,7 +274,7 @@ theorem paper46RegularIndex_spec
 /-- Distinct regular pieces get distinct ORIGINAL representative indices. -/
 theorem paper46RegularIndex_injective
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m) :
     Function.Injective (paper46RegularIndex μ tubes n s m a) := by
@@ -294,7 +294,7 @@ theorem paper46RegularIndex_injective
 /-- The precise σ(P_m^reg) required by the later original-tube hFiberLower. -/
 noncomputable def paper46RegularIndices
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m) : Finset T := by
   classical
@@ -304,7 +304,7 @@ noncomputable def paper46RegularIndices
     labels under the *new* nonintersecting equivalence. -/
 noncomputable def paper46RegularIndexEquiv
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m) :
     PaperRegularLabel μ tubes n s m ≃
@@ -327,7 +327,7 @@ noncomputable def paper46RegularIndexEquiv
 
 theorem paper46RegularIndices_card
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m) :
     (paper46RegularIndices μ tubes n s m a).card =
@@ -340,7 +340,7 @@ theorem paper46RegularIndices_card
     by the paper. It never sees the auxiliary-label summand. -/
 noncomputable def paper46OriginalTubeMapReg
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m)
     (t : T) : Option {r : T //
@@ -355,7 +355,7 @@ noncomputable def paper46OriginalTubeMapReg
     tubes and ONLY the regular Theorem 4.6 σ-image. -/
 theorem paper46_regular_count_of_fibers
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m)
     (hFiberLower : ∀ r : {r : T //

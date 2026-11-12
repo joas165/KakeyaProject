@@ -2,22 +2,12 @@ module
 public import Kakeya.Ninety21Theorem46Hall
 
 /-!
-# Theorem 4.6 reindexing in the analytic endpoint
+# Theorem 4.6 analytic endpoint
 
-The SAME retained source sets are transported by the paper's Theorem 4.6
-bijection into the extended representative labels `T ⊕ P_exc`. The original
-`T` contains only the N original tubes, never auxiliary labels.
-
-The 4.6 matching is a HIGH-LEVEL construction (q >= 8). It cannot be used
-at q = 1, 2, 4. The small-level count uses the existing Theorem 4.2
-bijection only for its cardinality bound; the single source mass sum is
-unchanged at every level.
-
-The ONLY NEW INCIDENCE hypothesis for the large levels is `hFiberLower`,
-which counts original-tube fibers of the REGULAR Theorem 4.6 labels. The
-exceptional-piece contribution is left visible in the analytic estimate:
-it has NOT been bounded by the desired geometry and is not replaced with
-an unjustified numerical assumption.
+The Theorem 4.6 bijection relabels retained source sets by original and
+exceptional auxiliary labels. Their mass sum is preserved. At levels q ≥ 8,
+regular original-tube fibers give the counting bound with an exceptional
+contribution. Levels q < 8 use the finite ambient mass estimate.
 -/
 
 @[expose] public section
@@ -33,7 +23,7 @@ variable {X T K : Type*} [MeasurableSpace X] [Fintype T]
     label type. -/
 noncomputable def paper46SelectedSourceEquiv
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
     {r : T // r ∈ s.B m} ≃
       {r : PaperExtendedLabel μ tubes n s m //
@@ -60,7 +50,7 @@ noncomputable def paper46SelectedSourceEquiv
     any piece. -/
 noncomputable def paper46RemainingSourceEquiv
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
     {p : K // p ∈ s.P m} ≃
       (PaperRegularLabel μ tubes n s m ⊕
@@ -111,7 +101,7 @@ noncomputable def paper46RemainingSourceEquiv
     New source labels: selected extended ⊕ (regular ⊕ exceptional). -/
 noncomputable def paper46SourceEquiv
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
     ({r : T // r ∈ s.B m} ⊕ {p : K // p ∈ s.P m}) ≃
     ({r : PaperExtendedLabel μ tubes n s m //
@@ -125,7 +115,7 @@ noncomputable def paper46SourceEquiv
     factor is the NONINTERSECTING Theorem 4.6 `hallEquiv`. -/
 noncomputable def paper46AnalyticEquiv
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m) :
     ({r : T // r ∈ s.B m} ⊕ {p : K // p ∈ s.P m}) ≃
@@ -138,7 +128,7 @@ noncomputable def paper46AnalyticEquiv
     they are not interpreted as original tube geometries. -/
 noncomputable def paper46AnalyticPiece
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m)
     (r : PaperExtendedLabel μ tubes n s m) : Set X :=
@@ -148,7 +138,7 @@ noncomputable def paper46AnalyticPiece
 
 theorem paper46AnalyticPiece_at_equiv
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m)
     (p : {r : T // r ∈ s.B m} ⊕ {k : K // k ∈ s.P m}) :
@@ -162,7 +152,7 @@ theorem paper46AnalyticPiece_at_equiv
     No auxiliary tube enters any incidence count or physical tube measure. -/
 theorem paper46_analytic_mass_sum
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m) :
     (∑ r ∈ paper46LabelSet μ tubes n s m a,
@@ -187,7 +177,7 @@ theorem paper46_analytic_mass_sum
 /-- The new extended label set counts EXACTLY the same retained pieces. -/
 theorem paper46_analytic_card
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m) :
     (paper46LabelSet μ tubes n s m a).card =
@@ -200,7 +190,7 @@ theorem paper46_analytic_card
     by the inverse equivalence. -/
 theorem paper46_analytic_piece_volume
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m)
     (r : PaperExtendedLabel μ tubes n s m)
@@ -216,7 +206,7 @@ theorem paper46_analytic_piece_volume
 theorem paper46_analytic_capture
     (μ : Measure X) [IsFiniteMeasure μ] (tubes : T → Set X)
     (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (c : SourceGreedyAtLevels μ tubes n s)
     (hT : ∀ i, MeasurableSet (tubes i))
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
@@ -244,7 +234,7 @@ theorem paper46_analytic_capture
     |P| <= |B| premise. -/
 theorem paper46_analytic_count_with_exceptional
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (a : Paper46ConstructionData μ tubes n s m)
     (hFiberLower : ∀ r : {r : T //
@@ -278,7 +268,7 @@ theorem paper46_analytic_count_with_exceptional
     not prove it. There is no additional row/parent uniqueness hypothesis. -/
 structure Paper46LargeLevelInputs
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n) where
+    (s : RetainedDyadicData (K := K) μ tubes n) where
   construction : ∀ (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)),
     8 ≤ Kakeya.Eighty4.dyadicScale (Fintype.card T) m →
       Paper46ConstructionData μ tubes n s m
@@ -296,14 +286,14 @@ structure Paper46LargeLevelInputs
     estimates. The dyadic level type is finite. -/
 noncomputable def paper46ExceptionalOverhead
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n) : ℝ :=
+    (s : RetainedDyadicData (K := K) μ tubes n) : ℝ :=
   ∑ m : Kakeya.Eighty4.DyadicIndex (Fintype.card T),
     Kakeya.Eighty4.dyadicScale (Fintype.card T) m *
       ((paperExceptionalPieces μ tubes n s m).card : ℝ)
 
 theorem paper46ExceptionalOverhead_nonneg
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n) :
+    (s : RetainedDyadicData (K := K) μ tubes n) :
     0 ≤ paper46ExceptionalOverhead μ tubes n s := by
   classical
   unfold paper46ExceptionalOverhead
@@ -314,7 +304,7 @@ theorem paper46ExceptionalOverhead_nonneg
 
 theorem paper46_exceptional_term_le_overhead
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
     Kakeya.Eighty4.dyadicScale (Fintype.card T) m *
       ((paperExceptionalPieces μ tubes n s m).card : ℝ) ≤
@@ -332,66 +322,58 @@ theorem paper46_exceptional_term_le_overhead
         (Nat.cast_nonneg _))
     (Finset.mem_univ m)
 
-/-- On SMALL levels q<8, Theorem 4.6 is not applicable. The old Theorem 4.2
-    equivalence implies only a cardinality estimate: there can be at most N
-    source pieces. The ANALYTIC mass family itself is never replaced. -/
-theorem paper46_small_source_card
+/-- Source cardinality budget at levels where Theorem 4.6 applies. -/
+theorem paper46_large_level_source_count
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
-    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
-    (s.B m).card + (s.P m).card ≤ Fintype.card T := by
-  classical
-  rw [← hall_reindexed_card μ tubes n s m]
-  have h := Finset.card_le_card
-    (Finset.subset_univ (hallReindexing μ tubes n s m).val)
-  simpa using h
-
-/-- Uniform all-level combinatorial budget with a visible exceptional
-    correction. Only hFiberLower is a NEW incidence/counting input. -/
-theorem paper46_all_level_source_count
-    (μ : Measure X) (tubes : T → Set X) (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (a : Paper46LargeLevelInputs μ tubes n s)
-    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (hlarge : 8 ≤ Kakeya.Eighty4.dyadicScale (Fintype.card T) m) :
     Kakeya.Eighty4.dyadicScale (Fintype.card T) m *
       (((s.B m).card : ℝ) + ((s.P m).card : ℝ)) ≤
-        8 * (Fintype.card T : ℝ) +
-          paper46ExceptionalOverhead μ tubes n s := by
+        8 * (Fintype.card T : ℝ) + paper46ExceptionalOverhead μ tubes n s := by
   classical
-  let q : ℝ := Kakeya.Eighty4.dyadicScale (Fintype.card T) m
   have hE := paper46_exceptional_term_le_overhead μ tubes n s m
-  by_cases hlarge : 8 ≤ q
-  · have hCount := paper46_analytic_count_with_exceptional μ tubes n s m
-      (a.construction m hlarge) (a.hFiberLower m hlarge)
-    have hCard := paper46_analytic_card μ tubes n s m
-      (a.construction m hlarge)
-    have hCardR : ((paper46LabelSet μ tubes n s m
-        (a.construction m hlarge)).card : ℝ) =
-        ((s.B m).card : ℝ) + ((s.P m).card : ℝ) := by
-      exact_mod_cast hCard
-    rw [hCardR] at hCount
-    change q * (((s.B m).card : ℝ) + ((s.P m).card : ℝ)) ≤
-      8 * (Fintype.card T : ℝ) + paper46ExceptionalOverhead μ tubes n s
-    have hN : 0 ≤ (Fintype.card T : ℝ) := Nat.cast_nonneg _
-    linarith
-  · have hq : q < 8 := by linarith
-    have hcard := paper46_small_source_card μ tubes n s m
-    have hcardR : ((s.B m).card : ℝ) + ((s.P m).card : ℝ) ≤
-        (Fintype.card T : ℝ) := by
-      exact_mod_cast hcard
-    have hpos : 0 ≤ ((s.B m).card : ℝ) + ((s.P m).card : ℝ) := by
-      positivity
-    have hqBound : q * (((s.B m).card : ℝ) + ((s.P m).card : ℝ)) ≤
-        8 * (Fintype.card T : ℝ) := by
-      calc
-        _ ≤ 8 * (((s.B m).card : ℝ) + ((s.P m).card : ℝ)) :=
-          mul_le_mul_of_nonneg_right hq.le hpos
-        _ ≤ 8 * (Fintype.card T : ℝ) :=
-          mul_le_mul_of_nonneg_left hcardR (by norm_num)
-    have hENonneg := paper46ExceptionalOverhead_nonneg μ tubes n s
-    change q * (((s.B m).card : ℝ) + ((s.P m).card : ℝ)) ≤
-      8 * (Fintype.card T : ℝ) + paper46ExceptionalOverhead μ tubes n s
-    linarith
+  have hCount := paper46_analytic_count_with_exceptional μ tubes n s m
+    (a.construction m hlarge) (a.hFiberLower m hlarge)
+  have hCardR : ((paper46LabelSet μ tubes n s m
+      (a.construction m hlarge)).card : ℝ) =
+      ((s.B m).card : ℝ) + ((s.P m).card : ℝ) := by
+    exact_mod_cast paper46_analytic_card μ tubes n s m (a.construction m hlarge)
+  rw [hCardR] at hCount
+  have hN : 0 ≤ (Fintype.card T : ℝ) := Nat.cast_nonneg _
+  linarith
+
+/-- Direct finite-measure bound for small dyadic levels. -/
+theorem paper46_small_level_budget
+    (μ : Measure X) [IsFiniteMeasure μ] (tubes : T → Set X)
+    (alpha : ℝ) (ha : 0 ≤ alpha)
+    (hT : ∀ i, MeasurableSet (tubes i))
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (hsmall : Kakeya.Eighty4.dyadicScale (Fintype.card T) m < 8) :
+    (Kakeya.Eighty4.dyadicScale (Fintype.card T) m) ^ (1 + alpha) *
+      Kakeya.Conditional.mass μ (Kakeya.Eighty4.concreteDyadicBand tubes m) ≤
+        (8 : ℝ) ^ (1 + alpha) * Kakeya.Conditional.mass μ Set.univ := by
+  classical
+  have hmass : Kakeya.Conditional.mass μ
+      (Kakeya.Eighty4.concreteDyadicBand tubes m) ≤
+        Kakeya.Conditional.mass μ Set.univ := by
+    unfold Kakeya.Conditional.mass
+    apply integral_mono_ae
+      (Kakeya.Conditional.chi_integrable μ _
+        (Kakeya.Eighty4.concreteDyadicBand_measurable tubes hT m))
+      (Kakeya.Conditional.chi_integrable μ Set.univ MeasurableSet.univ)
+    apply Filter.Eventually.of_forall
+    intro x
+    by_cases hx : x ∈ Kakeya.Eighty4.concreteDyadicBand tubes m <;>
+      simp [Kakeya.Conditional.chi, hx]
+  have hpow := Real.rpow_le_rpow
+    (Kakeya.Eighty4.dyadicScale_pos (Fintype.card T) m).le hsmall.le
+    (show 0 ≤ 1 + alpha by linarith)
+  have hnonneg : 0 ≤ Kakeya.Conditional.mass μ
+      (Kakeya.Eighty4.concreteDyadicBand tubes m) :=
+    integral_nonneg (fun x => Kakeya.Conditional.chi_nonneg _ x)
+  exact mul_le_mul hpow hmass hnonneg (Real.rpow_nonneg (by norm_num) _)
 
 /-- Greedy capture for all levels, on precisely the ORIGINAL retained
     sets. At large levels its sum is *equal* to the Theorem 4.6 relabeled
@@ -399,7 +381,7 @@ theorem paper46_all_level_source_count
 theorem paper46_source_capture
     (μ : Measure X) [IsFiniteMeasure μ] (tubes : T → Set X)
     (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (c : SourceGreedyAtLevels μ tubes n s)
     (hT : ∀ i, MeasurableSet (tubes i))
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
@@ -419,17 +401,18 @@ theorem paper46_source_capture
   simpa using h
 
 /-- The dyadic analytic level budget is now connected to the Theorem 4.6
-    count at large levels, and to the valid small-level count otherwise.
+    count at large levels.
     The exceptional correction is explicit; no row uniqueness or extra
     incidence hypothesis is silently used. -/
 theorem paper46_analytic_level_budget
     (μ : Measure X) [IsFiniteMeasure μ] (tubes : T → Set X)
     (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (c : SourceGreedyAtLevels μ tubes n s)
     (a : Paper46LargeLevelInputs μ tubes n s)
     (hT : ∀ i, MeasurableSet (tubes i))
-    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (hlarge : 8 ≤ Kakeya.Eighty4.dyadicScale (Fintype.card T) m) :
     Kakeya.Eighty4.dyadicScale (Fintype.card T) m *
       Kakeya.Conditional.mass μ (Kakeya.Eighty4.concreteDyadicBand tubes m) ≤
       (1 / (1 - Real.exp (-1))) * s.C *
@@ -450,7 +433,7 @@ theorem paper46_analytic_level_budget
       ((Finset.univ : Finset
         ({r : T // r ∈ s.B m} ⊕ {p : K // p ∈ s.P m})).card : ℝ) ≤
         (1 : ℝ) * U := by
-    have hc := paper46_all_level_source_count μ tubes n s a m
+    have hc := paper46_large_level_source_count μ tubes n s a m hlarge
     simpa [q, U, E, Fintype.card_sum] using hc
   have hVolume : ∀ p ∈ (Finset.univ : Finset
       ({r : T // r ∈ s.B m} ⊕ {p : K // p ∈ s.P m})),
@@ -460,13 +443,11 @@ theorem paper46_analytic_level_budget
   have hCapture : Kakeya.Conditional.mass μ
       (Kakeya.Eighty4.concreteDyadicBand tubes m) ≤
       H * ∑ p, Kakeya.Conditional.mass μ (s.sourcePiece m p) := by
-    by_cases hlarge : 8 ≤ q
-    · have h := paper46_analytic_capture μ tubes n s c hT m
-        (a.construction m hlarge)
-      rw [paper46_analytic_mass_sum μ tubes n s m
-        (a.construction m hlarge)] at h
-      exact h
-    · exact paper46_source_capture μ tubes n s c hT m
+    have h := paper46_analytic_capture μ tubes n s c hT m
+      (a.construction m hlarge)
+    rw [paper46_analytic_mass_sum μ tubes n s m
+      (a.construction m hlarge)] at h
+    exact h
   have hBudget := localized_level_bound
     (Finset.univ : Finset
       ({r : T // r ∈ s.B m} ⊕ {p : K // p ∈ s.P m}))
@@ -495,14 +476,15 @@ theorem paper46_analytic_level_budget
 
 /-- Uniform bound compatible with the repository's logarithmic dyadic
     summation theorem. -/
-theorem paper46_analytic_uniform_level_budget
+theorem paper46_large_uniform_level_budget
     (μ : Measure X) [IsFiniteMeasure μ] (tubes : T → Set X)
     (n : ℕ)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (c : SourceGreedyAtLevels μ tubes n s)
     (a : Paper46LargeLevelInputs μ tubes n s)
     (hT : ∀ i, MeasurableSet (tubes i))
-    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (hlarge : 8 ≤ Kakeya.Eighty4.dyadicScale (Fintype.card T) m) :
     (Kakeya.Eighty4.dyadicScale (Fintype.card T) m) ^
       (1 + (1 : ℝ) / ((n : ℝ) - 1)) *
       Kakeya.Conditional.mass μ (Kakeya.Eighty4.concreteDyadicBand tubes m) ≤
@@ -529,7 +511,7 @@ theorem paper46_analytic_uniform_level_budget
     apply mul_nonneg (mul_nonneg hH s.hC)
     exact add_nonneg (mul_nonneg (by norm_num) hZ)
       (mul_nonneg hE s.hDeltaPow)
-  have hLevel := paper46_analytic_level_budget μ tubes n s c a hT m
+  have hLevel := paper46_analytic_level_budget μ tubes n s c a hT m hlarge
   have hScaled := mul_le_mul_of_nonneg_left hLevel hqa
   have hCap := mul_le_mul_of_nonneg_left (s.hRadiusScale m) hW
   change q ^ (1 + alpha) *
@@ -546,61 +528,100 @@ theorem paper46_analytic_uniform_level_budget
     _ = W * (q ^ alpha * s.radius m) := by ring
     _ ≤ W * s.radiusCap := hCap
 
-/-- Fully connected ANALYTIC endpoint through the Theorem 4.6 extended
-    reindexing at q>=8. The exceptional geometric cost remains displayed,
-    rather than being replaced by a false 4N count. No hypothesis beyond
-    the regular original-tube lower fibers has been added to the counting
-    argument. -/
+/-- Combined coefficient for the large-level estimate and finite small-level mass. -/
+noncomputable def paper46EndpointBudget
+    (μ : Measure X) [IsFiniteMeasure μ] (tubes : T → Set X) (n : ℕ)
+    (s : RetainedDyadicData (K := K) μ tubes n) : ℝ :=
+  (1 / (1 - Real.exp (-1))) * s.C *
+    (8 * s.Z + paper46ExceptionalOverhead μ tubes n s * s.deltaPow) * s.radiusCap +
+    (8 : ℝ) ^ (1 + (1 : ℝ) / ((n : ℝ) - 1)) *
+      Kakeya.Conditional.mass μ Set.univ
+
+/-- Uniform dyadic budget obtained by splitting at q = 8. -/
+theorem paper46_analytic_uniform_level_budget
+    (μ : Measure X) [IsFiniteMeasure μ] (tubes : T → Set X)
+    (n : ℕ) (hn : 2 ≤ n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
+    (c : SourceGreedyAtLevels μ tubes n s)
+    (a : Paper46LargeLevelInputs μ tubes n s)
+    (hT : ∀ i, MeasurableSet (tubes i))
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
+    (Kakeya.Eighty4.dyadicScale (Fintype.card T) m) ^
+      (1 + (1 : ℝ) / ((n : ℝ) - 1)) *
+      Kakeya.Conditional.mass μ (Kakeya.Eighty4.concreteDyadicBand tubes m) ≤
+        paper46EndpointBudget μ tubes n s := by
+  have hmass : 0 ≤ Kakeya.Conditional.mass μ (Set.univ : Set X) :=
+    integral_nonneg (fun x => Kakeya.Conditional.chi_nonneg _ x)
+  have hsmallNonneg : 0 ≤ (8 : ℝ) ^ (1 + (1 : ℝ) / ((n : ℝ) - 1)) *
+      Kakeya.Conditional.mass μ (Set.univ : Set X) :=
+    mul_nonneg (Real.rpow_nonneg (by norm_num) _) hmass
+  have hZ : 0 ≤ s.Z :=
+    (mul_nonneg (Nat.cast_nonneg _) s.hDeltaPow).trans s.hNormalization
+  have hE := paper46ExceptionalOverhead_nonneg μ tubes n s
+  have hH : 0 ≤ (1 : ℝ) / (1 - Real.exp (-1)) := by
+    have he : Real.exp (-1) < 1 := Real.exp_lt_one_iff.mpr (by norm_num)
+    exact div_nonneg (by norm_num) (sub_nonneg.mpr he.le)
+  have hCap : 0 ≤ s.radiusCap := by
+    exact (mul_nonneg (Real.rpow_nonneg
+      (Kakeya.Eighty4.dyadicScale_pos _ m).le _) (s.hRadiusNonneg m)).trans
+        (s.hRadiusScale m)
+  have hlargeNonneg : 0 ≤ (1 / (1 - Real.exp (-1))) * s.C *
+      (8 * s.Z + paper46ExceptionalOverhead μ tubes n s * s.deltaPow) *
+        s.radiusCap :=
+    mul_nonneg (mul_nonneg (mul_nonneg hH s.hC)
+      (add_nonneg (mul_nonneg (by norm_num) hZ)
+        (mul_nonneg hE s.hDeltaPow))) hCap
+  unfold paper46EndpointBudget
+  by_cases hlarge : 8 ≤ Kakeya.Eighty4.dyadicScale (Fintype.card T) m
+  · exact (paper46_large_uniform_level_budget μ tubes n s c a hT m hlarge).trans
+      (le_add_of_nonneg_right hsmallNonneg)
+  · have hnR : (2 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
+    have ha : 0 ≤ (1 : ℝ) / ((n : ℝ) - 1) := by
+      apply div_nonneg (by norm_num)
+      linarith
+    exact (paper46_small_level_budget μ tubes ((1 : ℝ) / ((n : ℝ) - 1))
+      ha hT m (lt_of_not_ge hlarge)).trans (le_add_of_nonneg_left hlargeNonneg)
+
+/-- Moment estimate from the large-level construction and the small-level bound. -/
 theorem full_conditional_kakeya_moment_of_paper46
     (μ : Measure X) [IsFiniteMeasure μ] (tubes : T → Set X)
     (n : ℕ) (hn : 2 ≤ n)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (c : SourceGreedyAtLevels μ tubes n s)
     (a : Paper46LargeLevelInputs μ tubes n s)
     (hT : ∀ i, MeasurableSet (tubes i)) :
     (∫ x, Kakeya.Eighty4.tubeMultiplicity tubes x ^
       ((n : ℝ) / ((n : ℝ) - 1)) ∂μ) ≤
       (2 : ℝ) ^ ((n : ℝ) / ((n : ℝ) - 1)) *
-        ((1 / (1 - Real.exp (-1))) * s.C *
-          (8 * s.Z + paper46ExceptionalOverhead μ tubes n s * s.deltaPow) *
-            s.radiusCap) *
+        paper46EndpointBudget μ tubes n s *
           ((Nat.log 2 (Fintype.card T) + 1 : ℕ) : ℝ) := by
   classical
   have hnR : (2 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
   have ha : 0 ≤ (1 : ℝ) / ((n : ℝ) - 1) := by
-    apply div_nonneg
-    · norm_num
-    · linarith
+    apply div_nonneg (by norm_num)
+    linarith
   have h := Kakeya.Eighty9.logarithmic_moment_from_level_budgets μ tubes
-    ((1 : ℝ) / ((n : ℝ) - 1))
-    ((1 / (1 - Real.exp (-1))) * s.C *
-      (8 * s.Z + paper46ExceptionalOverhead μ tubes n s * s.deltaPow) *
-        s.radiusCap)
-    ha hT (paper46_analytic_uniform_level_budget μ tubes n s c a hT)
+    ((1 : ℝ) / ((n : ℝ) - 1)) (paper46EndpointBudget μ tubes n s)
+    ha hT (paper46_analytic_uniform_level_budget μ tubes n hn s c a hT)
   rw [(Kakeya.Conditional.dimension_exponents n hn).1] at h
   exact h
 
-/-- Norm-form companion of the moment endpoint, with the same exact
-    exceptional correction. -/
+/-- Norm estimate with the combined large-level and small-level coefficient. -/
 theorem full_conditional_kakeya_of_paper46
     (μ : Measure X) [IsFiniteMeasure μ] (tubes : T → Set X)
     (n : ℕ) (hn : 2 ≤ n)
-    (s : TrimmedHallDyadicData (K := K) μ tubes n)
+    (s : RetainedDyadicData (K := K) μ tubes n)
     (c : SourceGreedyAtLevels μ tubes n s)
     (a : Paper46LargeLevelInputs μ tubes n s)
     (hT : ∀ i, MeasurableSet (tubes i)) :
     (∫ x, Kakeya.Eighty4.tubeMultiplicity tubes x ^
         ((n : ℝ) / ((n : ℝ) - 1)) ∂μ) ^ (((n : ℝ) - 1) / (n : ℝ)) ≤
       ((2 : ℝ) ^ ((n : ℝ) / ((n : ℝ) - 1)) *
-        ((1 / (1 - Real.exp (-1))) * s.C *
-          (8 * s.Z + paper46ExceptionalOverhead μ tubes n s * s.deltaPow) *
-            s.radiusCap) *
+        paper46EndpointBudget μ tubes n s *
           ((Nat.log 2 (Fintype.card T) + 1 : ℕ) : ℝ)) ^
             (((n : ℝ) - 1) / (n : ℝ)) := by
   exact Kakeya.Eighty9.logarithmic_norm_from_level_budgets μ tubes n hn
-    ((1 / (1 - Real.exp (-1))) * s.C *
-      (8 * s.Z + paper46ExceptionalOverhead μ tubes n s * s.deltaPow) *
-        s.radiusCap) hT
-    (paper46_analytic_uniform_level_budget μ tubes n s c a hT)
+    (paper46EndpointBudget μ tubes n s) hT
+    (paper46_analytic_uniform_level_budget μ tubes n hn s c a hT)
 
 end Kakeya.Ninety21
