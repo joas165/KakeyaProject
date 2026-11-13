@@ -1,5 +1,7 @@
 module
 import Kakeya
+import Kakeya.Ninety21ConcreteTubeBallBridge
+import Kakeya.Ninety21ConcreteGeometryReductions
 
 /-!
 # Axiom audit
@@ -182,7 +184,7 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.paper_regular_count_of_fibers
 #print axioms Kakeya.Ninety21.paper_hall_count_with_exceptional_remainder
 
--- Theorem 4.6's actual nonintersecting original/auxiliary bijection.
+-- Theorem 4.6 nonintersecting matching and extended equivalence.
 #print axioms Kakeya.Ninety21.exists_paper46_hall_equiv
 #print axioms Kakeya.Ninety21.hallEquiv
 #print axioms Kakeya.Ninety21.hallEquiv_selected_fixed
@@ -192,10 +194,9 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.paper46RegularIndex_injective
 #print axioms Kakeya.Ninety21.paper46_regular_count_of_fibers
 
--- End-to-end Theorem 4.6 label and analytic integration.
--- Regular fibers involve ORIGINAL tubes only; exceptional contribution stays explicit.
-#print axioms Kakeya.Ninety21.paper46SelectedSourceEquiv
-#print axioms Kakeya.Ninety21.paper46RemainingSourceEquiv
+-- Theorem 4.6 relabeling and analytic estimates.
+#print axioms Kakeya.Ninety21.paper46SelectedRetainedEquiv
+#print axioms Kakeya.Ninety21.paper46RemainingRetainedEquiv
 #print axioms Kakeya.Ninety21.paper46AnalyticEquiv
 #print axioms Kakeya.Ninety21.paper46AnalyticPiece_at_equiv
 #print axioms Kakeya.Ninety21.paper46_analytic_mass_sum
@@ -205,8 +206,8 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.paper46_analytic_count_with_exceptional
 #print axioms Kakeya.Ninety21.Paper46LargeLevelInputs
 #print axioms Kakeya.Ninety21.paper46ExceptionalOverhead
-#print axioms Kakeya.Ninety21.paper46_large_level_source_count
-#print axioms Kakeya.Ninety21.paper46_source_capture
+#print axioms Kakeya.Ninety21.paper46_large_level_retained_count
+#print axioms Kakeya.Ninety21.paper46_retained_capture
 #print axioms Kakeya.Ninety21.paper46_analytic_level_budget
 #print axioms Kakeya.Ninety21.paper46_analytic_uniform_level_budget
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_moment_of_paper46
@@ -217,3 +218,48 @@ the audited declarations and print their axiom dependencies.
 
 #print axioms Kakeya.Ninety21.paper_regular_budget_of_tube_ball_count
 #print axioms Kakeya.Ninety21.paper_exceptional_scaled_budget
+
+#print axioms Kakeya.Ninety21.paper46Construction_of_tube_ball_count
+#print axioms Kakeya.Ninety21.paper46Construction_of_dyadic_tube_ball_count
+#print axioms Kakeya.Ninety21.paper46LargeLevelInputs_of_tube_ball_count
+
+#print axioms Kakeya.Ninety21.tube_ball_scale_of_sq_le
+#print axioms Kakeya.Ninety21.paper_regular_budget_of_sq_le
+
+#print axioms Kakeya.Ninety21.TubeBallPairIndexing.pair_injective
+#print axioms Kakeya.Ninety21.paper_regular_budget_of_pair_indexing
+#print axioms Kakeya.Ninety21.paper46Construction_of_pair_indexing
+#print axioms Kakeya.Ninety21.paper46LargeLevelInputs_of_pair_indexing
+
+#print axioms Kakeya.Ninety21.paper46Cutoff
+#print axioms Kakeya.Ninety21.paper46Construction_of_pair_indexing_at_cutoff
+
+
+
+-- Concrete tube-ball geometry and greedy transport.
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_subset_tube
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_subset_gain
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_subset_level
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_subset_ball
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.gain_disjoint
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_measurable
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.toBallLocalized
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.pairIndexing
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.paper46Construction
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedyQ_measurable
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedyQ_subset_level
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGreedy.toRetainedGreedy
+
+-- Geometry, Vitali selection and greedy numerical reductions.
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedy_card_budget
+#print axioms Kakeya.Ninety21.canonical_retained_radius_scale
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_volume_le_orthogonal_product
+#print axioms Kakeya.Ninety21.exists_concrete_vitali_localized_cover
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedy_recurrence_of_average
+
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_volume_le_explicit
+#print axioms Kakeya.Ninety21.concrete_greedyUnion_succ
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedyQ_subset_residual
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedy_residual_conservation
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.cover_of_vitali_labels
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGreedy.ofAverage

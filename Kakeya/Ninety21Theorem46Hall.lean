@@ -3,23 +3,12 @@ public import Kakeya.Ninety21PaperDoubleCount
 public import Kakeya.Ninety64TrimmedBijection
 
 /-!
-# Theorem 4.6 Hall equivalence on the actual regular/exceptional pieces
+# Theorem 4.6 Hall equivalence
 
-This replaces the meaning of `Ninety21.hallEquiv` with the paper's
-NONINTERSECTING matching of regular pieces and a distinct AUXILIARY label for
-EACH exceptional piece. The previously used intersection-compatible
-Theorem 4.2 equivalence is retained under the explicit legacy name
-`hallEquiv42` in `Ninety21ConcreteIntegration`.
-
-The label type is `T ⊕ Exceptional`, never `T` alone. `T` is always the
-original N-tube index type. The auxiliary labels here are FORMAL labels;
-physical outside-B(0,2) tubes are not constructed in this general Set X API.
-
-The paper's Theorem 4.6 requires the regular-piece budget 4*|P_reg| <= N
-and the large-level condition q>=8. Those are proof obligations for applying
-this constructor to a concrete dyadic level, NOT conclusions of the Hall
-bijection and NOT new fiber or row-uniqueness axioms. The sole *later*
-incidence assumption is hFiberLower for the ORIGINAL T-indices and P_reg.
+The matching fixes selected tube labels, assigns distinct nonintersecting
+original tubes to regular retained pieces, and assigns formal auxiliary
+labels to exceptional retained pieces. The regular-piece budget and
+dyadic lower threshold are supplied by the geometric counting interface.
 -/
 
 @[expose] public section
@@ -30,22 +19,21 @@ attribute [local instance] Classical.propDecidable
 
 variable {X T K : Type*} [MeasurableSpace X] [Fintype T]
 
-/-- The genuine regular pieces, carrying their proofs of membership in the
-    geometric d(P) <= N/2 class. -/
+/-- Regular pieces with tube-intersection degree at most N/2. -/
 abbrev PaperRegularLabel
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
     (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :=
   {p : {k : K // k ∈ s.P m} // p ∈ paperRegularPieces μ tubes n s m}
 
-/-- The genuine exceptional pieces, carrying d(P) > N/2. -/
+/-- Exceptional pieces with tube-intersection degree greater than N/2. -/
 abbrev PaperExceptionalLabel
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
     (s : RetainedDyadicData (K := K) μ tubes n)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :=
   {p : {k : K // k ∈ s.P m} // p ∈ paperExceptionalPieces μ tubes n s m}
 
-/-- Original tube indices plus one label for each ACTUAL exceptional piece. -/
+/-- Original tube indices and exceptional-piece labels. -/
 abbrev PaperExtendedLabel
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
     (s : RetainedDyadicData (K := K) μ tubes n)
@@ -61,9 +49,7 @@ noncomputable def paperSelectedExtended
   classical
   exact (s.B m).image Sum.inl
 
-/-- The real hypotheses of the paper's Theorem 4.6 construction at this
-    dyadic level. In particular `hRegularBudget` is the paper's geometric
-    estimate and must be PROVED upstream; it is not derived from Hall. -/
+/-- Scale and regular-piece cardinality bounds for the Theorem 4.6 construction. -/
 structure Paper46ConstructionData
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
     (s : RetainedDyadicData (K := K) μ tubes n)
@@ -73,10 +59,8 @@ structure Paper46ConstructionData
   hScale : (q : ℝ) = Kakeya.Eighty4.dyadicScale (Fintype.card T) m
   hRegularBudget : 4 * (paperRegularPieces μ tubes n s m).card ≤ Fintype.card T
 
-/-- Reconstruct precisely the Theorem 4.6 injection and extend it using
-    `Ninety21.extend_matching_to_bijection`. Unlike Theorem 4.2 it fixes B,
-    maps regular pieces to NONINTERSECTING ORIGINAL tubes outside B, and
-    maps each exceptional piece to its own AUXILIARY label. -/
+/-- Extend the regular nonintersecting matching and exceptional labels to an equivalence fixing
+    selected indices. -/
 theorem exists_paper46_hall_equiv
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
     (s : RetainedDyadicData (K := K) μ tubes n)
@@ -94,7 +78,7 @@ theorem exists_paper46_hall_equiv
         ∃ r : T,
           (e (Sum.inr (Sum.inl p))).val = Sum.inl r ∧
           r ∉ s.B m ∧
-          ¬(s.sourcePiece m (Sum.inr p.val) ∩ tubes r).Nonempty) ∧
+          ¬(s.retainedPiece m (Sum.inr p.val) ∩ tubes r).Nonempty) ∧
       (∀ p : PaperExceptionalLabel μ tubes n s m,
         (e (Sum.inr (Sum.inr p))).val = Sum.inr p) ∧
       D.card = (paperSelectedExtended μ tubes n s m).card +
@@ -104,7 +88,7 @@ theorem exists_paper46_hall_equiv
   let Reg := PaperRegularLabel μ tubes n s m
   let Exc := PaperExceptionalLabel μ tubes n s m
   let hit : Reg → T → Prop := fun p r =>
-    (s.sourcePiece m (Sum.inr p.val) ∩ tubes r).Nonempty
+    (s.retainedPiece m (Sum.inr p.val) ∩ tubes r).Nonempty
   have hGreedy : a.q * (s.B m).card ≤ 2 * Fintype.card T := by
     have h := s.hGreedy m
     rw [← a.hScale] at h
@@ -118,8 +102,6 @@ theorem exists_paper46_hall_equiv
       Fintype.card T at hp
     exact hp
   have hOrdinary : 4 * Fintype.card Reg ≤ Fintype.card T := by
-    -- `Reg` is the subtype of the *actual* finite set of regular pieces.
-    -- Reduce the alias before rewriting its Fintype cardinality.
     change 4 * Fintype.card (↥(paperRegularPieces μ tubes n s m)) ≤
       Fintype.card T
     simpa only [Fintype.card_coe] using a.hRegularBudget
@@ -134,8 +116,6 @@ theorem exists_paper46_hall_equiv
     | inl p =>
       cases v with
       | inl p' =>
-        -- Reduce the local matching map before using constructor injectivity.
-        -- The explicit codomain avoids an unsolved implicit right-summand type.
         change (Sum.inl (σ₀ p) : T ⊕ Exc) = Sum.inl (σ₀ p') at huv
         have hp : σ₀ p = σ₀ p' := Sum.inl.inj huv
         exact congrArg (fun x : Reg => (Sum.inl x : Reg ⊕ Exc)) (hσ₀ hp)
@@ -181,9 +161,7 @@ theorem exists_paper46_hall_equiv
   · intro p
     simpa [σ] using hassign (Sum.inr p)
 
-/-- The NEW `hallEquiv` is the exact Theorem 4.6 bijection. Its codomain
-    contains auxiliary labels, hence it intentionally does NOT have type
-    `... ≃ {r : T // r ∈ D}`. -/
+/-- The extended label set of the Theorem 4.6 equivalence. -/
 noncomputable def paper46LabelSet
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
     (s : RetainedDyadicData (K := K) μ tubes n)
@@ -240,16 +218,14 @@ theorem hallEquiv_regular_nonintersecting
     ∃ r : T,
       (hallEquiv μ tubes n s m a (Sum.inr (Sum.inl p))).val = Sum.inl r ∧
       r ∉ s.B m ∧
-      ¬(s.sourcePiece m (Sum.inr p.val) ∩ tubes r).Nonempty := by
+      ¬(s.retainedPiece m (Sum.inr p.val) ∩ tubes r).Nonempty := by
   exact (Classical.choose_spec (Classical.choose_spec
     (exists_paper46_hall_equiv μ tubes n s m a))).2.2.1 p
 
 
-/-! ## The regular σ-image from THIS Theorem 4.6 equivalence -/
+/-! ## Regular representative indices -/
 
-/-- Project a Theorem 4.6 regular-piece label to its ORIGINAL tube index.
-    This definition is justified by `hallEquiv_regular_nonintersecting`, not
-    by the old intersection-compatible Hall image. -/
+/-- The original tube index assigned to a regular piece by Theorem 4.6. -/
 noncomputable def paper46RegularIndex
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
     (s : RetainedDyadicData (K := K) μ tubes n)
@@ -267,11 +243,11 @@ theorem paper46RegularIndex_spec
     (hallEquiv μ tubes n s m a (Sum.inr (Sum.inl p))).val =
       Sum.inl (paper46RegularIndex μ tubes n s m a p) ∧
     paper46RegularIndex μ tubes n s m a p ∉ s.B m ∧
-    ¬(s.sourcePiece m (Sum.inr p.val) ∩
+    ¬(s.retainedPiece m (Sum.inr p.val) ∩
       tubes (paper46RegularIndex μ tubes n s m a p)).Nonempty :=
   Classical.choose_spec (hallEquiv_regular_nonintersecting μ tubes n s m a p)
 
-/-- Distinct regular pieces get distinct ORIGINAL representative indices. -/
+/-- Distinct regular pieces have distinct representative indices. -/
 theorem paper46RegularIndex_injective
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
     (s : RetainedDyadicData (K := K) μ tubes n)
@@ -291,7 +267,7 @@ theorem paper46RegularIndex_injective
     Sum.inr.inj he'
   exact Sum.inl.inj hreg
 
-/-- The precise σ(P_m^reg) required by the later original-tube hFiberLower. -/
+/-- The image of the regular pieces under their representative assignment. -/
 noncomputable def paper46RegularIndices
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
     (s : RetainedDyadicData (K := K) μ tubes n)
@@ -300,8 +276,7 @@ noncomputable def paper46RegularIndices
   classical
   exact Finset.univ.image (paper46RegularIndex μ tubes n s m a)
 
-/-- The exact regular-index image, preserving the genuine regular source
-    labels under the *new* nonintersecting equivalence. -/
+/-- Equivalence between regular pieces and their representative indices. -/
 noncomputable def paper46RegularIndexEquiv
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
     (s : RetainedDyadicData (K := K) μ tubes n)
@@ -336,8 +311,8 @@ theorem paper46RegularIndices_card
   have h := Fintype.card_congr (paper46RegularIndexEquiv μ tubes n s m a)
   simpa only [Fintype.card_coe] using h.symm
 
-/-- A PARTIAL assignment of ORIGINAL tube indices to σ(P_reg), as required
-    by the paper. It never sees the auxiliary-label summand. -/
+/-- Assign an original tube to a representative of a regular piece it intersects, when one
+    exists. -/
 noncomputable def paper46OriginalTubeMapReg
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
     (s : RetainedDyadicData (K := K) μ tubes n)
@@ -347,12 +322,11 @@ noncomputable def paper46OriginalTubeMapReg
       r ∈ paper46RegularIndices μ tubes n s m a} := by
   classical
   exact if h : ∃ p : PaperRegularLabel μ tubes n s m,
-      (s.sourcePiece m (Sum.inr p.val) ∩ tubes t).Nonempty
+      (s.retainedPiece m (Sum.inr p.val) ∩ tubes t).Nonempty
     then some (paper46RegularIndexEquiv μ tubes n s m a (Classical.choose h))
     else none
 
-/-- The ONLY new incidence hypothesis remains lower fibers over ORIGINAL
-    tubes and ONLY the regular Theorem 4.6 σ-image. -/
+/-- Bound the regular-piece count using lower bounds on original-tube fibers. -/
 theorem paper46_regular_count_of_fibers
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
     (s : RetainedDyadicData (K := K) μ tubes n)
