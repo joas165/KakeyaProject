@@ -33,5 +33,10 @@ public import Kakeya.Ninety21Theorem46Hall
 public import Kakeya.Ninety21Theorem46Endpoint
 public import Kakeya.Ninety21ConcreteTubeBallBridge
 public import Kakeya.Ninety21ConcreteGeometryReductions
+public import Kakeya.Ninety21RetainedCoverage
+public import Kakeya.Ninety21VitaliIndexBudget
+public import Kakeya.Ninety21TwoRadiusEndpoint
+public import Kakeya.Ninety21OccupiedVitaliPieces
+public import Kakeya.Ninety21GreedyVitaliIntegration
 public import Kakeya.Ninety21ExceptionalBudget
 @[expose] public section

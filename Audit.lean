@@ -2,6 +2,11 @@ module
 import Kakeya
 import Kakeya.Ninety21ConcreteTubeBallBridge
 import Kakeya.Ninety21ConcreteGeometryReductions
+import Kakeya.Ninety21RetainedCoverage
+import Kakeya.Ninety21VitaliIndexBudget
+import Kakeya.Ninety21TwoRadiusEndpoint
+import Kakeya.Ninety21OccupiedVitaliPieces
+import Kakeya.Ninety21GreedyVitaliIntegration
 
 /-!
 # Axiom audit
@@ -263,3 +268,87 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedy_residual_conservation
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.cover_of_vitali_labels
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGreedy.ofAverage
+
+-- Two-radius Vitali coverage and volume estimates.
+#print axioms Kakeya.Ninety21.finite_double_union_measure_le
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.measure_le_tripleBall_sum
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.exists_twoRadius_vitali_mass_bound
+#print axioms Kakeya.Ninety21.unitTube_tripleBall_volume_le
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.volume_le_tripleBall_cost
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.exists_twoRadius_vitali_volume_bound
+
+-- Retained tube-ball labels and cover-index budgets.
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.coverIndices
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.selectedBall_mem_coverIndices
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.pairBall_mem_coverIndices
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.coverIndices_card_budget_nat
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.coverIndices_card_budget
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitaliPairs
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitaliPairs_parent
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitaliPairs_ball
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitaliPairs_contains
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withVitaliPairs
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitali_mem_coverIndices
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitali_cover_withPairs
+
+-- Two-radius analytic endpoint.
+#print axioms Kakeya.Ninety21.twoRadius_mass_le_double_sum
+#print axioms Kakeya.Ninety21.twoRadius_mass_capture_from_step
+#print axioms Kakeya.Ninety21.twoRadiusRadius
+#print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy
+#print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.mass_capture
+#print axioms Kakeya.Ninety21.paper46_twoRadius_analytic_level_budget
+#print axioms Kakeya.Ninety21.paper46_twoRadius_large_uniform_level_budget
+#print axioms Kakeya.Ninety21.paper46_twoRadius_analytic_uniform_level_budget
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_moment_of_paper46_twoRadius
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_of_paper46_twoRadius
+
+-- Occupied Vitali pieces, disjointness, and cover transfer.
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitaliIndices
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitali_nonempty
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedCandidates_cover
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitali_subset_occupied
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitaliLabels
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitaliLabel_nonempty
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitaliLabel_disjoint
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.activeVitaliTubes
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.activeVitaliTubes_card_le
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.firstOccupiedVitaliBall
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.firstOccupiedVitaliBall_mem
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitaliBase
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitaliPieces
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitaliPieces_greedyQ
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitali_gain_eq
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.gain_subset_parentTube
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.gain_subset_dyadicLevel
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_nonempty_of_gain_ball
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_eq_gain_ball_of_univ_trim
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitaliPieces_piece_eq
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitaliPieces_nonempty
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitali_pairBall_ne_selected
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitali_label_injective
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitali_label_mem
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitaliPieces_disjoint
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitali_mem_coverIndices
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitali_cover_transfer
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitali_index_budget
+#print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofOccupiedVitali
+
+-- Greedy Vitali selection and occupied-indexed radius-R balls.
+#print axioms Kakeya.Ninety21.exists_finite_occupied_radius_cover
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.exists_greedy_vitali_from_compact_gains
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.exists_greedy_occupied_vitali
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exists_selected
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_occupied
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_disjoint
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_triple_cover
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_triple_cover
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_piece_nonempty
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_ball_eq
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_incidence_eq
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_incidence_card_le_all
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_index_budget
+#print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofGreedyVitaliCandidates
