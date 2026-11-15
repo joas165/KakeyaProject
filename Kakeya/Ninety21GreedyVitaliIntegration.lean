@@ -2,6 +2,8 @@ module
 
 public import Kakeya.Ninety21OccupiedVitaliPieces
 public import Mathlib.Topology.MetricSpace.Cover
+public import Mathlib.Topology.MetricSpace.Bounded
+public import Mathlib.Data.Fintype.EquivFin
 
 /-!
 # Greedy Vitali selection and the two-radius retained family
@@ -434,5 +436,333 @@ noncomputable def ConcreteTwoRadiusGreedy.ofGreedyVitaliCandidates
       rw [hRadius m] at hCover
       simpa only [ConcreteGreedyVitaliCandidates.retained] using hCover)
     hTripleCost
+
+
+
+/-! ## Finite center indexing -/
+
+/-- Tube–center pairs, with each center taken from its parent tube's finite net. -/
+abbrev VitaliFiniteCenterPair {T X : Type*}
+    (B : Finset T) (C : T → Finset X) :=
+  Σ j : {j : T // j ∈ B}, {c : X // c ∈ C j.1}
+
+/-- Enumerate the finite tube–center pairs without identifying centers from
+    different parent tubes. -/
+noncomputable def vitaliFiniteCenterEquiv {T X : Type*}
+    (B : Finset T) (C : T → Finset X) :
+    Fin (Fintype.card (VitaliFiniteCenterPair B C)) ≃
+      VitaliFiniteCenterPair B C := by
+  classical
+  exact (Fintype.equivFin (VitaliFiniteCenterPair B C)).symm
+
+/-- The parent tube of an enumerated finite-center label. -/
+noncomputable def vitaliFiniteParent {T X : Type*}
+    (B : Finset T) (C : T → Finset X)
+    (i : Fin (Fintype.card (VitaliFiniteCenterPair B C))) : T :=
+  ((vitaliFiniteCenterEquiv B C) i).1.1
+
+/-- The center of an enumerated finite-center label. -/
+noncomputable def vitaliFiniteCenter {T X : Type*}
+    (B : Finset T) (C : T → Finset X)
+    (i : Fin (Fintype.card (VitaliFiniteCenterPair B C))) : X :=
+  ((vitaliFiniteCenterEquiv B C) i).2.1
+
+/-- The index set associated with one selected parent tube. -/
+noncomputable def vitaliFiniteCandidates {T X : Type*}
+    (B : Finset T) (C : T → Finset X) (j : T) :
+    Finset (Fin (Fintype.card (VitaliFiniteCenterPair B C))) := by
+  classical
+  exact Finset.univ.filter (fun i => vitaliFiniteParent B C i = j)
+
+/-- Every center in a selected tube's finite net has a unique global pair index. -/
+theorem vitaliFinite_index_exists {T X : Type*}
+    (B : Finset T) (C : T → Finset X)
+    (j : T) (hj : j ∈ B) (c : X) (hc : c ∈ C j) :
+    ∃ i : Fin (Fintype.card (VitaliFiniteCenterPair B C)),
+      i ∈ vitaliFiniteCandidates B C j ∧
+        vitaliFiniteCenter B C i = c := by
+  classical
+  let p : VitaliFiniteCenterPair B C := ⟨⟨j, hj⟩, ⟨c, hc⟩⟩
+  let i := (vitaliFiniteCenterEquiv B C).symm p
+  have he : (vitaliFiniteCenterEquiv B C) i = p :=
+    (vitaliFiniteCenterEquiv B C).apply_symm_apply p
+  have hp : vitaliFiniteParent B C i = j :=
+    congrArg (fun x : VitaliFiniteCenterPair B C => (x.1 : T)) he
+  have hc' : vitaliFiniteCenter B C i = c :=
+    congrArg (fun x : VitaliFiniteCenterPair B C => (x.2 : X)) he
+  refine ⟨i, ?_, hc'⟩
+  exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, hp⟩
+
+/-- Enumerating the center pairs preserves every radius-R candidate cover. -/
+theorem vitaliFinite_indexed_cover {T X : Type*} [MetricSpace X]
+    (B : Finset T) (C : T → Finset X) (Q : T → Set X) (R : ℝ)
+    (hCover : ∀ j ∈ B, Q j ⊆ ⋃ c ∈ C j, Metric.ball c R) :
+    ∀ j ∈ B,
+      Q j ⊆ ⋃ i ∈ vitaliFiniteCandidates B C j,
+        Metric.ball (vitaliFiniteCenter B C i) R := by
+  classical
+  intro j hj x hx
+  obtain ⟨c, hc⟩ := Set.mem_iUnion.mp (hCover j hj hx)
+  obtain ⟨hcC, hxBall⟩ := Set.mem_iUnion.mp hc
+  obtain ⟨i, hi, hci⟩ := vitaliFinite_index_exists B C j hj c hcC
+  exact Set.mem_iUnion.mpr ⟨i,
+    Set.mem_iUnion.mpr ⟨hi, by simpa only [hci] using hxBall⟩⟩
+
+/-- An indexed center belongs to the finite net of its parent tube. -/
+theorem vitaliFinite_center_mem {T X : Type*}
+    (B : Finset T) (C : T → Finset X)
+    (i : Fin (Fintype.card (VitaliFiniteCenterPair B C))) :
+    vitaliFiniteCenter B C i ∈ C (vitaliFiniteParent B C i) := by
+  exact ((vitaliFiniteCenterEquiv B C) i).2.2
+
+/-- Compactness of the closure of every actual greedy gain follows from
+    boundedness of its dyadic level in a proper metric space. -/
+theorem ConcreteTubeBallGeometry.gain_compact_closure_of_bounded_level
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X] [ProperSpace X]
+    [Fintype T] {tubes : T → Set X}
+    (g : ConcreteTubeBallGeometry tubes)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (hBound : Bornology.IsBounded
+      (Kakeya.Eighty4.concreteDyadicBand tubes m)) (j : T) :
+    IsCompact (closure (g.gain m j)) := by
+  exact (hBound.subset (g.gain_subset_dyadicLevel m j)).isCompact_closure
+
+/-- The greedy stage correspondence follows when the selected tubes are
+    precisely the first K distinct choices and their stages lie below K. -/
+theorem ConcreteTubeBallGeometry.stages_of_selected_range
+    {X T : Type*} [MeasurableSpace X] [Fintype T]
+    {tubes : T → Set X} (g : ConcreteTubeBallGeometry tubes)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (hRange : g.B m =
+      (Finset.range ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊).image
+          (g.chosen m))
+    (hStageBound : ∀ j ∈ g.B m,
+      g.stage m j < ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊)
+    (hInjective : ∀ k l,
+      k < ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ →
+      l < ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ →
+      g.chosen m k = g.chosen m l → k = l) :
+    ∀ k < ⌈(Fintype.card T : ℝ) /
+      Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊,
+      g.chosen m k ∈ g.B m ∧ g.stage m (g.chosen m k) = k := by
+  intro k hk
+  have hj : g.chosen m k ∈ g.B m := by
+    rw [hRange]
+    exact Finset.mem_image.mpr
+      ⟨k, Finset.mem_range.mpr hk, rfl⟩
+  refine ⟨hj, ?_⟩
+  exact hInjective (g.stage m (g.chosen m k)) k
+    (hStageBound (g.chosen m k) hj) hk
+    (g.hChosen m (g.chosen m k) hj)
+
+/-- Instantiate the geometric Vitali theorem once the greedy level is
+    bounded and the selected stages match their parent tube indices. -/
+theorem ConcreteTubeBallGeometry.exists_greedy_vitali_of_bounded_level
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X] [ProperSpace X]
+    [Fintype T] {tubes : T → Set X}
+    (g : ConcreteTubeBallGeometry tubes)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (R : ℝ) (hR : 0 < R)
+    (hStages : ∀ k < ⌈(Fintype.card T : ℝ) /
+      Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊,
+      g.chosen m k ∈ g.B m ∧ g.stage m (g.chosen m k) = k)
+    (hBound : Bornology.IsBounded
+      (Kakeya.Eighty4.concreteDyadicBand tubes m)) :
+    ∃ S : T → Finset X,
+      (∀ j ∈ g.B m, ∀ c ∈ S j, c ∈ g.gain m j) ∧
+      (∀ j ∈ g.B m, ∀ c ∈ S j, ∀ c' ∈ S j, c ≠ c' →
+        Disjoint (Metric.ball c R) (Metric.ball c' R)) ∧
+      (Kakeya.Eighty4.greedyUnion (g.greedyQ m)
+        ⌈(Fintype.card T : ℝ) /
+          Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ ⊆
+        ⋃ j ∈ g.B m, ⋃ c ∈ S j,
+          tubes j ∩ Metric.ball c (3 * R)) := by
+  exact g.exists_greedy_vitali_from_compact_gains m R hR hStages
+    (fun j _ => g.gain_compact_closure_of_bounded_level m hBound j)
+
+
+
+/-- A finite occupied net for a greedy gain in a bounded dyadic level. -/
+noncomputable def ConcreteTubeBallGeometry.finiteGainNet
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X] [ProperSpace X]
+    [Fintype T] {tubes : T → Set X}
+    (g : ConcreteTubeBallGeometry tubes)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (R : ℝ) (hR : 0 < R)
+    (hBound : Bornology.IsBounded
+      (Kakeya.Eighty4.concreteDyadicBand tubes m)) (j : T) : Finset X :=
+  Classical.choose (exists_finite_occupied_radius_cover
+    (g.gain m j) R hR (g.gain_compact_closure_of_bounded_level m hBound j))
+
+/-- Centers in the finite gain net belong to the corresponding greedy gain. -/
+theorem ConcreteTubeBallGeometry.finiteGainNet_mem
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X] [ProperSpace X]
+    [Fintype T] {tubes : T → Set X}
+    (g : ConcreteTubeBallGeometry tubes)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (R : ℝ) (hR : 0 < R)
+    (hBound : Bornology.IsBounded
+      (Kakeya.Eighty4.concreteDyadicBand tubes m))
+    (j : T) (c : X) (hc : c ∈ g.finiteGainNet m R hR hBound j) :
+    c ∈ g.gain m j := by
+  exact (Classical.choose_spec (exists_finite_occupied_radius_cover
+    (g.gain m j) R hR
+    (g.gain_compact_closure_of_bounded_level m hBound j))).1 c hc
+
+/-- The finite gain net covers its parent gain at radius R. -/
+theorem ConcreteTubeBallGeometry.finiteGainNet_cover
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X] [ProperSpace X]
+    [Fintype T] {tubes : T → Set X}
+    (g : ConcreteTubeBallGeometry tubes)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (R : ℝ) (hR : 0 < R)
+    (hBound : Bornology.IsBounded
+      (Kakeya.Eighty4.concreteDyadicBand tubes m)) (j : T) :
+    g.gain m j ⊆ ⋃ c ∈ g.finiteGainNet m R hR hBound j,
+      Metric.ball c R := by
+  exact (Classical.choose_spec (exists_finite_occupied_radius_cover
+    (g.gain m j) R hR
+    (g.gain_compact_closure_of_bounded_level m hBound j))).2
+
+/-- Finite occupied gain nets admit a single `Fin` indexing for all selected
+    tube–center pairs at a fixed dyadic level. -/
+theorem ConcreteTubeBallGeometry.finiteGainNet_indexed_cover
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X] [ProperSpace X]
+    [Fintype T] {tubes : T → Set X}
+    (g : ConcreteTubeBallGeometry tubes)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (R : ℝ) (hR : 0 < R)
+    (hBound : Bornology.IsBounded
+      (Kakeya.Eighty4.concreteDyadicBand tubes m)) :
+    let C : T → Finset X := g.finiteGainNet m R hR hBound
+    ∀ j ∈ g.B m,
+      g.gain m j ⊆ ⋃ i ∈ vitaliFiniteCandidates (g.B m) C j,
+        Metric.ball (vitaliFiniteCenter (g.B m) C i) R := by
+  exact vitaliFinite_indexed_cover (g.B m)
+    (g.finiteGainNet m R hR hBound) (g.gain m) R
+    (fun j _ => g.finiteGainNet_cover m R hR hBound j)
+
+/-- Specialization of compact greedy-gain closures to finite-dimensional
+    Euclidean space. -/
+theorem ConcreteTubeBallGeometry.euclidean_gain_compact_closure
+    {T : Type*} [Fintype T] (n : ℕ)
+    (tubes : T → Set (EuclideanSpace ℝ (Fin n)))
+    (g : ConcreteTubeBallGeometry tubes)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (hBound : Bornology.IsBounded
+      (Kakeya.Eighty4.concreteDyadicBand tubes m)) (j : T) :
+    IsCompact (closure (g.gain m j)) := by
+  exact g.gain_compact_closure_of_bounded_level m hBound j
+
+
+
+/-- Supply the indexed Vitali candidate data from occupied finite gain nets.
+    The indexing condition records that the ball labels enumerate those nets. -/
+noncomputable def ConcreteGreedyVitaliCandidates.ofIndexedGainNets
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X] [ProperSpace X]
+    [Fintype T] {tubes : T → Set X}
+    (g : ConcreteTubeBallGeometry tubes)
+    (radius : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℝ)
+    (hRadius : ∀ m, 0 < radius m)
+    (hBound : ∀ m, Bornology.IsBounded
+      (Kakeya.Eighty4.concreteDyadicBand tubes m))
+    (centers : ∀ m, Fin (g.ballCount m) → X)
+    (hBall : ∀ m i, g.ball m i = Metric.ball (centers m i) (radius m))
+    (candidates : ∀ m, T → Finset (Fin (g.ballCount m)))
+    (hIndexed : ∀ m j, j ∈ g.B m →
+      ∀ c ∈ g.finiteGainNet m (radius m) (hRadius m) (hBound m) j,
+        ∃ i ∈ candidates m j, centers m i = c)
+    (hRange : ∀ m, g.B m =
+      (Finset.range ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊).image
+          (g.chosen m))
+    (hStageBound : ∀ m j, j ∈ g.B m →
+      g.stage m j < ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊)
+    (hInjective : ∀ m k l,
+      k < ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ →
+      l < ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ →
+      g.chosen m k = g.chosen m l → k = l) :
+    ConcreteGreedyVitaliCandidates tubes g := by
+  classical
+  refine {
+    radius := radius
+    hRadius := hRadius
+    centers := centers
+    hBall := hBall
+    candidates := candidates
+    hStages := fun m k hk =>
+      g.stages_of_selected_range m (hRange m)
+        (hStageBound m) (hInjective m) k hk
+    hLocal := ?_ }
+  intro m j hj x hx
+  obtain ⟨c, hc⟩ := Set.mem_iUnion.mp
+    (g.finiteGainNet_cover m (radius m) (hRadius m) (hBound m) j hx)
+  obtain ⟨hcNet, hxBall⟩ := Set.mem_iUnion.mp hc
+  obtain ⟨i, hi, hCenter⟩ := hIndexed m j hj c hcNet
+  refine Set.mem_iUnion.mpr ⟨i, Set.mem_iUnion.mpr ⟨hi, ?_⟩⟩
+  rw [hBall m i, hCenter]
+  exact hxBall
+
+
+
+/-! ## Compatibility with the existing indexed geometry -/
+
+/-- Identify the finite gain-net centers with balls already indexed by the
+original geometry. Extra ball indices are allowed, and the original geometry
+and its retained labels are unchanged. -/
+noncomputable def ConcreteGreedyVitaliCandidates.ofExistingGainNetIndexMap
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X] [ProperSpace X]
+    [Fintype T] {tubes : T → Set X}
+    (g : ConcreteTubeBallGeometry tubes)
+    (radius : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℝ)
+    (hRadius : ∀ m, 0 < radius m)
+    (hBound : ∀ m, Bornology.IsBounded
+      (Kakeya.Eighty4.concreteDyadicBand tubes m))
+    (centers : ∀ m, Fin (g.ballCount m) → X)
+    (hBall : ∀ m i, g.ball m i = Metric.ball (centers m i) (radius m))
+    (index : ∀ m, VitaliFiniteCenterPair (g.B m)
+      (g.finiteGainNet m (radius m) (hRadius m) (hBound m)) →
+        Fin (g.ballCount m))
+    (hIndexCenter : ∀ m p, centers m (index m p) = p.2.1)
+    (hRange : ∀ m, g.B m =
+      (Finset.range ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊).image
+          (g.chosen m))
+    (hStageBound : ∀ m j, j ∈ g.B m →
+      g.stage m j < ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊)
+    (hInjective : ∀ m k l,
+      k < ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ →
+      l < ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ →
+      g.chosen m k = g.chosen m l → k = l) :
+    ConcreteGreedyVitaliCandidates tubes g := by
+  classical
+  let candidates : ∀ m, T → Finset (Fin (g.ballCount m)) :=
+    fun m j => (Finset.univ : Finset (Fin (g.ballCount m))).filter
+      (fun i => ∃ p : VitaliFiniteCenterPair (g.B m)
+        (g.finiteGainNet m (radius m) (hRadius m) (hBound m)),
+        p.1.1 = j ∧ index m p = i)
+  apply ConcreteGreedyVitaliCandidates.ofIndexedGainNets g
+    radius hRadius hBound centers hBall candidates
+  · intro m j hj c hc
+    let p : VitaliFiniteCenterPair (g.B m)
+        (g.finiteGainNet m (radius m) (hRadius m) (hBound m)) :=
+      ⟨⟨j, hj⟩, ⟨c, hc⟩⟩
+    refine ⟨index m p, ?_, hIndexCenter m p⟩
+    change index m p ∈ candidates m j
+    exact Finset.mem_filter.mpr
+      ⟨Finset.mem_univ _, ⟨p, rfl, rfl⟩⟩
+  · exact hRange
+  · exact hStageBound
+  · exact hInjective
 
 end Kakeya.Ninety21

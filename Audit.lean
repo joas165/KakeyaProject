@@ -352,3 +352,25 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_incidence_card_le_all
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_index_budget
 #print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofGreedyVitaliCandidates
+
+-- Finite greedy-gain nets, indexed Vitali centers, and selected stages.
+#print axioms Kakeya.Ninety21.VitaliFiniteCenterPair
+#print axioms Kakeya.Ninety21.vitaliFiniteCenterEquiv
+#print axioms Kakeya.Ninety21.vitaliFiniteParent
+#print axioms Kakeya.Ninety21.vitaliFiniteCenter
+#print axioms Kakeya.Ninety21.vitaliFiniteCandidates
+#print axioms Kakeya.Ninety21.vitaliFinite_index_exists
+#print axioms Kakeya.Ninety21.vitaliFinite_indexed_cover
+#print axioms Kakeya.Ninety21.vitaliFinite_center_mem
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.gain_compact_closure_of_bounded_level
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.stages_of_selected_range
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.exists_greedy_vitali_of_bounded_level
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.finiteGainNet
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.finiteGainNet_mem
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.finiteGainNet_cover
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.finiteGainNet_indexed_cover
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.euclidean_gain_compact_closure
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofIndexedGainNets
+
+-- Existing-geometry finite-net compatibility.
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofExistingGainNetIndexMap
