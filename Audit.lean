@@ -2,6 +2,12 @@ module
 import Kakeya
 import Kakeya.Ninety21ConcreteTubeBallBridge
 import Kakeya.Ninety21ConcreteGeometryReductions
+import Kakeya.Ninety21RetainedCoverage
+import Kakeya.Ninety21VitaliIndexBudget
+import Kakeya.Ninety21TwoRadiusEndpoint
+import Kakeya.Ninety21OccupiedVitaliPieces
+import Kakeya.Ninety21GreedyVitaliBounds
+import Kakeya.Ninety21GreedyVitaliEndpointBridge
 
 /-!
 # Axiom audit
@@ -263,3 +269,203 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedy_residual_conservation
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.cover_of_vitali_labels
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGreedy.ofAverage
+
+-- Two-radius Vitali coverage and volume estimates.
+#print axioms Kakeya.Ninety21.finite_double_union_measure_le
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.measure_le_tripleBall_sum
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.exists_twoRadius_vitali_mass_bound
+#print axioms Kakeya.Ninety21.unitTube_tripleBall_volume_le
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.volume_le_tripleBall_cost
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.exists_twoRadius_vitali_volume_bound
+
+-- Retained tube-ball labels and cover-index budgets.
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.coverIndices
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.selectedBall_mem_coverIndices
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.pairBall_mem_coverIndices
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.coverIndices_card_budget_nat
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.coverIndices_card_budget
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitaliPairs
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitaliPairs_parent
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitaliPairs_ball
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitaliPairs_contains
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withVitaliPairs
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitali_mem_coverIndices
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitali_cover_withPairs
+
+-- Two-radius analytic endpoint.
+#print axioms Kakeya.Ninety21.twoRadius_mass_le_double_sum
+#print axioms Kakeya.Ninety21.twoRadius_mass_capture_from_step
+#print axioms Kakeya.Ninety21.twoRadiusRadius
+#print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy
+#print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.mass_capture
+#print axioms Kakeya.Ninety21.paper46_twoRadius_analytic_level_budget
+#print axioms Kakeya.Ninety21.paper46_twoRadius_large_uniform_level_budget
+#print axioms Kakeya.Ninety21.paper46_twoRadius_analytic_uniform_level_budget
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_moment_of_paper46_twoRadius
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_of_paper46_twoRadius
+
+-- Occupied Vitali pieces, disjointness, and cover transfer.
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitaliIndices
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitali_nonempty
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedCandidates_cover
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitali_subset_occupied
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitaliLabels
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitaliLabel_nonempty
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitaliLabel_disjoint
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.activeVitaliTubes
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.activeVitaliTubes_card_le
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.firstOccupiedVitaliBall
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.firstOccupiedVitaliBall_mem
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitaliBase
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitaliPieces
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitaliPieces_greedyQ
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitali_gain_eq
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.gain_subset_parentTube
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.gain_subset_dyadicLevel
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_nonempty_of_gain_ball
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_eq_gain_ball_of_univ_trim
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitaliPieces_piece_eq
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitaliPieces_nonempty
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitali_pairBall_ne_selected
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitali_label_injective
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitali_label_mem
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withOccupiedVitaliPieces_disjoint
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitali_mem_coverIndices
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitali_cover_transfer
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitali_index_budget
+#print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofOccupiedVitali
+
+-- Greedy Vitali selection and occupied-indexed radius-R balls.
+#print axioms Kakeya.Ninety21.exists_finite_occupied_radius_cover
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.exists_greedy_vitali_from_compact_gains
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.exists_greedy_occupied_vitali
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exists_selected
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_occupied
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_disjoint
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_triple_cover
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_triple_cover
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_piece_nonempty
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_ball_eq
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_incidence_eq
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_incidence_card_le_all
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_index_budget
+#print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofGreedyVitaliCandidates
+
+-- Finite greedy-gain nets, indexed Vitali centers, and selected stages.
+#print axioms Kakeya.Ninety21.VitaliFiniteCenterPair
+#print axioms Kakeya.Ninety21.vitaliFiniteCenterEquiv
+#print axioms Kakeya.Ninety21.vitaliFiniteParent
+#print axioms Kakeya.Ninety21.vitaliFiniteCenter
+#print axioms Kakeya.Ninety21.vitaliFiniteCandidates
+#print axioms Kakeya.Ninety21.vitaliFinite_index_exists
+#print axioms Kakeya.Ninety21.vitaliFinite_indexed_cover
+#print axioms Kakeya.Ninety21.vitaliFinite_center_mem
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.gain_compact_closure_of_bounded_level
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.stages_of_selected_range
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.exists_greedy_vitali_of_bounded_level
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.finiteGainNet
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.finiteGainNet_mem
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.finiteGainNet_cover
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.finiteGainNet_indexed_cover
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.euclidean_gain_compact_closure
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofIndexedGainNets
+
+-- Existing-geometry finite-net compatibility.
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofExistingGainNetIndexMap
+
+-- Original finite-net ball indexing and occupied Vitali input.
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamily
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamily_ball
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamily_ball_occupied
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofGreedyNetFamily
+#print axioms Kakeya.Ninety21.greedyFiniteNet
+#print axioms Kakeya.Ninety21.greedyFiniteNet_mem
+#print axioms Kakeya.Ninety21.greedyFiniteNet_cover
+#print axioms Kakeya.Ninety21.greedyFiniteNet_nonempty
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactGreedyGains
+
+-- Greedy-average recurrence and triple-radius cost for the occupied family.
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_greedy_recurrence_of_average
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_triple_volume_le
+#print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofGreedyVitaliAverage
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_of_greedyVitaliAverage
+
+-- Canonical greedy selection and Euclidean triple-radius endpoint.
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_canonical_greedy_recurrence
+#print axioms Kakeya.Ninety21.tripleRadiusTransverseCoefficient
+#print axioms Kakeya.Ninety21.conditional_mass_eq_measure_toReal
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclidean_triple_cost
+#print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofCanonicalVitaliEuclidean
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_of_canonicalVitaliEuclidean
+
+-- Maximal residual selection without replacement.
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.MaximalUnused
+#print axioms Kakeya.Ninety21.exists_maximal_unused_tube
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedy_average_of_maximal_unused
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_greedy_recurrence_of_maximal_unused
+#print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofMaximalUnusedVitaliEuclidean
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_of_maximalUnusedVitaliEuclidean
+
+-- Original greedy selection without replacement and its Vitali data.
+#print axioms Kakeya.Ninety21.maximalUnusedChoice
+#print axioms Kakeya.Ninety21.maximalUnusedChoice_spec
+#print axioms Kakeya.Ninety21.maximalUnusedUsed
+#print axioms Kakeya.Ninety21.maximalUnusedChosen
+#print axioms Kakeya.Ninety21.maximalUnusedUsed_eq_image
+#print axioms Kakeya.Ninety21.maximalUnused_available
+#print axioms Kakeya.Ninety21.maximalUnusedChosen_not_mem
+#print axioms Kakeya.Ninety21.maximalUnusedChosen_injective_initial
+#print axioms Kakeya.Ninety21.maximalUnusedUsed_union_eq_prefix
+#print axioms Kakeya.Ninety21.maximalUnusedChosen_maximal
+#print axioms Kakeya.Ninety21.maximalUnused_dyadic_step_le_card
+#print axioms Kakeya.Ninety21.maximalUnusedDyadicChosen
+#print axioms Kakeya.Ninety21.maximalUnusedDyadicSelected
+#print axioms Kakeya.Ninety21.maximalUnusedDyadicStage
+#print axioms Kakeya.Ninety21.maximalUnusedDyadicStage_chosen
+#print axioms Kakeya.Ninety21.maximalUnusedDyadic_hChosen
+#print axioms Kakeya.Ninety21.maximalUnusedDyadic_hStages
+#print axioms Kakeya.Ninety21.maximalUnusedDyadicSelected_card
+#print axioms Kakeya.Ninety21.maximalUnusedDyadic_hMax
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamily_maximalUnused
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamily_hStages
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactMaximalUnusedGains
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactMaximalUnusedGains_selection
+
+-- Empty-gain localization and genuine finite-net indexing.
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_empty_of_gain_empty
+#print axioms Kakeya.Ninety21.greedyFiniteNet_empty_of_gain_empty
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty
+#print axioms Kakeya.Ninety21.activeGainNetTubes
+#print axioms Kakeya.Ninety21.activeGainNetTubes_card_le
+#print axioms Kakeya.Ninety21.activeGainNetTubes_empty
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofGreedyNetFamilyAllowEmpty
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty_ball_occupied
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty_zero_balls
+
+-- Greedy–Vitali concrete bounds.
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_ball_occupied_of_centers
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_selected_card_le
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_selected_card_maximal_unused
+#print axioms Kakeya.Ninety21.ofGreedyNetFamily_center_on_level
+#print axioms Kakeya.Ninety21.ofGreedyNetFamilyAllowEmpty_center_on_level
+#print axioms Kakeya.Ninety21.compactGreedyGain_centers_on_level
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactGreedyGains_centers_on_level
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactGreedyGains_retained_ball_occupied
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_piece_euclidean_cost
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclideanTubeBallBounds
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclideanTubeBallBounds_radius
+
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_label_ball_occupied
+#print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius
+#print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius_pos
+#print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius_scale
+
+-- Maximal-unused dyadic scaling, selected budget, and direct analytic endpoint.
+#print axioms Kakeya.Ninety21.dyadicScale_le_card
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.selected_card_of_maximal_unused_subset
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.active_maximal_unused_subset
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclideanBoundsOfMaximalUnused
+#print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofDerivedMaximalUnusedEuclidean
