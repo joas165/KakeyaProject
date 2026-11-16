@@ -129,32 +129,118 @@ theorem ofGreedyNetFamily_center_on_level
     (chosen m) (stage m p.1.1) hx
   exact hLevel
 
-/-- A genuine indexed gain-net center lies in its parent dyadic level. -/
-theorem vitaliPaddedCenter_on_level_of_genuine
+/-- The unpadded finite-net geometry has only centers belonging to
+actual greedy gains, hence to the dyadic level. -/
+theorem ofGreedyNetFamilyAllowEmpty_center_on_level
     {X T : Type*} [MeasurableSpace X] [MetricSpace X]
     [Nonempty X] [Fintype T]
     (tubes : T → Set X)
     (B : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → Finset T)
     (chosen : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℕ → T)
     (stage : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → T → ℕ)
+    (hChosen : ∀ m j, j ∈ B m → chosen m (stage m j) = j)
     (C : ∀ m, T → Finset X)
     (hCenters : ∀ m j, j ∈ B m → ∀ c ∈ C m j,
       c ∈ Kakeya.Eighty4.concreteGreedyGain tubes
         (Kakeya.Eighty4.concreteDyadicBand tubes m)
         (chosen m) (stage m j))
+    (radius : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℝ)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
-    (i : Fin (Fintype.card (Option (VitaliFiniteCenterPair (B m) (C m)))))
-    (p : VitaliFiniteCenterPair (B m) (C m))
-    (hi : vitaliPaddedCenterEquiv (B m) (C m) i = some p) :
-    vitaliPaddedCenter (B m) (C m) i ∈
+    (i : Fin ((ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty
+      tubes B chosen stage hChosen C radius).ballCount m)) :
+    vitaliFiniteCenter (activeGainNetTubes B C m) (C m) i ∈
       Kakeya.Eighty4.concreteDyadicBand tubes m := by
-  have hx := hCenters m p.1.1 p.1.2 p.2.1 p.2.2
-  have hLevel := Kakeya.Eighty4.concreteGreedyGain_subset_level tubes
-    (Kakeya.Eighty4.concreteDyadicBand tubes m)
-    (chosen m) (stage m p.1.1) hx
-  unfold vitaliPaddedCenter
-  rw [hi]
-  exact hLevel
+  exact ofGreedyNetFamily_center_on_level tubes
+    (activeGainNetTubes B C) chosen stage C
+    (fun m j hj c hc => hCenters m j (Finset.mem_filter.mp hj).1 c hc)
+    m i
+
+/-- The compact greedy-gain construction satisfies the center-occupancy
+condition without auxiliary ball indices. -/
+theorem compactGreedyGain_centers_on_level
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X]
+    [ProperSpace X] [Nonempty X] [Fintype T]
+    (tubes : T → Set X)
+    (B : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → Finset T)
+    (chosen : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℕ → T)
+    (stage : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → T → ℕ)
+    (hChosen : ∀ m j, j ∈ B m → chosen m (stage m j) = j)
+    (radius : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℝ)
+    (hRadius : ∀ m, 0 < radius m)
+    (hBound : ∀ m, Bornology.IsBounded
+      (Kakeya.Eighty4.concreteDyadicBand tubes m))
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (i : Fin ((ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty
+      tubes B chosen stage hChosen
+      (greedyFiniteNet tubes chosen stage radius hRadius hBound)
+      radius).ballCount m)) :
+    vitaliFiniteCenter
+        (activeGainNetTubes B
+          (greedyFiniteNet tubes chosen stage radius hRadius hBound) m)
+        (greedyFiniteNet tubes chosen stage radius hRadius hBound m) i ∈
+      Kakeya.Eighty4.concreteDyadicBand tubes m := by
+  exact ofGreedyNetFamilyAllowEmpty_center_on_level tubes B chosen stage
+    hChosen (greedyFiniteNet tubes chosen stage radius hRadius hBound)
+    (fun m j _ c hc => greedyFiniteNet_mem tubes chosen stage radius
+      hRadius hBound m j c hc) radius m i
+
+/-- The compact-gain candidate data inherits occupied centers directly
+from the finite-net construction. -/
+theorem ConcreteGreedyVitaliCandidates.ofCompactGreedyGains_centers_on_level
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X]
+    [ProperSpace X] [Nonempty X] [Fintype T]
+    (tubes : T → Set X)
+    (B : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → Finset T)
+    (chosen : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℕ → T)
+    (stage : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → T → ℕ)
+    (hChosen : ∀ m j, j ∈ B m → chosen m (stage m j) = j)
+    (radius : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℝ)
+    (hRadius : ∀ m, 0 < radius m)
+    (hBound : ∀ m, Bornology.IsBounded
+      (Kakeya.Eighty4.concreteDyadicBand tubes m))
+    (hStages : ∀ m k,
+      k < ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ →
+      chosen m k ∈ B m ∧ stage m (chosen m k) = k) :
+    let d := ConcreteGreedyVitaliCandidates.ofCompactGreedyGains
+      tubes B chosen stage hChosen radius hRadius hBound hStages
+    ∀ m i, d.centers m i ∈
+      Kakeya.Eighty4.concreteDyadicBand tubes m := by
+  dsimp only
+  intro m i
+  exact compactGreedyGain_centers_on_level
+    tubes B chosen stage hChosen radius hRadius hBound m i
+
+/-- Every ball of the compact-gain retained geometry is occupied.
+Empty gain levels have no ball indices. -/
+theorem ConcreteGreedyVitaliCandidates.ofCompactGreedyGains_retained_ball_occupied
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X]
+    [ProperSpace X] [Nonempty X] [Fintype T]
+    (tubes : T → Set X)
+    (B : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → Finset T)
+    (chosen : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℕ → T)
+    (stage : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → T → ℕ)
+    (hChosen : ∀ m j, j ∈ B m → chosen m (stage m j) = j)
+    (radius : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℝ)
+    (hRadius : ∀ m, 0 < radius m)
+    (hBound : ∀ m, Bornology.IsBounded
+      (Kakeya.Eighty4.concreteDyadicBand tubes m))
+    (hStages : ∀ m k,
+      k < ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ →
+      chosen m k ∈ B m ∧ stage m (chosen m k) = k) :
+    let d := ConcreteGreedyVitaliCandidates.ofCompactGreedyGains
+      tubes B chosen stage hChosen radius hRadius hBound hStages
+    ∀ m i, (d.retained.ball m i ∩
+      Kakeya.Eighty4.concreteDyadicBand tubes m).Nonempty := by
+  dsimp only
+  intro m i
+  let d := ConcreteGreedyVitaliCandidates.ofCompactGreedyGains
+    tubes B chosen stage hChosen radius hRadius hBound hStages
+  exact d.retained_ball_occupied_of_centers
+    (ConcreteGreedyVitaliCandidates.ofCompactGreedyGains_centers_on_level
+      tubes B chosen stage hChosen radius hRadius hBound hStages)
+    m i
 
 /-- The retained small piece is bounded by the ordinary radius-R
 Euclidean tube–ball volume estimate. -/

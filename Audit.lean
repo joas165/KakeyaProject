@@ -7,6 +7,7 @@ import Kakeya.Ninety21VitaliIndexBudget
 import Kakeya.Ninety21TwoRadiusEndpoint
 import Kakeya.Ninety21OccupiedVitaliPieces
 import Kakeya.Ninety21GreedyVitaliBounds
+import Kakeya.Ninety21GreedyVitaliEndpointBridge
 
 /-!
 # Axiom audit
@@ -433,29 +434,38 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactMaximalUnusedGains
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactMaximalUnusedGains_selection
 
--- Empty-gain localization and padded finite-net indexing.
+-- Empty-gain localization and genuine finite-net indexing.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_empty_of_gain_empty
 #print axioms Kakeya.Ninety21.greedyFiniteNet_empty_of_gain_empty
-#print axioms Kakeya.Ninety21.vitaliPaddedCenterEquiv
-#print axioms Kakeya.Ninety21.vitaliPaddedCenter
-#print axioms Kakeya.Ninety21.vitaliPaddedCandidates
-#print axioms Kakeya.Ninety21.vitaliPadded_fallback_not_candidate
-#print axioms Kakeya.Ninety21.vitaliPadded_index_exists
-#print axioms Kakeya.Ninety21.vitaliPadded_indexed_cover
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty
+#print axioms Kakeya.Ninety21.activeGainNetTubes
+#print axioms Kakeya.Ninety21.activeGainNetTubes_card_le
+#print axioms Kakeya.Ninety21.activeGainNetTubes_empty
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofGreedyNetFamilyAllowEmpty
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty_ball_occupied
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty_zero_balls
 
 -- Greedy–Vitali concrete bounds.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_ball_occupied_of_centers
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_selected_card_le
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_selected_card_maximal_unused
 #print axioms Kakeya.Ninety21.ofGreedyNetFamily_center_on_level
+#print axioms Kakeya.Ninety21.ofGreedyNetFamilyAllowEmpty_center_on_level
+#print axioms Kakeya.Ninety21.compactGreedyGain_centers_on_level
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactGreedyGains_centers_on_level
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactGreedyGains_retained_ball_occupied
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_piece_euclidean_cost
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclideanTubeBallBounds
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclideanTubeBallBounds_radius
 
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_label_ball_occupied
-#print axioms Kakeya.Ninety21.vitaliPaddedCenter_on_level_of_genuine
 #print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius
 #print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius_pos
 #print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius_scale
+
+-- Maximal-unused dyadic scaling, selected budget, and direct analytic endpoint.
+#print axioms Kakeya.Ninety21.dyadicScale_le_card
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.selected_card_of_maximal_unused_subset
+#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.active_maximal_unused_subset
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclideanBoundsOfMaximalUnused
+#print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofDerivedMaximalUnusedEuclidean

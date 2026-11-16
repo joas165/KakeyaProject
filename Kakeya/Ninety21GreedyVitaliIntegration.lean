@@ -178,7 +178,8 @@ theorem ConcreteTubeBallGeometry.exists_greedy_occupied_vitali
       T → Finset (Fin (g.ballCount m')))
     (hStages : ∀ k < ⌈(Fintype.card T : ℝ) /
         Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊,
-      g.chosen m k ∈ g.B m ∧ g.stage m (g.chosen m k) = k)
+      (g.greedyQ m k).Nonempty →
+        g.chosen m k ∈ g.B m ∧ g.stage m (g.chosen m k) = k)
     (hLocal : ∀ j ∈ g.B m,
       g.gain m j ⊆ ⋃ i ∈ L m j, g.ball m i) :
     ∃ S : T → Finset (Fin (g.ballCount m)),
@@ -207,7 +208,8 @@ theorem ConcreteTubeBallGeometry.exists_greedy_occupied_vitali
       g.greedyQ m k at hx
     obtain ⟨k, hk⟩ := Set.mem_iUnion.mp hx
     obtain ⟨hkRange, hxGain⟩ := Set.mem_iUnion.mp hk
-    obtain ⟨hj, hStage⟩ := hStages k (Finset.mem_range.mp hkRange)
+    obtain ⟨hj, hStage⟩ :=
+      hStages k (Finset.mem_range.mp hkRange) ⟨x, hxGain⟩
     have hxParent : x ∈ g.gain m (g.chosen m k) := by
       simpa [ConcreteTubeBallGeometry.gain, hj, hStage,
         ConcreteTubeBallGeometry.greedyQ] using hxGain
@@ -343,7 +345,8 @@ structure ConcreteGreedyVitaliCandidates
   hStages : ∀ m k,
     k < ⌈(Fintype.card T : ℝ) /
       Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ →
-    g.chosen m k ∈ g.B m ∧ g.stage m (g.chosen m k) = k
+    (g.greedyQ m k).Nonempty →
+      g.chosen m k ∈ g.B m ∧ g.stage m (g.chosen m k) = k
   hLocal : ∀ m j, j ∈ g.B m →
     g.gain m j ⊆ ⋃ i ∈ candidates m j, g.ball m i
 
@@ -1323,7 +1326,7 @@ noncomputable def ConcreteGreedyVitaliCandidates.ofIndexedGainNets
     centers := centers
     hBall := hBall
     candidates := candidates
-    hStages := fun m k hk =>
+    hStages := fun m k hk _ =>
       g.stages_of_selected_range m (hRange m)
         (hStageBound m) (hInjective m) k hk
     hLocal := ?_ }
@@ -1487,7 +1490,7 @@ noncomputable def ConcreteGreedyVitaliCandidates.ofGreedyNetFamily
   }
   · intro m i
     rfl
-  · intro m k hk
+  · intro m k hk _
     change chosen m k ∈ B m ∧ stage m (chosen m k) = k
     exact hStages m k hk
   · intro m j hj x hx
@@ -1668,87 +1671,41 @@ theorem greedyFiniteNet_nonempty
 
 /-! ## Finite ball indexing with empty greedy gains -/
 
-/-- A finite center index with one additional fallback index. -/
-noncomputable def vitaliPaddedCenterEquiv {T X : Type*}
-    (B : Finset T) (C : T → Finset X) :
-    Fin (Fintype.card (Option (VitaliFiniteCenterPair B C))) ≃
-      Option (VitaliFiniteCenterPair B C) := by
+/-- Only selected tubes with a nonempty finite gain net contribute indexed balls. -/
+noncomputable def activeGainNetTubes
+    {X T : Type*} [Fintype T]
+    (B : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → Finset T)
+    (C : ∀ m : Kakeya.Eighty4.DyadicIndex (Fintype.card T), T → Finset X)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) : Finset T := by
   classical
-  exact (Fintype.equivFin (Option (VitaliFiniteCenterPair B C))).symm
+  exact (B m).filter (fun j => (C m j).Nonempty)
 
-/-- The additional index has an arbitrary center; genuine indices retain
-    their original finite-net centers. -/
-noncomputable def vitaliPaddedCenter {T X : Type*} [Nonempty X]
-    (B : Finset T) (C : T → Finset X)
-    (i : Fin (Fintype.card (Option (VitaliFiniteCenterPair B C)))) : X :=
-  match vitaliPaddedCenterEquiv B C i with
-  | some p => p.2.1
-  | none => Classical.choice (inferInstance : Nonempty X)
-
-/-- Only genuine tube–center pairs are Vitali candidates. -/
-noncomputable def vitaliPaddedCandidates {T X : Type*}
-    (B : Finset T) (C : T → Finset X) (j : T) :
-    Finset (Fin (Fintype.card (Option (VitaliFiniteCenterPair B C)))) := by
+/-- Removing empty nets cannot increase the selected-tube count. -/
+theorem activeGainNetTubes_card_le
+    {X T : Type*} [Fintype T]
+    (B : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → Finset T)
+    (C : ∀ m, T → Finset X)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
+    (activeGainNetTubes B C m).card ≤ (B m).card := by
   classical
-  exact Finset.univ.filter (fun i =>
-    ∃ p : VitaliFiniteCenterPair B C,
-      vitaliPaddedCenterEquiv B C i = some p ∧ p.1.1 = j)
+  exact Finset.card_le_card (Finset.filter_subset _ _)
 
-/-- The additional structural ball is never a Vitali candidate. -/
-theorem vitaliPadded_fallback_not_candidate {T X : Type*}
-    (B : Finset T) (C : T → Finset X) (j : T) :
-    (vitaliPaddedCenterEquiv B C).symm none ∉
-      vitaliPaddedCandidates B C j := by
+/-- If all finite nets are empty, there are no active tube labels. -/
+theorem activeGainNetTubes_empty
+    {X T : Type*} [Fintype T]
+    (B : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → Finset T)
+    (C : ∀ m, T → Finset X)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (hEmpty : ∀ j, C m j = ∅) :
+    activeGainNetTubes B C m = ∅ := by
   classical
-  intro h
-  have hp : ∃ p : VitaliFiniteCenterPair B C,
-      vitaliPaddedCenterEquiv B C
-          ((vitaliPaddedCenterEquiv B C).symm none) = some p ∧ p.1.1 = j := by
-    unfold vitaliPaddedCandidates at h
-    exact (Finset.mem_filter.mp h).2
-  obtain ⟨p, hp, _⟩ := hp
-  have hnone : vitaliPaddedCenterEquiv B C
-      ((vitaliPaddedCenterEquiv B C).symm none) = none :=
-    (vitaliPaddedCenterEquiv B C).apply_symm_apply none
-  rw [hnone] at hp
-  cases hp
+  apply Finset.eq_empty_iff_forall_notMem.mpr
+  intro j hj
+  obtain ⟨c, hc⟩ := (Finset.mem_filter.mp hj).2
+  simp [hEmpty j] at hc
 
-/-- Each gain-net center has a genuine padded index in its own tube fiber. -/
-theorem vitaliPadded_index_exists {T X : Type*} [Nonempty X]
-    (B : Finset T) (C : T → Finset X)
-    (j : T) (hj : j ∈ B) (c : X) (hc : c ∈ C j) :
-    ∃ i : Fin (Fintype.card (Option (VitaliFiniteCenterPair B C))),
-      i ∈ vitaliPaddedCandidates B C j ∧
-        vitaliPaddedCenter B C i = c := by
-  classical
-  let p : VitaliFiniteCenterPair B C := ⟨⟨j, hj⟩, ⟨c, hc⟩⟩
-  let i := (vitaliPaddedCenterEquiv B C).symm (some p)
-  have he : vitaliPaddedCenterEquiv B C i = some p :=
-    (vitaliPaddedCenterEquiv B C).apply_symm_apply (some p)
-  have hi : i ∈ vitaliPaddedCandidates B C j := by
-    unfold vitaliPaddedCandidates
-    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, ⟨p, he, rfl⟩⟩
-  refine ⟨i, hi, ?_⟩
-  unfold vitaliPaddedCenter
-  rw [he]
-
-/-- Finite gain-net covering survives the padded ball indexing. -/
-theorem vitaliPadded_indexed_cover {T X : Type*}
-    [MetricSpace X] [Nonempty X]
-    (B : Finset T) (C : T → Finset X) (Q : T → Set X) (R : ℝ)
-    (hCover : ∀ j ∈ B, Q j ⊆ ⋃ c ∈ C j, Metric.ball c R) :
-    ∀ j ∈ B, Q j ⊆ ⋃ i ∈ vitaliPaddedCandidates B C j,
-      Metric.ball (vitaliPaddedCenter B C i) R := by
-  classical
-  intro j hj x hx
-  obtain ⟨c, hc⟩ := Set.mem_iUnion.mp (hCover j hj hx)
-  obtain ⟨hcC, hxc⟩ := Set.mem_iUnion.mp hc
-  obtain ⟨i, hi, hci⟩ := vitaliPadded_index_exists B C j hj c hcC
-  exact Set.mem_iUnion.mpr ⟨i,
-    Set.mem_iUnion.mpr ⟨hi, by simpa only [hci] using hxc⟩⟩
-
-/-- The original greedy-choice and stage data with all gain-net centers
-    indexed, even when some selected gains are empty. -/
+/-- The generated geometry indexes only actual gain-net centers. Empty gains
+have no distinguished ball and are omitted from the active tube family. -/
 noncomputable def ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty
     {X T : Type*} [MeasurableSpace X] [MetricSpace X]
     [Nonempty X] [Fintype T]
@@ -1761,32 +1718,55 @@ noncomputable def ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty
     (radius : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℝ) :
     ConcreteTubeBallGeometry tubes := by
   classical
+  let B' := activeGainNetTubes B C
   exact {
-    B := B
+    B := B'
     P := fun _ => ∅
-    ballCount := fun m =>
-      Fintype.card (Option (VitaliFiniteCenterPair (B m) (C m)))
+    ballCount := fun m => Fintype.card (VitaliFiniteCenterPair (B' m) (C m))
     ball := fun m i =>
-      Metric.ball (vitaliPaddedCenter (B m) (C m) i) (radius m)
+      Metric.ball (vitaliFiniteCenter (B' m) (C m) i) (radius m)
     chosen := chosen
     stage := stage
-    hChosen := hChosen
+    hChosen := by
+      intro m j hj
+      exact hChosen m j (Finset.mem_filter.mp hj).1
     hPSelected := by
       intro m p hp
       simp at hp
     hPBall := by
       intro m p hp
       simp at hp
-    selectedBall := fun m j =>
-      (vitaliPaddedCenterEquiv (B m) (C m)).symm
-        (if h : (C m j.val).Nonempty then
-          some ⟨j, ⟨Classical.choose h, Classical.choose_spec h⟩⟩
-        else none)
+    selectedBall := fun m j => by
+      have hc : (C m j.val).Nonempty :=
+        (Finset.mem_filter.mp j.property).2
+      exact (vitaliFiniteCenterEquiv (B' m) (C m)).symm
+        ⟨j, ⟨Classical.choose hc, Classical.choose_spec hc⟩⟩
     trim := fun _ _ _ => Set.univ
   }
 
-/-- The padded geometry uses precisely the genuine finite-net centers
-    as candidates for the occupied Vitali selection. -/
+/-- An empty finite-center family produces an empty ball index type. -/
+theorem ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty_zero_balls
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X]
+    [Nonempty X] [Fintype T]
+    (tubes : T → Set X)
+    (B : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → Finset T)
+    (chosen : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℕ → T)
+    (stage : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → T → ℕ)
+    (hChosen : ∀ m j, j ∈ B m → chosen m (stage m j) = j)
+    (C : ∀ m, T → Finset X)
+    (radius : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℝ)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (hEmpty : ∀ j, C m j = ∅) :
+    (ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty
+      tubes B chosen stage hChosen C radius).ballCount m = 0 := by
+  classical
+  change Fintype.card
+    (VitaliFiniteCenterPair (activeGainNetTubes B C m) (C m)) = 0
+  rw [activeGainNetTubes_empty B C m hEmpty]
+  simp [VitaliFiniteCenterPair]
+
+/-- Selected stages with nonempty gains belong to the active tube family.
+Finite nets of empty gains require no ball index. -/
 noncomputable def ConcreteGreedyVitaliCandidates.ofGreedyNetFamilyAllowEmpty
     {X T : Type*} [MeasurableSpace X] [MetricSpace X]
     [Nonempty X] [Fintype T]
@@ -1811,39 +1791,93 @@ noncomputable def ConcreteGreedyVitaliCandidates.ofGreedyNetFamilyAllowEmpty
       (ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty tubes B chosen
         stage hChosen C radius) := by
   classical
+  let B' := activeGainNetTubes B C
   let g := ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty tubes B
     chosen stage hChosen C radius
   refine {
     radius := radius
     hRadius := hRadius
-    centers := fun m i => vitaliPaddedCenter (B m) (C m) i
+    centers := fun m i => vitaliFiniteCenter (B' m) (C m) i
     hBall := ?_
-    candidates := fun m j => vitaliPaddedCandidates (B m) (C m) j
+    candidates := fun m j => vitaliFiniteCandidates (B' m) (C m) j
     hStages := ?_
     hLocal := ?_
   }
   · intro m i
     rfl
-  · intro m k hk
-    change chosen m k ∈ B m ∧ stage m (chosen m k) = k
-    exact hStages m k hk
+  · intro m k hk hx
+    obtain ⟨hj, hStage⟩ := hStages m k hk
+    have hxGain : (Kakeya.Eighty4.concreteGreedyGain tubes
+        (Kakeya.Eighty4.concreteDyadicBand tubes m)
+        (chosen m) (stage m (chosen m k))).Nonempty := by
+      change (Kakeya.Eighty4.concreteGreedyGain tubes
+        (Kakeya.Eighty4.concreteDyadicBand tubes m)
+        (chosen m) k).Nonempty at hx
+      simpa only [hStage] using hx
+    obtain ⟨x, hx⟩ := hxGain
+    obtain ⟨c, hc⟩ := Set.mem_iUnion.mp
+      (hCover m (chosen m k) hj hx)
+    obtain ⟨hcC, _⟩ := Set.mem_iUnion.mp hc
+    change chosen m k ∈ B' m ∧ stage m (chosen m k) = k
+    exact ⟨Finset.mem_filter.mpr ⟨hj, ⟨c, hcC⟩⟩, hStage⟩
   · intro m j hj x hx
+    have hjActive : j ∈ B' m := hj
+    have hjOriginal : j ∈ B m := (Finset.mem_filter.mp hjActive).1
     have hxGain : x ∈ Kakeya.Eighty4.concreteGreedyGain tubes
         (Kakeya.Eighty4.concreteDyadicBand tubes m)
         (chosen m) (stage m j) := by
-      change x ∈ (if j ∈ B m then
+      change x ∈ (if j ∈ B' m then
         Kakeya.Eighty4.concreteGreedyGain tubes
           (Kakeya.Eighty4.concreteDyadicBand tubes m)
           (chosen m) (stage m j) else ∅) at hx
-      change j ∈ B m at hj
-      simpa only [if_pos hj] using hx
-    obtain ⟨c, hc⟩ := Set.mem_iUnion.mp (hCover m j hj hxGain)
+      simpa only [if_pos hjActive] using hx
+    obtain ⟨c, hc⟩ := Set.mem_iUnion.mp
+      (hCover m j hjOriginal hxGain)
     obtain ⟨hcNet, hxc⟩ := Set.mem_iUnion.mp hc
-    obtain ⟨i, hi, hci⟩ := vitaliPadded_index_exists
-      (B m) (C m) j hj c hcNet
+    obtain ⟨i, hi, hci⟩ := vitaliFinite_index_exists
+      (B' m) (C m) j hjActive c hcNet
     refine Set.mem_iUnion.mpr ⟨i, Set.mem_iUnion.mpr ⟨hi, ?_⟩⟩
-    change x ∈ Metric.ball (vitaliPaddedCenter (B m) (C m) i) (radius m)
+    change x ∈ Metric.ball (vitaliFiniteCenter (B' m) (C m) i) (radius m)
     simpa only [hci] using hxc
+
+/-- Every indexed ball of the generated geometry has a center in the dyadic
+level. This applies vacuously when no gain has a finite-net center. -/
+theorem ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty_ball_occupied
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X]
+    [Nonempty X] [Fintype T]
+    (tubes : T → Set X)
+    (B : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → Finset T)
+    (chosen : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℕ → T)
+    (stage : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → T → ℕ)
+    (hChosen : ∀ m j, j ∈ B m → chosen m (stage m j) = j)
+    (C : ∀ m, T → Finset X)
+    (hCenters : ∀ m j, j ∈ B m → ∀ c ∈ C m j,
+      c ∈ Kakeya.Eighty4.concreteGreedyGain tubes
+        (Kakeya.Eighty4.concreteDyadicBand tubes m)
+        (chosen m) (stage m j))
+    (radius : Kakeya.Eighty4.DyadicIndex (Fintype.card T) → ℝ)
+    (hRadius : ∀ m, 0 < radius m)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (i : Fin ((ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty
+      tubes B chosen stage hChosen C radius).ballCount m)) :
+    (((ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty
+        tubes B chosen stage hChosen C radius).ball m i) ∩
+      Kakeya.Eighty4.concreteDyadicBand tubes m).Nonempty := by
+  let B' := activeGainNetTubes B C
+  let p : VitaliFiniteCenterPair (B' m) (C m) :=
+    vitaliFiniteCenterEquiv (B' m) (C m) i
+  have hj : p.1.1 ∈ B m := (Finset.mem_filter.mp p.1.2).1
+  have hc : p.2.1 ∈ C m p.1.1 := p.2.2
+  have hxGain := hCenters m p.1.1 hj p.2.1 hc
+  have hxBand : p.2.1 ∈ Kakeya.Eighty4.concreteDyadicBand tubes m :=
+    Kakeya.Eighty4.concreteGreedyGain_subset_level tubes
+      (Kakeya.Eighty4.concreteDyadicBand tubes m)
+      (chosen m) (stage m p.1.1) hxGain
+  refine ⟨p.2.1, ?_, hxBand⟩
+  change p.2.1 ∈ Metric.ball (vitaliFiniteCenter (B' m) (C m) i) (radius m)
+  have heq : vitaliFiniteCenter (B' m) (C m) i = p.2.1 := rfl
+  rw [heq]
+  exact Metric.mem_ball_self (hRadius m)
 
 /-- Construct the original indexed ball family from bounded greedy gains.
     Empty gains have empty center nets and no occupied candidate labels. -/
@@ -2207,8 +2241,8 @@ theorem maximalUnusedDyadic_hMax
     (Kakeya.Eighty4.concreteDyadicBand tubes m) k j hj
 
 
-/-- The padded indexed geometry built from the nonrepeating greedy
-    selector satisfies the unused-tube maximality condition. -/
+/-- The indexed geometry built from the nonrepeating greedy selector
+    satisfies the unused-tube maximality condition. -/
 theorem ConcreteTubeBallGeometry.ofGreedyNetFamily_maximalUnused
     {X T : Type*} [MeasurableSpace X] [MetricSpace X]
     [Nonempty X] [Fintype T] [Nonempty T]
@@ -2239,8 +2273,16 @@ theorem ConcreteTubeBallGeometry.ofGreedyNetFamily_hStages
       C radius
     ∀ m k, k < ⌈(Fintype.card T : ℝ) /
       Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ →
+      (C m (g.chosen m k)).Nonempty →
       g.chosen m k ∈ g.B m ∧ g.stage m (g.chosen m k) = k := by
-  exact maximalUnusedDyadic_hStages μ tubes
+  dsimp only
+  intro m k hk hc
+  obtain ⟨hj, hs⟩ := maximalUnusedDyadic_hStages μ tubes m k hk
+  change maximalUnusedDyadicChosen μ tubes m k ∈
+      activeGainNetTubes (maximalUnusedDyadicSelected μ tubes) C m ∧
+      maximalUnusedDyadicStage μ tubes m
+        (maximalUnusedDyadicChosen μ tubes m k) = k
+  exact ⟨Finset.mem_filter.mpr ⟨hj, hc⟩, hs⟩
 
 /-- Construct finite-net Vitali data from the maximal-unused greedy selector,
     including stages whose gains are empty. -/
@@ -2285,12 +2327,31 @@ theorem ConcreteGreedyVitaliCandidates.ofCompactMaximalUnusedGains_selection
     g.MaximalUnused μ ∧
       (∀ m k, k < ⌈(Fintype.card T : ℝ) /
         Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ →
-        g.chosen m k ∈ g.B m ∧ g.stage m (g.chosen m k) = k) := by
+        (g.greedyQ m k).Nonempty →
+          g.chosen m k ∈ g.B m ∧ g.stage m (g.chosen m k) = k) := by
   constructor
   · exact ConcreteTubeBallGeometry.ofGreedyNetFamily_maximalUnused
       μ tubes _ radius
-  · exact ConcreteTubeBallGeometry.ofGreedyNetFamily_hStages
-      μ tubes _ radius
+  · intro m k hk hx
+    have hStages := maximalUnusedDyadic_hStages μ tubes m k hk
+    have hGain : (Kakeya.Eighty4.concreteGreedyGain tubes
+        (Kakeya.Eighty4.concreteDyadicBand tubes m)
+        (maximalUnusedDyadicChosen μ tubes m)
+        (maximalUnusedDyadicStage μ tubes m
+          (maximalUnusedDyadicChosen μ tubes m k))).Nonempty := by
+      change (Kakeya.Eighty4.concreteGreedyGain tubes
+        (Kakeya.Eighty4.concreteDyadicBand tubes m)
+        (maximalUnusedDyadicChosen μ tubes m) k).Nonempty at hx
+      simpa only [hStages.2] using hx
+    have hC : (greedyFiniteNet tubes
+        (maximalUnusedDyadicChosen μ tubes)
+        (maximalUnusedDyadicStage μ tubes) radius hRadius hBound m
+        (maximalUnusedDyadicChosen μ tubes m k)).Nonempty :=
+      greedyFiniteNet_nonempty tubes (maximalUnusedDyadicChosen μ tubes)
+        (maximalUnusedDyadicStage μ tubes) radius hRadius hBound
+        m (maximalUnusedDyadicChosen μ tubes m k) hGain
+    exact ConcreteTubeBallGeometry.ofGreedyNetFamily_hStages
+      μ tubes _ radius m k hk hC
 
 /-! ## Canonical greedy recurrence and Euclidean triple-radius cost -/
 
