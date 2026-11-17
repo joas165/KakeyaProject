@@ -366,9 +366,11 @@ noncomputable def ConcreteGreedyVitaliCandidates.euclideanTubeBallBounds
         Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊)
     (hNorm : (Fintype.card T : ℝ) * δ ^ (k + 1) ≤ Z)
     (hIncidence : ∀ m r,
-      (∑ i : Fin (g.ballCount m),
-        if (g.ball m i ∩ Kakeya.unitTube (center r) (direction r) δ).Nonempty
-          then (1 : ℝ) else 0) ≤
+      (∑ i : Fin (d.retained.ballCount m),
+        if (∃ s : ({t : T // t ∈ d.retained.B m} ⊕
+            {p : T × ℕ // p ∈ d.retained.P m}),
+          d.retained.tubeOf m s = r ∧ d.retained.ballOf m s = i)
+        then (1 : ℝ) else 0) ≤
         K * Kakeya.Eighty4.dyadicScale (Fintype.card T) m ^
           ((1 : ℝ) / (((k + 2 : ℕ) : ℝ) - 1))) :
     ConcreteTubeBallBounds μ
@@ -402,7 +404,6 @@ noncomputable def ConcreteGreedyVitaliCandidates.euclideanTubeBallBounds
             (A * Kakeya.Eighty4.dyadicScale (Fintype.card T) m ^
               (-((1 : ℝ) / (((k + 2 : ℕ) : ℝ) - 1)))) := by rw [hRadius m]
   · intro m r
-    rw [d.retained_incidence_eq m r]
     exact hIncidence m r
 
 /-- The radius in the derived concrete bounds is the radius of the
