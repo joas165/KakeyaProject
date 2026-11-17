@@ -39,6 +39,8 @@ public import Kakeya.Ninety21TwoRadiusEndpoint
 public import Kakeya.Ninety21OccupiedVitaliPieces
 public import Kakeya.Ninety21GreedyVitaliIntegration
 public import Kakeya.Ninety21GreedyVitaliBounds
+public import Kakeya.Ninety21OriginalTubeBallPacking
+public import Kakeya.Ninety21ParentVitaliPacking
 public import Kakeya.Ninety21GreedyVitaliEndpointBridge
 public import Kakeya.Ninety21ExceptionalBudget
 @[expose] public section
