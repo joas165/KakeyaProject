@@ -23,6 +23,7 @@ To check the concrete integration and inspect selected axiom dependencies:
 
 ```sh
 lake build Kakeya.Ninety21GreedyVitaliEndpointBridge
+lake build Kakeya.Ninety21CompactGreedyPackingIntegration
 lake build Kakeya.Ninety21Theorem46Endpoint
 lake env lean Audit.lean
 ```
@@ -53,7 +54,13 @@ The Theorem 4.6 route works with **actual retained trimmed pieces**, not merely 
 4. **Theorem 4.6 reindexing.** Selected tube indices remain fixed. Regular pieces are assigned distinct **nonintersecting original-tube representative labels** outside the selected family; exceptional pieces are assigned separate auxiliary labels. A label represents the same source piece and is **not** asserted to be a tube containing it.
 5. **Exact mass transport and conditional counting.** A bijection changes the indexing of the source masses without changing their sum. A regular-only lower-fiber condition yields the double count; exceptional pieces retain a separate overhead term.
 
-For large levels, the representative label type is the disjoint union of original tube labels and exceptional auxiliary labels. The small levels \(q<8\) use a separate finite cardinality bound because Theorem 4.6 has the hypothesis \(q\ge8\).
+For large levels, the representative label type is the disjoint union of original tube labels and exceptional auxiliary labels. For the pair-indexed construction in dimensions \(n\ge3\), the analytic cutoff is
+
+\[
+Q_0=\max\{8,(8C_{\mathrm{pack}})^2\}.
+\]
+
+The Hall construction and regular-piece budget apply above this cutoff. Levels \(q<Q_0\), including the intermediate range above 8, use the finite ambient-mass estimate in the analytic endpoint.
 
 ### Greedy–Vitali and concrete bounds integration
 
@@ -75,15 +82,20 @@ and the tube–ball mass estimate of the form
 
 `ConcreteGreedyVitaliCandidates.euclideanBoundsOfMaximalUnused` derives the dyadic-scale and selected-cardinality fields from the construction. `ConcreteTwoRadiusGreedy.ofDerivedMaximalUnusedEuclidean` passes those bounds, the greedy recurrence, and the triple-radius estimate to the existing two-radius analytic interface.
 
-**The concrete bridge remains conditional.** It takes the tube-count normalization \(N\delta^{n-1}\le Z\) and an original-tube *ball-incidence* estimate
+The parent-associated ball bound is derived from the actual tube-wise Vitali selection. For each selected parent tube, its selected radius-\(R_m\) balls are pairwise disjoint and meet that tube. The length-one tube geometry gives
 
 \[
-\#\{i:B_{m,i}\cap T_r^\delta\ne\varnothing\}\le Kq^{1/(n-1)}.
+\#\{i:\text{a retained label has parent }r\text{ and ball index }i\}
+\le C_{\mathrm{pack}}q^{1/(n-1)}.
 \]
 
-It also requires compatibility data identifying the chosen sequence, canonical radii, occupied centers, and selected family with the constructed geometry. These are explicit inputs where the bridge does not derive them automatically. The ball-incidence bound is distinct from the regular-piece lower-fiber condition in Theorem 4.6.
+This is the `hHallRight` field used by the localized construction. It counts balls associated with the specified parent tube; it is not a count of all balls from every parent that happen to intersect that tube. Disjointness is used within each parent's Vitali selection.
 
-The greedy–Vitali specialization uses identity trimming for its localized gains. Its construction alone does **not** establish identification with every nontrivially trimmed source family used in the Theorem 4.6 route.
+`ConcreteGreedyVitaliCandidates.euclideanBoundsOfMaximalUnusedGeometry` derives this bound using the canonical radius and the total-scale condition \(\delta N^{1/(n-1)}\le A\). The compact specialization, `euclideanBoundsOfCompactMaximalUnusedGeometry`, also supplies the center, radius, and selected-family identifications. `ConcreteTwoRadiusGreedy.ofCompactMaximalUnusedGeometry` supplies the chosen-sequence identification and connects the construction to the two-radius analytic interface.
+
+The compact constructors still take the normalization \(N\delta^{n-1}\le Z\), the total-scale condition, boundedness of the dyadic bands, measurability and unit-direction hypotheses, and domination of the finite measure by Euclidean volume. A final Euclidean application must supply these inputs with suitable dimension-dependent constants.
+
+The greedy–Vitali specialization uses identity trimming for its localized gains. Applying the Theorem 4.6 endpoint requires the matching, mass comparison, and counting estimates for the same retained family throughout.
 
 ## Key equalities and open bound
 
@@ -109,7 +121,7 @@ The **postponed Theorem 4.6 regular lower-fiber condition** counts the **\(N\) o
 \#\{\ell\in\{1,\ldots,N\}:\widehat\Phi_m(\ell)=r\}\ge 2^m.
 \]
 
-Here \(\widehat\Phi_m\) is a single-valued *partial assignment* to regular labels (represented by `Option` in Lean). It does not assume that original tube–piece intersections are unique. **Auxiliary labels do not contribute to these fibers**: their associated tubes can lie outside \(B(0,2)\) and need not intersect any retained piece.
+Here \(\widehat\Phi_m\) is a single-valued *partial assignment* to regular labels (represented by `Option` in Lean). It does not assume that original tube–piece intersections are unique. **Auxiliary labels are purely formal representatives of exceptional pieces.** They have no geometric tubes and do not contribute to these fibers. All original-tube geometry and incidence counting use the original \(N\) indices.
 
 Under this condition, the regular-piece double count gives \(q|\mathcal P_m^{\mathrm{reg}}|\le N\). Combining it with the greedy selected-tube budget and the cardinality identity yields the displayed conditional estimate
 
@@ -117,7 +129,13 @@ Under this condition, the regular-piece double count gives \(q|\mathcal P_m^{\ma
 q|D_m|\le 3N+q|\mathcal P_m^{\mathrm{exc}}|.
 \]
 
-The exceptional contribution is recorded, not silently discarded. A geometric packing argument is needed to control it before the desired uniform analytic estimate follows.
+The endpoint records the exceptional contribution through
+
+\[
+E_{\mathrm{exc}}=\sum_m 2^m|\mathcal P_m^{\mathrm{exc}}|.
+\]
+
+The current endpoint uses this total overhead to bound each level's exceptional term. Its concrete geometric control remains to be supplied. The parent-associated `hHallRight` estimate and the exceptional packing estimate are separate parts of the argument.
 
 ## Finding your way around the code
 
@@ -130,6 +148,10 @@ The exceptional contribution is recorded, not silently discarded. A geometric pa
 | [`Kakeya/Ninety21GreedyVitaliIntegration.lean`](Kakeya/Ninety21GreedyVitaliIntegration.lean) | Maximal-unused selection, finite gain nets, occupied Vitali candidates, empty-gain handling, and greedy recurrence. |
 | [`Kakeya/Ninety21GreedyVitaliBounds.lean`](Kakeya/Ninety21GreedyVitaliBounds.lean) | Occupancy and selected-cardinality lemmas, canonical radius, and Euclidean retained-piece volume estimates. |
 | [`Kakeya/Ninety21GreedyVitaliEndpointBridge.lean`](Kakeya/Ninety21GreedyVitaliEndpointBridge.lean) | Derived dyadic bounds and direct connection to the conditional two-radius endpoint. |
+| [`Kakeya/Ninety21OriginalTubeBallPacking.lean`](Kakeya/Ninety21OriginalTubeBallPacking.lean) and [`Kakeya/Ninety21ParentVitaliPacking.lean`](Kakeya/Ninety21ParentVitaliPacking.lean) | Euclidean packing and its application to parent-associated Vitali balls. |
+| [`Kakeya/Ninety21GeometricPackingEndpoint.lean`](Kakeya/Ninety21GeometricPackingEndpoint.lean) | Canonical radius bounds, derived parent-associated packing, and geometric endpoint constructors. |
+| [`Kakeya/Ninety21CompactGreedyPackingIntegration.lean`](Kakeya/Ninety21CompactGreedyPackingIntegration.lean) | Compact maximal-unused identifications and concrete geometric constructors. |
+| [`Kakeya/Ninety21RegularBudget.lean`](Kakeya/Ninety21RegularBudget.lean) | Regular-piece budget from pair indexing and parent-associated ball counts above the analytic cutoff. |
 | [`Kakeya/Ninety21Bijection.lean`](Kakeya/Ninety21Bijection.lean) | Finite Hall matching and bijection-extension tools. |
 | [`Kakeya/Ninety64TrimmedBijection.lean`](Kakeya/Ninety64TrimmedBijection.lean) | Matching statements for actual trimmed pieces; elementary exceptional-piece counts. |
 | [`Kakeya/Ninety21ConcreteIntegration.lean`](Kakeya/Ninety21ConcreteIntegration.lean) | Retained source-family data and legacy Theorem 4.2 reindexing (`hallEquiv42`). |
@@ -138,7 +160,7 @@ The exceptional contribution is recorded, not silently discarded. A geometric pa
 | [`Kakeya/Ninety21Theorem46Endpoint.lean`](Kakeya/Ninety21Theorem46Endpoint.lean) | Mass transport, conditional dyadic budget, and analytic endpoint integration. |
 | [`Audit.lean`](Audit.lean) | `#print axioms` checks for selected formal statements. |
 
-The development includes additional `Eighty*` and `Ninety*` modules documenting intermediate variants. **Module presence does not mean a theorem is part of the current final proof path.** For the Theorem 4.6 counting route, begin with `Ninety21Theorem46Endpoint.lean`; for the concrete greedy–Vitali analytic interface, begin with `Ninety21GreedyVitaliEndpointBridge.lean` and follow their imports backward.
+The development includes additional `Eighty*` and `Ninety*` modules documenting intermediate variants. **Module presence does not mean a theorem is part of the current final proof path.** For the Theorem 4.6 counting route, begin with `Ninety21Theorem46Endpoint.lean`; for the concrete greedy–Vitali geometric construction, begin with `Ninety21CompactGreedyPackingIntegration.lean` and follow its imports backward.
 
 ### Useful theorem and constructor names
 
@@ -147,6 +169,10 @@ The development includes additional `Eighty*` and `Ninety*` modules documenting 
 - `Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_piece_euclidean_cost`: geometric volume bound for retained localized pieces.
 - `Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclideanBoundsOfMaximalUnused`: derived concrete bounds constructor.
 - `Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofDerivedMaximalUnusedEuclidean`: concrete two-radius endpoint constructor.
+- `Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_card_le_of_canonical_geometry`: tube-wise Vitali packing at the canonical radius.
+- `Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.compactMaximalUnused_identifications`: center, selected-family, and chosen-sequence identifications.
+- `Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofCompactMaximalUnusedGeometry`: compact geometric constructor for the two-radius interface.
+- `Kakeya.Ninety21.paper46Construction_of_pair_indexing_at_cutoff`: Hall construction data with the derived regular-piece budget.
 - `Kakeya.Ninety21.paper46_analytic_mass_sum`: equality of the source and Theorem 4.6 reindexed mass sums.
 - `Kakeya.Ninety21.paper46_analytic_capture`: transfers the existing greedy mass comparison to those representative labels.
 - `Kakeya.Ninety21.paper46_analytic_count_with_exceptional`: double-counting bound retaining exceptional overhead.
@@ -162,9 +188,10 @@ The formalization separates (a) finite combinatorial lemmas and changes of index
 | Dyadic decomposition, finite matching infrastructure, and abstract mass-sum reindexing | Implemented in existing Lean modules. |
 | Maximal-unused greedy selection, occupied Vitali localization, empty-gain indexing, and residual recurrence | Integrated into the concrete construction. |
 | Euclidean piece volume, selected-cardinality and dyadic-radius bounds | Provided by the concrete bounds modules under their stated geometric hypotheses. |
-| Derived bounds and two-radius analytic interface | Integrated conditionally; normalization, original-tube ball incidence, and compatibility data remain explicit inputs. |
+| Parent-associated `hHallRight` and compact identifications | Derived for the canonical tube-wise Vitali construction under the stated Euclidean and scale hypotheses. |
+| Derived bounds and two-radius analytic interface | Connected by the compact geometric constructor; normalization, total scale, measure and boundedness inputs remain explicit. |
 | Theorem 4.6 regular/exceptional labels and mass transport | Integrated into the conditional endpoint. |
-| Regular-piece cardinality input (`Paper46ConstructionData.hRegularBudget`) | Not yet discharged from the concrete geometric setup. |
+| Regular-piece cardinality input (`Paper46ConstructionData.hRegularBudget`) | Derived from localized parent-associated ball counts and pair indexing above the cutoff; constructors supply it to the Hall data. |
 | Exceptional Vitali-ball packing for the concrete retained family | The elementary counting bridge exists; the complete geometric application remains open. |
 | Regular lower-fiber estimate (`hFiberLower`) | Postponed; counts original tube indices and regular pieces only. |
 | Full unconditional Kakeya maximal-function conjecture | **Not proved by this repository's present conditional endpoint.** |
@@ -181,6 +208,7 @@ For incremental development:
 lake build Kakeya.Ninety21GreedyVitaliIntegration
 lake build Kakeya.Ninety21GreedyVitaliBounds
 lake build Kakeya.Ninety21GreedyVitaliEndpointBridge
+lake build Kakeya.Ninety21CompactGreedyPackingIntegration
 lake build Kakeya.Ninety21PaperDoubleCount
 lake build Kakeya.Ninety21Theorem46Hall
 lake build Kakeya.Ninety21Theorem46Endpoint
@@ -196,9 +224,9 @@ If a build fails, report the first `error:` location, the module name, and the p
 
 The construction and direct endpoint integration are implemented conditionally. Remaining mathematical and geometric work:
 
-1. Derive original-tube ball incidence (`hHallRight`) from the appropriate indexed geometric family; obtain tube-count normalization from direction-separation and packing, and discharge any remaining compatibility conditions.
-2. Prove the regular-piece incidence/cardinality obligations for the actual Theorem 4.6 retained family, including the regular-only original-tube `hFiberLower` condition.
-3. Prove the exceptional Vitali-ball packing estimate and control the exceptional overhead.
-4. Connect these geometric inputs to the full unconditional maximal-function estimate, without changing the source family during matching and counting.
+1. Prove the regular-only original-tube `hFiberLower` condition for the assignment and retained family used by Theorem 4.6.
+2. Prove the exceptional packing estimate for that family and control the exceptional overhead used by the analytic endpoint.
+3. Instantiate the Theorem 4.6 endpoint with the concrete retained geometry, its pair indexing, mass comparison, regular fibers, and exceptional estimate.
+4. Derive dimension-dependent normalization and total-scale bounds from direction separation, supply the concrete measure and boundedness inputs, and complete the passage to the unconditional maximal-function statement.
 
 This is an evolving formal research project. Corrections to statement scope, proofs, and the boundary between hypotheses and established theorems are welcome as GitHub issues or pull requests. When proposing changes, state which exact Lean declaration is affected and whether `lake build` succeeds on the repository's pinned toolchain.
