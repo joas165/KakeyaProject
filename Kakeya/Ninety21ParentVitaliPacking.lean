@@ -210,4 +210,156 @@ noncomputable def ConcreteGreedyVitaliCandidates.euclideanTubeBallBounds_of_sele
     A C Z K hA hC hK hCgeom hRadius hCenters hScale hSelected hNorm
     (d.parent_associated_hHallRight (k + 2) K hK hPacking)
 
+
+
+/-- The selected Vitali balls satisfy the numerical packing estimate of
+Lemma 4.4 when each original tube has length at most one and the canonical
+localization radii satisfy `δ ≤ R ≤ 1`. -/
+theorem ConcreteGreedyVitaliCandidates.selected_card_le_of_originalTube_geometry
+    {k : ℕ} {T : Type*} [Fintype T]
+    (center direction : T → Kakeya.Space (k + 2))
+    (δ A : ℝ)
+    (g : ConcreteTubeBallGeometry
+      (fun r => Kakeya.unitTube (center r) (direction r) δ))
+    (d : ConcreteGreedyVitaliCandidates
+      (fun r => Kakeya.unitTube (center r) (direction r) δ) g)
+    (hv : ∀ r, direction r ≠ 0)
+    (hNorm : ∀ r, ‖direction r‖ ≤ 1)
+    (hA : 0 < A)
+    (hRadius : ∀ m, d.radius m =
+      canonicalGreedyVitaliRadius (T := T) (k + 2) A m)
+    (hδR : ∀ m, δ ≤ d.radius m)
+    (hRone : ∀ m, d.radius m ≤ 1)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (r : T) (hr : r ∈ g.B m) :
+    ((d.selected m r).card : ℝ) ≤
+      ((7 * 3 ^ (k + 1) * packingBallConstant (k + 1)) /
+        (packingBallConstant (k + 2) * A)) *
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m ^
+          ((1 : ℝ) / (((k + 2 : ℕ) : ℝ) - 1)) := by
+  let R := d.radius m
+  have hR : 0 < R := d.hRadius m
+  have hDisjoint :
+      (↑(d.selected m r) : Set (Fin (g.ballCount m))).PairwiseDisjoint
+        (fun i => Metric.ball (d.centers m i) R) := by
+    intro i hi j hj hij
+    have h := d.selected_disjoint m r hr i hi j hj hij
+    simpa only [d.hBall m i, d.hBall m j] using h
+  have hHit (i : Fin (g.ballCount m)) (hi : i ∈ d.selected m r) :
+      (Metric.ball (d.centers m i) R ∩
+        Kakeya.unitTube (center r) (direction r) δ).Nonempty := by
+    simpa only [d.hBall m i] using
+      (d.selected_ball_meets_parent_tube m r hr i hi)
+  have hVolume := originalTube_disjoint_balls_real_volume_le k
+    (center r) (direction r) δ R (d.centers m) (d.selected m r)
+    (hv r) (hNorm r) hR (hδR m) hDisjoint hHit
+  have hScale :
+      Kakeya.Eighty4.dyadicScale (Fintype.card T) m ^
+        ((1 : ℝ) / (((k + 2 : ℕ) : ℝ) - 1)) * R = A := by
+    dsimp [R]
+    rw [hRadius m]
+    exact canonicalGreedyVitaliRadius_scale (T := T) (k + 2) A m
+  exact disjoint_balls_card_le_dyadic k (d.selected m r).card
+    R A (Kakeya.Eighty4.dyadicScale (Fintype.card T) m)
+    (packingBallConstant (k + 2)) (packingBallConstant (k + 1))
+    hR (hRone m) hA (Kakeya.Eighty4.dyadicScale_pos _ m)
+    (packingBallConstant_pos _) (packingBallConstant_pos _).le
+    hScale hVolume
+
+/-- Tube-wise Euclidean packing supplies the parent-associated `hHallRight`
+without an independent selected-family incidence hypothesis. -/
+theorem ConcreteGreedyVitaliCandidates.parent_associated_hHallRight_of_geometry
+    {k : ℕ} {T : Type*} [Fintype T]
+    (center direction : T → Kakeya.Space (k + 2))
+    (δ A : ℝ)
+    (g : ConcreteTubeBallGeometry
+      (fun r => Kakeya.unitTube (center r) (direction r) δ))
+    (d : ConcreteGreedyVitaliCandidates
+      (fun r => Kakeya.unitTube (center r) (direction r) δ) g)
+    (hv : ∀ r, direction r ≠ 0)
+    (hNorm : ∀ r, ‖direction r‖ ≤ 1)
+    (hA : 0 < A)
+    (hRadius : ∀ m, d.radius m =
+      canonicalGreedyVitaliRadius (T := T) (k + 2) A m)
+    (hδR : ∀ m, δ ≤ d.radius m)
+    (hRone : ∀ m, d.radius m ≤ 1) :
+    ∀ m r,
+      (∑ i : Fin (d.retained.ballCount m),
+        if (∃ s : ({t : T // t ∈ d.retained.B m} ⊕
+            {p : T × ℕ // p ∈ d.retained.P m}),
+          d.retained.tubeOf m s = r ∧ d.retained.ballOf m s = i)
+        then (1 : ℝ) else 0) ≤
+          ((7 * 3 ^ (k + 1) * packingBallConstant (k + 1)) /
+            (packingBallConstant (k + 2) * A)) *
+          Kakeya.Eighty4.dyadicScale (Fintype.card T) m ^
+            ((1 : ℝ) / (((k + 2 : ℕ) : ℝ) - 1)) := by
+  let K : ℝ :=
+    (7 * 3 ^ (k + 1) * packingBallConstant (k + 1)) /
+      (packingBallConstant (k + 2) * A)
+  have hK : 0 ≤ K := by
+    have hωn := packingBallConstant_pos (k + 2)
+    have hωtrans := packingBallConstant_pos (k + 1)
+    dsimp [K]
+    positivity
+  exact d.parent_associated_hHallRight (k + 2) K hK
+    (fun m r hr => d.selected_card_le_of_originalTube_geometry
+      center direction δ A g (hv := hv) (hNorm := hNorm) hA
+      hRadius hδR hRone m r hr)
+
+
+
+/-- Euclidean tube–ball bounds with the parent-associated incidence derived
+from the original-tube Vitali packing estimate. -/
+noncomputable def ConcreteGreedyVitaliCandidates.euclideanTubeBallBounds_of_geometry
+    {k : ℕ} {T : Type*} [Fintype T]
+    (μ : Measure (Kakeya.Space (k + 2))) [IsFiniteMeasure μ]
+    (center direction : T → Kakeya.Space (k + 2))
+    (δ : ℝ) (hδ : 0 ≤ δ)
+    (g : ConcreteTubeBallGeometry
+      (fun j => Kakeya.unitTube (center j) (direction j) δ))
+    (d : ConcreteGreedyVitaliCandidates
+      (fun j => Kakeya.unitTube (center j) (direction j) δ) g)
+    (hT : ∀ j, MeasurableSet
+      (Kakeya.unitTube (center j) (direction j) δ))
+    (hv : ∀ j, direction j ≠ 0)
+    (hNorm : ∀ j, ‖direction j‖ ≤ 1)
+    (hDom : ∀ E : Set (Kakeya.Space (k + 2)),
+      μ E ≤ (volume : Measure (Kakeya.Space (k + 2))) E)
+    (A C Z : ℝ) (hA : 0 < A) (hC : 0 ≤ C)
+    (hCgeom : 2 * tripleRadiusTransverseCoefficient k ≤ C)
+    (hRadius : ∀ m, d.radius m =
+      canonicalGreedyVitaliRadius (T := T) (k + 2) A m)
+    (hδR : ∀ m, δ ≤ d.radius m)
+    (hRone : ∀ m, d.radius m ≤ 1)
+    (hCenters : ∀ m i,
+      d.centers m i ∈ Kakeya.Eighty4.concreteDyadicBand
+        (fun j => Kakeya.unitTube (center j) (direction j) δ) m)
+    (hScale : ∀ m,
+      Kakeya.Eighty4.dyadicScale (Fintype.card T) m ≤
+        (Fintype.card T : ℝ))
+    (hSelected : ∀ m, (g.B m).card ≤
+      ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊)
+    (hNormCount : (Fintype.card T : ℝ) * δ ^ (k + 1) ≤ Z) :
+    ConcreteTubeBallBounds μ
+      (fun j => Kakeya.unitTube (center j) (direction j) δ)
+      (k + 2) d.retained := by
+  let K : ℝ := (7 * 3 ^ (k + 1) * packingBallConstant (k + 1)) /
+    (packingBallConstant (k + 2) * A)
+  have hK : 0 ≤ K := by
+    have hωn := packingBallConstant_pos (k + 2)
+    have hωtrans := packingBallConstant_pos (k + 1)
+    dsimp [K]
+    positivity
+  have hRadius' : ∀ m, d.radius m = A *
+      Kakeya.Eighty4.dyadicScale (Fintype.card T) m ^
+        (-((1 : ℝ) / (((k + 2 : ℕ) : ℝ) - 1))) := by
+    intro m
+    exact hRadius m
+  exact d.euclideanTubeBallBounds_of_selected_packing
+    μ center direction δ hδ g hT hv hDom A C Z K hA.le hC hK
+    hCgeom hRadius' hCenters hScale hSelected hNormCount
+    (fun m r hr => d.selected_card_le_of_originalTube_geometry
+      center direction δ A g hv hNorm hA hRadius hδR hRone m r hr)
+
 end Kakeya.Ninety21
