@@ -76,7 +76,7 @@ theorem ConcreteTubeBallGeometry.active_maximal_unused_subset
   exact Finset.filter_subset _ _
 
 /-- Concrete bounds from maximal-unused selection and the canonical radius.
-Only normalization and original-tube ball incidence are quantitative inputs. -/
+Normalization and parent-associated ball counts are quantitative inputs. -/
 noncomputable def ConcreteGreedyVitaliCandidates.euclideanBoundsOfMaximalUnused
     {k : ℕ} {T : Type*} [Fintype T] [Nonempty T]
     (μ : Measure (Kakeya.Space (k + 2))) [IsFiniteMeasure μ]
@@ -103,9 +103,11 @@ noncomputable def ConcreteGreedyVitaliCandidates.euclideanBoundsOfMaximalUnused
       (fun j => Kakeya.unitTube (center j) (direction j) δ) m)
     (hNorm : (Fintype.card T : ℝ) * δ ^ (k + 1) ≤ Z)
     (hIncidence : ∀ m r,
-      (∑ i : Fin (g.ballCount m),
-        if (g.ball m i ∩ Kakeya.unitTube (center r) (direction r) δ).Nonempty
-          then (1 : ℝ) else 0) ≤
+      (∑ i : Fin (d.retained.ballCount m),
+        if (∃ s : ({t : T // t ∈ d.retained.B m} ⊕
+            {p : T × ℕ // p ∈ d.retained.P m}),
+          d.retained.tubeOf m s = r ∧ d.retained.ballOf m s = i)
+        then (1 : ℝ) else 0) ≤
         K * Kakeya.Eighty4.dyadicScale (Fintype.card T) m ^
           ((1 : ℝ) / (((k + 2 : ℕ) : ℝ) - 1))) :
     ConcreteTubeBallBounds μ
@@ -158,9 +160,11 @@ noncomputable def ConcreteTwoRadiusGreedy.ofDerivedMaximalUnusedEuclidean
       (fun j => Kakeya.unitTube (center j) (direction j) δ) m)
     (hNorm : (Fintype.card T : ℝ) * δ ^ (k + 1) ≤ Z)
     (hIncidence : ∀ m r,
-      (∑ i : Fin (g.ballCount m),
-        if (g.ball m i ∩ Kakeya.unitTube (center r) (direction r) δ).Nonempty
-          then (1 : ℝ) else 0) ≤
+      (∑ i : Fin (d.retained.ballCount m),
+        if (∃ s : ({t : T // t ∈ d.retained.B m} ⊕
+            {p : T × ℕ // p ∈ d.retained.P m}),
+          d.retained.tubeOf m s = r ∧ d.retained.ballOf m s = i)
+        then (1 : ℝ) else 0) ≤
         K * Kakeya.Eighty4.dyadicScale (Fintype.card T) m ^
           ((1 : ℝ) / (((k + 2 : ℕ) : ℝ) - 1))) :
     let b := ConcreteGreedyVitaliCandidates.euclideanBoundsOfMaximalUnused

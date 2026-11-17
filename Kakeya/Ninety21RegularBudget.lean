@@ -52,39 +52,40 @@ theorem paper_regular_budget_of_tube_ball_count
   let Reg := PaperRegularLabel μ tubes n s.toRetainedDyadicData m
   let Sel := {r : T // r ∈ s.B m}
   let J := Fin (s.ballCount m)
-  let hit : Sel → J → Prop :=
-    fun r j => (s.ball m j ∩ tubes r.val).Nonempty
-  let f : Reg → (Σ r : Sel, {j : J // hit r j}) := by
+  let associated : Sel → J → Prop := fun r i =>
+    ∃ s' : ({t : T // t ∈ s.B m} ⊕ {p : K // p ∈ s.P m}),
+      (match s' with
+       | Sum.inl t => t.val
+       | Sum.inr p => s.parent m p) = r.val ∧ s.sourceBall m s' = i
+  let f : Reg → (Σ r : Sel, {j : J // associated r j}) := by
     intro p
     refine ⟨⟨s.parent m p.val, s.hParent m p.val⟩,
       ⟨s.sourceBall m (Sum.inr p.val), ?_⟩⟩
-    obtain ⟨x, hx⟩ := s.hNonempty m (Sum.inr p.val)
-    exact ⟨x, s.hSourceBall m (Sum.inr p.val) hx,
-      (s.hTrimmed m p.val hx).1⟩
+    exact ⟨Sum.inr p.val, rfl, rfl⟩
   have hf : Function.Injective f := by
     intro p p' heq
     apply Subtype.ext
     apply hPairInjective
     apply Prod.ext
-    · exact congrArg (fun z : (Σ r : Sel, {j : J // hit r j}) => z.1.val) heq
-    · exact congrArg (fun z : (Σ r : Sel, {j : J // hit r j}) => z.2.val) heq
+    · exact congrArg (fun z : (Σ r : Sel, {j : J // associated r j}) => z.1.val) heq
+    · exact congrArg (fun z : (Σ r : Sel, {j : J // associated r j}) => z.2.val) heq
   have hCard : Fintype.card Reg ≤
-      ∑ r : Sel, Fintype.card {j : J // hit r j} := by
+      ∑ r : Sel, Fintype.card {j : J // associated r j} := by
     simpa only [Fintype.card_sigma] using
       (Fintype.card_le_of_injective f hf)
   have hRealCard : (Fintype.card Reg : ℝ) ≤
-      ∑ r : Sel, (Fintype.card {j : J // hit r j} : ℝ) := by
+      ∑ r : Sel, (Fintype.card {j : J // associated r j} : ℝ) := by
     exact_mod_cast hCard
   have hBall (r : Sel) :
-      (Fintype.card {j : J // hit r j} : ℝ) ≤
+      (Fintype.card {j : J // associated r j} : ℝ) ≤
       s.ballPackingConstant *
         (Kakeya.Eighty4.dyadicScale (Fintype.card T) m) ^
           ((1 : ℝ) / ((n : ℝ) - 1)) := by
-    have hc : Fintype.card {j : J // hit r j} =
-        (Finset.univ.filter (hit r)).card :=
-      Fintype.card_subtype (hit r)
+    have hc : Fintype.card {j : J // associated r j} =
+        (Finset.univ.filter (associated r)).card :=
+      Fintype.card_subtype (associated r)
     rw [hc]
-    simpa [hit, Finset.sum_boole] using s.hHallRight m r.val
+    simpa [associated, Finset.sum_boole] using s.hHallRight m r.val
   have hCount : (Fintype.card Reg : ℝ) ≤
       ((s.B m).card : ℝ) *
         (s.ballPackingConstant *
@@ -92,7 +93,7 @@ theorem paper_regular_budget_of_tube_ball_count
             ((1 : ℝ) / ((n : ℝ) - 1))) := by
     calc
       (Fintype.card Reg : ℝ) ≤
-          ∑ r : Sel, (Fintype.card {j : J // hit r j} : ℝ) := hRealCard
+          ∑ r : Sel, (Fintype.card {j : J // associated r j} : ℝ) := hRealCard
       _ ≤ ∑ _r : Sel,
           (s.ballPackingConstant *
             (Kakeya.Eighty4.dyadicScale (Fintype.card T) m) ^

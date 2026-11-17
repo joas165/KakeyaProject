@@ -6,21 +6,18 @@ public import Kakeya.Ninety21ConcreteIntegration
 
 The family `s.P m` is the existing family of remaining retained trimmed pieces.
 There is no separately selected or substituted family.
-
 For p in that family set
-  d(p) = #{t : T | (sourcePiece (inr p) ∩ tubes t).Nonempty}.
+  d(p) = #{t : T | (retainedPiece (inr p) ∩ tubes t).Nonempty}.
 Theorem 4.6's classification is implemented *definitionally*:
   P_reg = {p in P | 2*d(p) <= N}
   P_exc = {p in P | N < 2*d(p)}.
 This is exactly d(p) <= N/2 versus d(p) > N/2 (no real rounding).
-
 The original-tube partial assignment is restricted to P_reg. It contains no
 auxiliary labels and makes no row-uniqueness claim about intersections.
 The only new incidence/counting assumption is `hFiberLower`, for P_reg alone.
 The current Hall image of P_reg is not yet proved to be the distinct
 nonintersecting representative image sigma(P_reg) of Theorem 4.6.
-
-This module proves q*|P_reg| <= N, partitions the actual source family, and
+This module proves q*|P_reg| <= N, partitions the actual retained family, and
 obtains q*|D| <= 3*N + q*|P_exc|. It DOES NOT claim the exceptional packing
 bound or the final 4N budget. Those require the actual Vitali-ball data,
 which `RetainedDyadicData` does not yet encode.
@@ -34,7 +31,6 @@ namespace Kakeya.Ninety21
 attribute [local instance] Classical.propDecidable
 
 variable {X T K : Type*} [MeasurableSpace X] [Fintype T]
-
 /-- Number of ORIGINAL tubes meeting an actual remaining retained piece. -/
 noncomputable def paperOriginalTubeDegree
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
@@ -43,8 +39,7 @@ noncomputable def paperOriginalTubeDegree
     (p : {k : K // k ∈ s.P m}) : ℕ := by
   classical
   exact (Finset.univ.filter (fun r : T =>
-    (s.sourcePiece m (Sum.inr p) ∩ tubes r).Nonempty)).card
-
+    (s.retainedPiece m (Sum.inr p) ∩ tubes r).Nonempty)).card
 /-- The paper's `P_m^reg`: precisely the actual pieces with d(P) ≤ N/2. -/
 noncomputable def paperRegularPieces
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
@@ -54,7 +49,6 @@ noncomputable def paperRegularPieces
   classical
   exact Finset.univ.filter (fun p =>
     2 * paperOriginalTubeDegree μ tubes n s m p ≤ Fintype.card T)
-
 /-- The paper's `P_m^exc`: precisely the actual pieces with d(P) > N/2. -/
 noncomputable def paperExceptionalPieces
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
@@ -64,7 +58,6 @@ noncomputable def paperExceptionalPieces
   classical
   exact Finset.univ.filter (fun p =>
     Fintype.card T < 2 * paperOriginalTubeDegree μ tubes n s m p)
-
 theorem mem_paperRegularPieces
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
     (s : RetainedDyadicData (K := K) μ tubes n)
@@ -74,7 +67,6 @@ theorem mem_paperRegularPieces
       2 * paperOriginalTubeDegree μ tubes n s m p ≤ Fintype.card T := by
   classical
   simp [paperRegularPieces]
-
 theorem mem_paperExceptionalPieces
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
     (s : RetainedDyadicData (K := K) μ tubes n)
@@ -84,7 +76,6 @@ theorem mem_paperExceptionalPieces
       Fintype.card T < 2 * paperOriginalTubeDegree μ tubes n s m p := by
   classical
   simp [paperExceptionalPieces]
-
 /-- Every actual retained piece is in exactly one of the two classes. -/
 theorem paper_regular_exceptional_partition
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
@@ -108,7 +99,6 @@ theorem paper_regular_exceptional_partition
     · have hx : Fintype.card T < 2 * paperOriginalTubeDegree μ tubes n s m p := by
         omega
       exact Or.inr ((mem_paperExceptionalPieces μ tubes n s m p).mpr hx)
-
 /-- In particular, the split does not create or discard any retained pieces. -/
 theorem paper_regular_exceptional_card
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
@@ -125,7 +115,6 @@ theorem paper_regular_exceptional_card
           paperExceptionalPieces μ tubes n s m).card :=
           (Finset.card_union_of_disjoint hdisj).symm
     _ = (s.P m).card := by rw [hcover]; simp
-
 /-- Each exceptional piece keeps its actual selected trimmed-tube parent.
 No new parent function or piece family is introduced by classification. -/
 theorem paperExceptional_parent_selected
@@ -135,7 +124,6 @@ theorem paperExceptional_parent_selected
     (p : {p : {k : K // k ∈ s.P m} //
       p ∈ paperExceptionalPieces μ tubes n s m}) :
     s.parent m p.val ∈ s.B m := s.hParent m p.val
-
 /-- The exceptional pieces are still the same localized trimmed subsets. -/
 theorem paperExceptional_trimmed
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
@@ -143,10 +131,9 @@ theorem paperExceptional_trimmed
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
     (p : {p : {k : K // k ∈ s.P m} //
       p ∈ paperExceptionalPieces μ tubes n s m}) :
-    s.sourcePiece m (Sum.inr p.val) ⊆
+    s.retainedPiece m (Sum.inr p.val) ⊆
       tubes (s.parent m p.val) ∩ s.gain m (s.parent m p.val) :=
   s.hTrimmed m p.val
-
 /-- The Hall index assigned to a regular *actual retained piece*. This is
 only a relabeling of that piece, not a new piece or original-tube incidence. -/
 noncomputable def paperRegularIndex
@@ -156,7 +143,6 @@ noncomputable def paperRegularIndex
     (p : {p : {k : K // k ∈ s.P m} //
       p ∈ paperRegularPieces μ tubes n s.toBallLocalizedDyadicData.toRetainedDyadicData m}) : T :=
   (hallEquiv42 μ tubes n s m (Sum.inr p.val)).val
-
 /-- Regular pieces have distinct representatives because Hall is a bijection. -/
 theorem paperRegularIndex_injective
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
@@ -169,7 +155,6 @@ theorem paperRegularIndex_injective
   have hp : p.val = p'.val :=
     Sum.inr.inj ((hallEquiv42 μ tubes n s m).injective he)
   exact Subtype.ext hp
-
 /-- The finite set of Hall labels of regular actual pieces. This is the
 image under the *existing* Hall equivalence, not a claim that its values are
 the nonintersecting representatives of Theorem 4.6. -/
@@ -179,7 +164,6 @@ noncomputable def paperRegularIndices
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) : Finset T := by
   classical
   exact Finset.univ.image (paperRegularIndex μ tubes n s m)
-
 /-- The regular labels really lie in the existing Hall reindexing `D_m`. -/
 theorem paperRegularIndices_subset_hall
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
@@ -191,8 +175,7 @@ theorem paperRegularIndices_subset_hall
   intro r hr
   obtain ⟨p, _, rfl⟩ := Finset.mem_image.mp hr
   exact (hallEquiv42 μ tubes n s m (Sum.inr p.val)).property
-
-/-- The regular source labels and their distinct Hall indices are equivalent.
+/-- The regular retained labels and their distinct Hall indices are equivalent.
 This is the regular image under the currently implemented intersection-compatible
 Hall reindexing. The paper's nonintersecting sigma from Theorem 4.6 is a
 separate construction and is NOT identified with this map here. -/
@@ -222,7 +205,6 @@ noncomputable def paperRegularIndexEquiv
     refine ⟨p, ?_⟩
     apply Subtype.ext
     exact hp
-
 /-- The sigma image has exactly as many indices as geometric regular pieces. -/
 theorem paperRegularIndices_card
     (μ : Measure X) (tubes : T → Set X) (n : ℕ)
@@ -233,7 +215,6 @@ theorem paperRegularIndices_card
   classical
   have hc := Fintype.card_congr (paperRegularIndexEquiv μ tubes n s m)
   simpa only [Fintype.card_coe] using hc.symm
-
 /-- A PARTIAL assignment from ORIGINAL tubes to sigma(P_m^reg) only.
 It is single-valued by its type; it does not assert that an original tube
 intersects only one geometrical piece. Auxiliary tubes are not in its domain.
@@ -247,10 +228,9 @@ noncomputable def paperOriginalTubeMapReg
   classical
   exact if h : ∃ p : {p : {k : K // k ∈ s.P m} //
       p ∈ paperRegularPieces μ tubes n s.toBallLocalizedDyadicData.toRetainedDyadicData m},
-      (s.sourcePiece m (Sum.inr p.val) ∩ tubes t).Nonempty
+      (s.retainedPiece m (Sum.inr p.val) ∩ tubes t).Nonempty
     then some (paperRegularIndexEquiv μ tubes n s m (Classical.choose h))
     else none
-
 /-- A fiber count needs single-valuedness, NOT uniqueness of tube-piece
 intersections. It can be applied only with valid geometric lower fibers. -/
 theorem paper_double_count_fibers
@@ -275,7 +255,6 @@ theorem paper_double_count_fibers
       | none => simp
       | some p => simp
     _ = (Fintype.card R : ℝ) := by simp
-
 /-- The SOLE additional incidence assumption, *only* for regular pieces and
 *only* over ORIGINAL tubes. The classification is no longer an input. -/
 theorem paper_regular_count_of_fibers
@@ -297,7 +276,6 @@ theorem paper_regular_count_of_fibers
     (Kakeya.Eighty4.dyadicScale (Fintype.card T) m)
     hFiberLower
   simpa only [Fintype.card_coe, paperRegularIndices_card] using hf
-
 /-- The paper double count, now over the *defined geometric* regular pieces.
 The exceptional count is an explicit remainder, not an assumption. -/
 theorem paper_hall_count_with_exceptional_remainder
@@ -351,5 +329,4 @@ theorem paper_hall_count_with_exceptional_remainder
           have hGreedy' : q * ((s.B m).card : ℝ) ≤
               2 * (Fintype.card T : ℝ) := hGreedy
           nlinarith
-
 end Kakeya.Ninety21

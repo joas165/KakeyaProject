@@ -180,7 +180,9 @@ structure ConcreteTubeBallBounds
   hBallPackingConstant : 0 ≤ ballPackingConstant
   hHallRight : ∀ m r,
     (∑ i : Fin (g.ballCount m),
-      if (g.ball m i ∩ tubes r).Nonempty then (1 : ℝ) else 0) ≤
+      if (∃ s : ({t : T // t ∈ g.B m} ⊕ {p : T × ℕ // p ∈ g.P m}),
+        g.tubeOf m s = r ∧ g.ballOf m s = i)
+      then (1 : ℝ) else 0) ≤
       ballPackingConstant * (Kakeya.Eighty4.dyadicScale (Fintype.card T) m) ^
         ((1 : ℝ) / ((n : ℝ) - 1))
 
@@ -242,7 +244,9 @@ noncomputable def ConcreteTubeBallGeometry.toBallLocalized
     hBallOccupied := b.hBallOccupied
     ballPackingConstant := b.ballPackingConstant
     hBallPackingConstant := b.hBallPackingConstant
-    hHallRight := b.hHallRight
+    hHallRight := by
+      intro m r
+      simpa only [Sum.exists, ConcreteTubeBallGeometry.tubeOf] using b.hHallRight m r
   }
 
 /-- Tube–ball pair indexing is automatic for this concrete construction. -/
