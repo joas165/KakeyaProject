@@ -500,3 +500,13 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.nonTransverseDirectionIndices_card_of_projected_charts
 #print axioms Kakeya.Ninety21.nonTransverseDirectionIndices_budget_of_projected_charts
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_scaled_budget_of_projected_chart
+
+-- Angular-cap population normalization.
+#print axioms Kakeya.Ninety21.angular_population_real_bound
+#print axioms Kakeya.Ninety21.nonTransverseDirectionIndices_budget_of_quantitative_packing
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_scaled_budget_of_cap_packing
+
+-- Unit-cap coordinate geometry and reverse Lipschitz control.
+#print axioms Kakeya.Ninety21.unit_cap_axial_difference_le
+#print axioms Kakeya.Ninety21.unit_two_cap_reverse_lipschitz
+#print axioms Kakeya.Ninety21.nonTransverseDirectionIndices_card_of_unit_chart_geometry

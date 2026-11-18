@@ -50,4 +50,6 @@ public import Kakeya.Ninety21ExceptionalTransverseBudget
 public import Kakeya.Ninety21EuclideanFiniteNet
 public import Kakeya.Ninety21AngularCapCounting
 public import Kakeya.Ninety21AngularProjectionPacking
+public import Kakeya.Ninety21AngularPopulationBudget
+public import Kakeya.Ninety21AngularChartGeometry
 @[expose] public section
