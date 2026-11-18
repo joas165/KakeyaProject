@@ -47,4 +47,7 @@ public import Kakeya.Ninety21ExceptionalBudget
 public import Kakeya.Ninety21ExceptionalParentBudget
 public import Kakeya.Ninety21TwoTubeTransverseGeometry
 public import Kakeya.Ninety21ExceptionalTransverseBudget
+public import Kakeya.Ninety21EuclideanFiniteNet
+public import Kakeya.Ninety21AngularCapCounting
+public import Kakeya.Ninety21AngularProjectionPacking
 @[expose] public section

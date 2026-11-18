@@ -7,7 +7,6 @@ import Kakeya.Ninety21VitaliIndexBudget
 import Kakeya.Ninety21TwoRadiusEndpoint
 import Kakeya.Ninety21OccupiedVitaliPieces
 import Kakeya.Ninety21GreedyVitaliBounds
-import Kakeya.Ninety21GreedyVitaliEndpointBridge
 
 /-!
 # Axiom audit
@@ -434,38 +433,70 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactMaximalUnusedGains
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactMaximalUnusedGains_selection
 
--- Empty-gain localization and genuine finite-net indexing.
+-- Empty-gain localization and padded finite-net indexing.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_empty_of_gain_empty
 #print axioms Kakeya.Ninety21.greedyFiniteNet_empty_of_gain_empty
+#print axioms Kakeya.Ninety21.vitaliPaddedCenterEquiv
+#print axioms Kakeya.Ninety21.vitaliPaddedCenter
+#print axioms Kakeya.Ninety21.vitaliPaddedCandidates
+#print axioms Kakeya.Ninety21.vitaliPadded_fallback_not_candidate
+#print axioms Kakeya.Ninety21.vitaliPadded_index_exists
+#print axioms Kakeya.Ninety21.vitaliPadded_indexed_cover
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty
-#print axioms Kakeya.Ninety21.activeGainNetTubes
-#print axioms Kakeya.Ninety21.activeGainNetTubes_card_le
-#print axioms Kakeya.Ninety21.activeGainNetTubes_empty
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofGreedyNetFamilyAllowEmpty
-#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty_ball_occupied
-#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty_zero_balls
 
 -- Greedy–Vitali concrete bounds.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_ball_occupied_of_centers
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_selected_card_le
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_selected_card_maximal_unused
 #print axioms Kakeya.Ninety21.ofGreedyNetFamily_center_on_level
-#print axioms Kakeya.Ninety21.ofGreedyNetFamilyAllowEmpty_center_on_level
-#print axioms Kakeya.Ninety21.compactGreedyGain_centers_on_level
-#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactGreedyGains_centers_on_level
-#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactGreedyGains_retained_ball_occupied
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_piece_euclidean_cost
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclideanTubeBallBounds
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclideanTubeBallBounds_radius
 
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_label_ball_occupied
+#print axioms Kakeya.Ninety21.vitaliPaddedCenter_on_level_of_genuine
 #print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius
 #print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius_pos
 #print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius_scale
 
--- Maximal-unused dyadic scaling, selected budget, and direct analytic endpoint.
-#print axioms Kakeya.Ninety21.dyadicScale_le_card
-#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.selected_card_of_maximal_unused_subset
-#print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.active_maximal_unused_subset
-#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclideanBoundsOfMaximalUnused
-#print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofDerivedMaximalUnusedEuclidean
+-- Exceptional parent-ball indexing and pair-label counting.
+#print axioms Kakeya.Ninety21.paperExceptionalParentBallIndices
+#print axioms Kakeya.Ninety21.paper_exceptional_card_le_parent_ball_count
+#print axioms Kakeya.Ninety21.paper_exceptional_scaled_budget_of_parent_ball_count
+#print axioms Kakeya.Ninety21.paper_exceptional_scaled_budget_of_pair_indexing
+
+-- Two-tube transversality and disjoint-ball packing.
+#print axioms Kakeya.Ninety21.originalTube_ball_center_near_axis
+#print axioms Kakeya.Ninety21.TransverseDirections
+#print axioms Kakeya.Ninety21.two_transverse_tubes_ball_center_diameter
+#print axioms Kakeya.Ninety21.disjoint_balls_card_le_half_radius_net
+#print axioms Kakeya.Ninety21.two_transverse_tubes_ball_count_of_cover
+
+-- Exceptional original-tube incidence and parent-wise bounds.
+#print axioms Kakeya.Ninety21.transverse_finite_incidence_count
+#print axioms Kakeya.Ninety21.exceptional_parent_ball_large_original_incidence
+#print axioms Kakeya.Ninety21.exceptional_parent_ball_packing_of_transverse_count
+#print axioms Kakeya.Ninety21.exceptional_scaled_budget_of_transverse_count
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_parent_balls_selected
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_parent_balls_disjoint
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_transverse_pair_card_le
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_scaled_budget_of_transverse_geometry
+
+-- Uniform Euclidean covering and exceptional-budget specialization.
+#print axioms Kakeya.Ninety21.euclidean_uniform_half_radius_net
+#print axioms Kakeya.Ninety21.euclidean_transverse_uniform_half_radius_net
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_scaled_budget_uniform_cover
+
+-- Separated-direction nets and angular-cap incidence counting.
+#print axioms Kakeya.Ninety21.separated_finset_card_le_net_card
+#print axioms Kakeya.Ninety21.nonTransverseDirectionIndices
+#print axioms Kakeya.Ninety21.transverse_of_not_mem_nonTransverseDirectionIndices
+#print axioms Kakeya.Ninety21.nonTransverseDirectionIndices_card_budget_of_net
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_scaled_budget_of_angular_cap_net
+
+#print axioms Kakeya.Ninety21.separated_two_chart_card_le
+#print axioms Kakeya.Ninety21.uniform_projected_cap_net
+#print axioms Kakeya.Ninety21.nonTransverseDirectionIndices_card_of_projected_charts
+#print axioms Kakeya.Ninety21.nonTransverseDirectionIndices_budget_of_projected_charts
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_scaled_budget_of_projected_chart
