@@ -510,3 +510,30 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.unit_cap_axial_difference_le
 #print axioms Kakeya.Ninety21.unit_two_cap_reverse_lipschitz
 #print axioms Kakeya.Ninety21.nonTransverseDirectionIndices_card_of_unit_chart_geometry
+
+-- Unit-direction Gram identities and nontransverse projected norms.
+#print axioms Kakeya.Ninety21.unit_directions_gram_identity
+#print axioms Kakeya.Ninety21.transverse_of_unit_sine_sq_lower
+#print axioms Kakeya.Ninety21.unit_sine_sq_lt_of_not_transverse
+#print axioms Kakeya.Ninety21.projected_norm_lt_of_not_transverse
+#print axioms Kakeya.Ninety21.original_nontransverse_projected_norm_le
+
+-- Quantitative Euclidean cap packing.
+#print axioms Kakeya.Ninety21.finite_euclidean_packing_of_ball_volume
+#print axioms Kakeya.Ninety21.finite_euclidean_projected_packing
+#print axioms Kakeya.Ninety21.separated_two_chart_real_card_le
+#print axioms Kakeya.Ninety21.quantitative_cap_card_of_projected_chart
+
+-- Orthogonal coordinate charts for unit directions.
+#print axioms Kakeya.Ninety21.directionOrthogonalBasis
+#print axioms Kakeya.Ninety21.unitDirectionPerpendicular
+#print axioms Kakeya.Ninety21.unitDirectionOrthogonalChart
+#print axioms Kakeya.Ninety21.unitDirectionOrthogonalChart_norm
+#print axioms Kakeya.Ninety21.unitDirectionOrthogonalChart_pythagoras
+
+-- Concrete angular packing and exceptional-piece budget.
+#print axioms Kakeya.Ninety21.unitDirectionHemisphere
+#print axioms Kakeya.Ninety21.unitDirectionHemisphere_same_sign
+#print axioms Kakeya.Ninety21.unitDirectionOrthogonalChart_coordinate_distance
+#print axioms Kakeya.Ninety21.original_unit_directions_quantitative_cap_card
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_scaled_budget_of_unit_directions

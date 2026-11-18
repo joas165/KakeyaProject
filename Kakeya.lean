@@ -52,4 +52,8 @@ public import Kakeya.Ninety21AngularCapCounting
 public import Kakeya.Ninety21AngularProjectionPacking
 public import Kakeya.Ninety21AngularPopulationBudget
 public import Kakeya.Ninety21AngularChartGeometry
+public import Kakeya.Ninety21AngularGramGeometry
+public import Kakeya.Ninety21QuantitativeCapPacking
+public import Kakeya.Ninety21OrthogonalChartCoordinates
+public import Kakeya.Ninety21ActualAngularPackingEndpoint
 @[expose] public section
