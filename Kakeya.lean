@@ -43,6 +43,8 @@ public import Kakeya.Ninety21OriginalTubeBallPacking
 public import Kakeya.Ninety21ParentVitaliPacking
 public import Kakeya.Ninety21GreedyVitaliEndpointBridge
 public import Kakeya.Ninety21GeometricPackingEndpoint
-public import Kakeya.Ninety21CompactGreedyPackingIntegration
 public import Kakeya.Ninety21ExceptionalBudget
+public import Kakeya.Ninety21ExceptionalParentBudget
+public import Kakeya.Ninety21TwoTubeTransverseGeometry
+public import Kakeya.Ninety21ExceptionalTransverseBudget
 @[expose] public section
