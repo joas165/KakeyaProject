@@ -56,4 +56,5 @@ public import Kakeya.Ninety21AngularGramGeometry
 public import Kakeya.Ninety21QuantitativeCapPacking
 public import Kakeya.Ninety21OrthogonalChartCoordinates
 public import Kakeya.Ninety21ActualAngularPackingEndpoint
+public import Kakeya.Ninety21ExceptionalPerLevelEndpoint
 @[expose] public section

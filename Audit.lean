@@ -10,7 +10,6 @@ import Kakeya.Ninety21GreedyVitaliBounds
 
 /-!
 # Axiom audit
-
 Run `lake build` followed by `lake env lean Audit.lean` to check
 the audited declarations and print their axiom dependencies.
 -/
@@ -117,11 +116,9 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.TubeBall.transverse_closedBall_volume
 #print axioms Kakeya.TubeBall.unitTube_ball_volume_le_explicit_arbitrary_direction
 #print axioms Kakeya.TubeBall.localized_unitTube_ball_volume_le_explicit_arbitrary_direction
-
 -- Intersection-compatible Hall matching.
 #print axioms Kakeya.Ninety21.intersecting_matching_of_degree_bounds
 #print axioms Kakeya.Ninety21.extend_matching_to_bijection
-
 -- Actual trimmed-piece bijections and exceptional-piece counts.
 #print axioms Kakeya.Ninety64.theorem42_matching
 #print axioms Kakeya.Ninety64.theorem42_actual_piece_bijection
@@ -130,7 +127,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety64.exceptional_piece_count_of_pair_injective
 #print axioms Kakeya.Ninety64.exceptional_piece_count_of_packing
 #print axioms Kakeya.Ninety64.exceptional_piece_scaled_budget
-
 -- Extended original-tube map and its counting bounds.
 #print axioms Kakeya.Ninety94.extensionHit_iff_original
 #print axioms Kakeya.Ninety94.extendedMap_eq_some_iff
@@ -140,14 +136,12 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety94.q_mul_card_le_original
 #print axioms Kakeya.Ninety94.q_mul_reindexed_card_le_original
 #print axioms Kakeya.Ninety94.greedy_gain_common_point_unique
-
 -- Ninety21 distinct-tube-count route to the logarithmic endpoint.
 #print axioms Kakeya.Ninety21.SelectedIncidenceDyadicInputs
 #print axioms Kakeya.Ninety21.dyadic_level_budget_of_selected_incidence
 #print axioms Kakeya.Ninety21.uniform_level_budget_of_selected_incidence
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_moment_of_selected_incidence
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_of_selected_incidence
-
 -- Single retained-piece mass sum, with greedy capture discharged.
 #print axioms Kakeya.Ninety21.SelectedIncidenceDyadicData
 #print axioms Kakeya.Ninety21.GreedyCaptureAtLevels
@@ -155,7 +149,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.inputs_of_greedy_cover
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_moment_of_greedy_cover
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_of_greedy_cover
-
 -- Hall matches the same pieces. The 4N count remains a separate proof obligation.
 #print axioms Kakeya.Ninety21.exists_hall_reindexing
 #print axioms Kakeya.Ninety21.hall_reindexed_card
@@ -166,7 +159,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.greedy_of_trimmed_hall
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_moment_of_trimmed_hall
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_of_trimmed_hall
-
 -- Original-tube degree splits the ACTUAL retained pieces by the paper's N/2 threshold.
 -- Exceptional pieces are excluded from the lower-fiber assumption.
 #print axioms Kakeya.Ninety21.paperOriginalTubeDegree
@@ -188,17 +180,14 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.paper_double_count_fibers
 #print axioms Kakeya.Ninety21.paper_regular_count_of_fibers
 #print axioms Kakeya.Ninety21.paper_hall_count_with_exceptional_remainder
-
 -- Theorem 4.6 nonintersecting matching and extended equivalence.
 #print axioms Kakeya.Ninety21.exists_paper46_hall_equiv
 #print axioms Kakeya.Ninety21.hallEquiv
 #print axioms Kakeya.Ninety21.hallEquiv_selected_fixed
 #print axioms Kakeya.Ninety21.hallEquiv_regular_nonintersecting
 #print axioms Kakeya.Ninety21.hallEquiv_exceptional_auxiliary
-
 #print axioms Kakeya.Ninety21.paper46RegularIndex_injective
 #print axioms Kakeya.Ninety21.paper46_regular_count_of_fibers
-
 -- Theorem 4.6 relabeling and analytic estimates.
 #print axioms Kakeya.Ninety21.paper46SelectedRetainedEquiv
 #print axioms Kakeya.Ninety21.paper46RemainingRetainedEquiv
@@ -217,7 +206,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.paper46_analytic_uniform_level_budget
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_moment_of_paper46
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_of_paper46
-
 #print axioms Kakeya.Ninety21.paper46_small_level_budget
 #print axioms Kakeya.Ninety21.paper46EndpointBudget
 
@@ -227,7 +215,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.paper46Construction_of_tube_ball_count
 #print axioms Kakeya.Ninety21.paper46Construction_of_dyadic_tube_ball_count
 #print axioms Kakeya.Ninety21.paper46LargeLevelInputs_of_tube_ball_count
-
 #print axioms Kakeya.Ninety21.tube_ball_scale_of_sq_le
 #print axioms Kakeya.Ninety21.paper_regular_budget_of_sq_le
 
@@ -235,12 +222,8 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.paper_regular_budget_of_pair_indexing
 #print axioms Kakeya.Ninety21.paper46Construction_of_pair_indexing
 #print axioms Kakeya.Ninety21.paper46LargeLevelInputs_of_pair_indexing
-
 #print axioms Kakeya.Ninety21.paper46Cutoff
 #print axioms Kakeya.Ninety21.paper46Construction_of_pair_indexing_at_cutoff
-
-
-
 -- Concrete tube-ball geometry and greedy transport.
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_subset_tube
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_subset_gain
@@ -254,21 +237,18 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedyQ_measurable
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedyQ_subset_level
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGreedy.toRetainedGreedy
-
 -- Geometry, Vitali selection and greedy numerical reductions.
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedy_card_budget
 #print axioms Kakeya.Ninety21.canonical_retained_radius_scale
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_volume_le_orthogonal_product
 #print axioms Kakeya.Ninety21.exists_concrete_vitali_localized_cover
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedy_recurrence_of_average
-
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.piece_volume_le_explicit
 #print axioms Kakeya.Ninety21.concrete_greedyUnion_succ
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedyQ_subset_residual
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.greedy_residual_conservation
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.cover_of_vitali_labels
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGreedy.ofAverage
-
 -- Two-radius Vitali coverage and volume estimates.
 #print axioms Kakeya.Ninety21.finite_double_union_measure_le
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.measure_le_tripleBall_sum
@@ -276,7 +256,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.unitTube_tripleBall_volume_le
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.volume_le_tripleBall_cost
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.exists_twoRadius_vitali_volume_bound
-
 -- Retained tube-ball labels and cover-index budgets.
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.coverIndices
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.selectedBall_mem_coverIndices
@@ -290,7 +269,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.withVitaliPairs
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitali_mem_coverIndices
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.vitali_cover_withPairs
-
 -- Two-radius analytic endpoint.
 #print axioms Kakeya.Ninety21.twoRadius_mass_le_double_sum
 #print axioms Kakeya.Ninety21.twoRadius_mass_capture_from_step
@@ -302,7 +280,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.paper46_twoRadius_analytic_uniform_level_budget
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_moment_of_paper46_twoRadius
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_of_paper46_twoRadius
-
 -- Occupied Vitali pieces, disjointness, and cover transfer.
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitaliIndices
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitali_nonempty
@@ -333,7 +310,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitali_cover_transfer
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.occupiedVitali_index_budget
 #print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofOccupiedVitali
-
 -- Greedy Vitali selection and occupied-indexed radius-R balls.
 #print axioms Kakeya.Ninety21.exists_finite_occupied_radius_cover
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.exists_greedy_vitali_from_compact_gains
@@ -352,7 +328,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_incidence_card_le_all
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_index_budget
 #print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofGreedyVitaliCandidates
-
 -- Finite greedy-gain nets, indexed Vitali centers, and selected stages.
 #print axioms Kakeya.Ninety21.VitaliFiniteCenterPair
 #print axioms Kakeya.Ninety21.vitaliFiniteCenterEquiv
@@ -371,10 +346,8 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.finiteGainNet_indexed_cover
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.euclidean_gain_compact_closure
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofIndexedGainNets
-
 -- Existing-geometry finite-net compatibility.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofExistingGainNetIndexMap
-
 -- Original finite-net ball indexing and occupied Vitali input.
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamily
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamily_ball
@@ -385,13 +358,11 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.greedyFiniteNet_cover
 #print axioms Kakeya.Ninety21.greedyFiniteNet_nonempty
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactGreedyGains
-
 -- Greedy-average recurrence and triple-radius cost for the occupied family.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_greedy_recurrence_of_average
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_triple_volume_le
 #print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofGreedyVitaliAverage
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_of_greedyVitaliAverage
-
 -- Canonical greedy selection and Euclidean triple-radius endpoint.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_canonical_greedy_recurrence
 #print axioms Kakeya.Ninety21.tripleRadiusTransverseCoefficient
@@ -399,7 +370,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclidean_triple_cost
 #print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofCanonicalVitaliEuclidean
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_of_canonicalVitaliEuclidean
-
 -- Maximal residual selection without replacement.
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.MaximalUnused
 #print axioms Kakeya.Ninety21.exists_maximal_unused_tube
@@ -407,7 +377,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_greedy_recurrence_of_maximal_unused
 #print axioms Kakeya.Ninety21.ConcreteTwoRadiusGreedy.ofMaximalUnusedVitaliEuclidean
 #print axioms Kakeya.Ninety21.full_conditional_kakeya_of_maximalUnusedVitaliEuclidean
-
 -- Original greedy selection without replacement and its Vitali data.
 #print axioms Kakeya.Ninety21.maximalUnusedChoice
 #print axioms Kakeya.Ninety21.maximalUnusedChoice_spec
@@ -432,7 +401,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamily_hStages
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactMaximalUnusedGains
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactMaximalUnusedGains_selection
-
 -- Empty-gain localization and padded finite-net indexing.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_empty_of_gain_empty
 #print axioms Kakeya.Ninety21.greedyFiniteNet_empty_of_gain_empty
@@ -444,7 +412,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.vitaliPadded_indexed_cover
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofGreedyNetFamilyAllowEmpty
-
 -- Greedy–Vitali concrete bounds.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_ball_occupied_of_centers
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_selected_card_le
@@ -453,26 +420,22 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_piece_euclidean_cost
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclideanTubeBallBounds
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclideanTubeBallBounds_radius
-
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_label_ball_occupied
 #print axioms Kakeya.Ninety21.vitaliPaddedCenter_on_level_of_genuine
 #print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius
 #print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius_pos
 #print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius_scale
-
 -- Exceptional parent-ball indexing and pair-label counting.
 #print axioms Kakeya.Ninety21.paperExceptionalParentBallIndices
 #print axioms Kakeya.Ninety21.paper_exceptional_card_le_parent_ball_count
 #print axioms Kakeya.Ninety21.paper_exceptional_scaled_budget_of_parent_ball_count
 #print axioms Kakeya.Ninety21.paper_exceptional_scaled_budget_of_pair_indexing
-
 -- Two-tube transversality and disjoint-ball packing.
 #print axioms Kakeya.Ninety21.originalTube_ball_center_near_axis
 #print axioms Kakeya.Ninety21.TransverseDirections
 #print axioms Kakeya.Ninety21.two_transverse_tubes_ball_center_diameter
 #print axioms Kakeya.Ninety21.disjoint_balls_card_le_half_radius_net
 #print axioms Kakeya.Ninety21.two_transverse_tubes_ball_count_of_cover
-
 -- Exceptional original-tube incidence and parent-wise bounds.
 #print axioms Kakeya.Ninety21.transverse_finite_incidence_count
 #print axioms Kakeya.Ninety21.exceptional_parent_ball_large_original_incidence
@@ -482,58 +445,61 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_parent_balls_disjoint
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_transverse_pair_card_le
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_scaled_budget_of_transverse_geometry
-
 -- Uniform Euclidean covering and exceptional-budget specialization.
 #print axioms Kakeya.Ninety21.euclidean_uniform_half_radius_net
 #print axioms Kakeya.Ninety21.euclidean_transverse_uniform_half_radius_net
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_scaled_budget_uniform_cover
-
 -- Separated-direction nets and angular-cap incidence counting.
 #print axioms Kakeya.Ninety21.separated_finset_card_le_net_card
 #print axioms Kakeya.Ninety21.nonTransverseDirectionIndices
 #print axioms Kakeya.Ninety21.transverse_of_not_mem_nonTransverseDirectionIndices
 #print axioms Kakeya.Ninety21.nonTransverseDirectionIndices_card_budget_of_net
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_scaled_budget_of_angular_cap_net
-
 #print axioms Kakeya.Ninety21.separated_two_chart_card_le
 #print axioms Kakeya.Ninety21.uniform_projected_cap_net
 #print axioms Kakeya.Ninety21.nonTransverseDirectionIndices_card_of_projected_charts
 #print axioms Kakeya.Ninety21.nonTransverseDirectionIndices_budget_of_projected_charts
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_scaled_budget_of_projected_chart
-
 -- Angular-cap population normalization.
 #print axioms Kakeya.Ninety21.angular_population_real_bound
 #print axioms Kakeya.Ninety21.nonTransverseDirectionIndices_budget_of_quantitative_packing
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_scaled_budget_of_cap_packing
-
 -- Unit-cap coordinate geometry and reverse Lipschitz control.
 #print axioms Kakeya.Ninety21.unit_cap_axial_difference_le
 #print axioms Kakeya.Ninety21.unit_two_cap_reverse_lipschitz
 #print axioms Kakeya.Ninety21.nonTransverseDirectionIndices_card_of_unit_chart_geometry
-
 -- Unit-direction Gram identities and nontransverse projected norms.
 #print axioms Kakeya.Ninety21.unit_directions_gram_identity
 #print axioms Kakeya.Ninety21.transverse_of_unit_sine_sq_lower
 #print axioms Kakeya.Ninety21.unit_sine_sq_lt_of_not_transverse
 #print axioms Kakeya.Ninety21.projected_norm_lt_of_not_transverse
 #print axioms Kakeya.Ninety21.original_nontransverse_projected_norm_le
-
 -- Quantitative Euclidean cap packing.
 #print axioms Kakeya.Ninety21.finite_euclidean_packing_of_ball_volume
 #print axioms Kakeya.Ninety21.finite_euclidean_projected_packing
 #print axioms Kakeya.Ninety21.separated_two_chart_real_card_le
 #print axioms Kakeya.Ninety21.quantitative_cap_card_of_projected_chart
-
 -- Orthogonal coordinate charts for unit directions.
 #print axioms Kakeya.Ninety21.directionOrthogonalBasis
 #print axioms Kakeya.Ninety21.unitDirectionPerpendicular
 #print axioms Kakeya.Ninety21.unitDirectionOrthogonalChart
 #print axioms Kakeya.Ninety21.unitDirectionOrthogonalChart_norm
 #print axioms Kakeya.Ninety21.unitDirectionOrthogonalChart_pythagoras
-
 -- Concrete angular packing and exceptional-piece budget.
 #print axioms Kakeya.Ninety21.unitDirectionHemisphere
 #print axioms Kakeya.Ninety21.unitDirectionHemisphere_same_sign
 #print axioms Kakeya.Ninety21.unitDirectionOrthogonalChart_coordinate_distance
 #print axioms Kakeya.Ninety21.original_unit_directions_quantitative_cap_card
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.exceptional_scaled_budget_of_unit_directions
+-- Per-level Theorem 4.6 counting and endpoint.
+#print axioms Kakeya.Ninety21.paper46_remaining_count_of_exceptional_budget
+#print axioms Kakeya.Ninety21.paper46_retained_count_of_exceptional_budget
+#print axioms Kakeya.Ninety21.paper46_large_level_retained_count_per_level
+#print axioms Kakeya.Ninety21.paper46_analytic_level_budget_per_level
+#print axioms Kakeya.Ninety21.paper46_analytic_uniform_level_budget_per_level
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_moment_of_paper46_per_level
+#print axioms Kakeya.Ninety21.full_conditional_kakeya_of_paper46_per_level
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_parents_subset
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.per_level_inputs_of_unit_directions
+#print axioms Kakeya.Ninety21.angular_packing_parameters_of_card_bound
+#print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.per_level_inputs_of_unit_directions_card_bound
