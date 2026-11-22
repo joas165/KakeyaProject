@@ -167,7 +167,7 @@ theorem exists_finite_occupied_radius_cover
 
 /-- Select occupied Vitali balls from a finite localization of the actual
 ordered greedy gains. -/
-theorem ConcreteTubeBallGeometry.exists_greedy_occupied_vitali
+theorem ConcreteTubeBallGeometry.exists_greedy_occupied_vitali_gain
     {X T : Type*} [MeasurableSpace X] [MetricSpace X] [Fintype T]
     {tubes : T → Set X} (g : ConcreteTubeBallGeometry tubes)
     (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
@@ -193,7 +193,7 @@ theorem ConcreteTubeBallGeometry.exists_greedy_occupied_vitali
         ⌈(Fintype.card T : ℝ) /
           Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ ⊆
         ⋃ j ∈ g.B m, ⋃ i ∈ S j,
-          tubes j ∩ Metric.ball (centers i) (3 * R)) := by
+          g.gain m j ∩ Metric.ball (centers i) (3 * R)) := by
   classical
   let U := Kakeya.Eighty4.greedyUnion (g.greedyQ m)
     ⌈(Fintype.card T : ℝ) /
@@ -251,7 +251,40 @@ theorem ConcreteTubeBallGeometry.exists_greedy_occupied_vitali
     exact Set.mem_iUnion.mpr ⟨j,
       Set.mem_iUnion.mpr ⟨hjB,
         Set.mem_iUnion.mpr ⟨i,
-          Set.mem_iUnion.mpr ⟨hiS, ⟨hxi.1.1.1, hxi.2⟩⟩⟩⟩⟩
+          Set.mem_iUnion.mpr ⟨hiS, ⟨hxi.1.1.2, hxi.2⟩⟩⟩⟩⟩
+
+theorem ConcreteTubeBallGeometry.exists_greedy_occupied_vitali
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X] [Fintype T]
+    {tubes : T → Set X} (g : ConcreteTubeBallGeometry tubes)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T))
+    (R : ℝ) (hR : 0 < R)
+    (centers : Fin (g.ballCount m) → X)
+    (hBall : ∀ i, g.ball m i = Metric.ball (centers i) R)
+    (L : (m' : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) →
+      T → Finset (Fin (g.ballCount m')))
+    (hStages : ∀ k < ⌈(Fintype.card T : ℝ) /
+        Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊,
+      (g.greedyQ m k).Nonempty →
+        g.chosen m k ∈ g.B m ∧ g.stage m (g.chosen m k) = k)
+    (hLocal : ∀ j ∈ g.B m,
+      g.gain m j ⊆ ⋃ i ∈ L m j, g.ball m i) :
+    ∃ S : T → Finset (Fin (g.ballCount m)),
+      (∀ j ∈ g.B m,
+        S j ⊆ g.occupiedVitaliIndices L m j) ∧
+      (∀ j ∈ g.B m, ∀ i ∈ S j,
+        (g.gain m j ∩ g.ball m i).Nonempty) ∧
+      (∀ j ∈ g.B m, ∀ i ∈ S j, ∀ i' ∈ S j, i ≠ i' →
+        Disjoint (g.ball m i) (g.ball m i')) ∧
+      (Kakeya.Eighty4.greedyUnion (g.greedyQ m)
+        ⌈(Fintype.card T : ℝ) /
+          Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ ⊆
+        ⋃ j ∈ g.B m, ⋃ i ∈ S j,
+          tubes j ∩ Metric.ball (centers i) (3 * R)) := by
+  obtain ⟨S, hSub, hOcc, hDisj, hCover⟩ :=
+    g.exists_greedy_occupied_vitali_gain m R hR centers hBall L hStages hLocal
+  refine ⟨S, hSub, hOcc, hDisj, hCover.trans ?_⟩
+  exact Set.iUnion₂_mono fun j _ => Set.iUnion₂_mono fun _ _ =>
+    Set.inter_subset_inter_left _ (g.gain_subset_parentTube m j)
 
 /-- Relatively compact greedy gains admit an occupied, tube-wise disjoint
 radius-R Vitali selection whose triple-radius enlargements cover the actual
@@ -351,6 +384,27 @@ structure ConcreteGreedyVitaliCandidates
     g.gain m j ⊆ ⋃ i ∈ candidates m j, g.ball m i
 
 /-- A selected Vitali family exists at each dyadic level. -/
+theorem ConcreteGreedyVitaliCandidates.exists_selected_gain
+    {X T : Type*} [MeasurableSpace X] [MetricSpace X] [Fintype T]
+    {tubes : T → Set X} {g : ConcreteTubeBallGeometry tubes}
+    (d : ConcreteGreedyVitaliCandidates tubes g)
+    (m : Kakeya.Eighty4.DyadicIndex (Fintype.card T)) :
+    ∃ S : T → Finset (Fin (g.ballCount m)),
+      (∀ j ∈ g.B m,
+        S j ⊆ g.occupiedVitaliIndices d.candidates m j) ∧
+      (∀ j ∈ g.B m, ∀ i ∈ S j,
+        (g.gain m j ∩ g.ball m i).Nonempty) ∧
+      (∀ j ∈ g.B m, ∀ i ∈ S j, ∀ i' ∈ S j, i ≠ i' →
+        Disjoint (g.ball m i) (g.ball m i')) ∧
+      (Kakeya.Eighty4.greedyUnion (g.greedyQ m)
+        ⌈(Fintype.card T : ℝ) /
+          Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ ⊆
+        ⋃ j ∈ g.B m, ⋃ i ∈ S j,
+          g.gain m j ∩ Metric.ball (d.centers m i) (3 * d.radius m)) := by
+  exact g.exists_greedy_occupied_vitali_gain m (d.radius m) (d.hRadius m)
+    (d.centers m) (d.hBall m) d.candidates
+    (d.hStages m) (d.hLocal m)
+
 theorem ConcreteGreedyVitaliCandidates.exists_selected
     {X T : Type*} [MeasurableSpace X] [MetricSpace X] [Fintype T]
     {tubes : T → Set X} {g : ConcreteTubeBallGeometry tubes}
@@ -378,7 +432,7 @@ noncomputable def ConcreteGreedyVitaliCandidates.selected
     {tubes : T → Set X} {g : ConcreteTubeBallGeometry tubes}
     (d : ConcreteGreedyVitaliCandidates tubes g) :
     ∀ m, T → Finset (Fin (g.ballCount m)) :=
-  fun m => Classical.choose (d.exists_selected m)
+  fun m => Classical.choose (d.exists_selected_gain m)
 
 /-- Selected balls are occupied and remain disjoint within each tube. -/
 theorem ConcreteGreedyVitaliCandidates.selected_occupied
@@ -389,7 +443,7 @@ theorem ConcreteGreedyVitaliCandidates.selected_occupied
     (j : T) (hj : j ∈ g.B m)
     (i : Fin (g.ballCount m)) (hi : i ∈ d.selected m j) :
     (g.gain m j ∩ g.ball m i).Nonempty := by
-  exact (Classical.choose_spec (d.exists_selected m)).2.1 j hj i hi
+  exact (Classical.choose_spec (d.exists_selected_gain m)).2.1 j hj i hi
 
 /-- An empty greedy gain contributes no selected Vitali ball. -/
 theorem ConcreteGreedyVitaliCandidates.selected_empty_of_gain_empty
@@ -417,7 +471,7 @@ theorem ConcreteGreedyVitaliCandidates.selected_disjoint
     (i' : Fin (g.ballCount m)) (hi' : i' ∈ d.selected m j)
     (hne : i ≠ i') :
     Disjoint (g.ball m i) (g.ball m i') := by
-  exact (Classical.choose_spec (d.exists_selected m)).2.2.1
+  exact (Classical.choose_spec (d.exists_selected_gain m)).2.2.1
     j hj i hi i' hi' hne
 
 theorem ConcreteGreedyVitaliCandidates.selected_triple_cover
@@ -430,7 +484,9 @@ theorem ConcreteGreedyVitaliCandidates.selected_triple_cover
         Kakeya.Eighty4.dyadicScale (Fintype.card T) m⌉₊ ⊆
       ⋃ j ∈ g.B m, ⋃ i ∈ d.selected m j,
         tubes j ∩ Metric.ball (d.centers m i) (3 * d.radius m) := by
-  exact (Classical.choose_spec (d.exists_selected m)).2.2.2
+  apply (Classical.choose_spec (d.exists_selected_gain m)).2.2.2.trans
+  exact Set.iUnion₂_mono fun j _ => Set.iUnion₂_mono fun _ _ =>
+    Set.inter_subset_inter_left _ (g.gain_subset_parentTube m j)
 
 /-- Retained labels are formed directly from the occupied selected balls. -/
 noncomputable def ConcreteGreedyVitaliCandidates.retained

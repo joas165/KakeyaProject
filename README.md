@@ -1,85 +1,74 @@
 # KakeyaProject
 
-Lean 4 formalization of conditional estimates for the Kakeya maximal-function problem. The development includes dyadic decomposition, greedy tube selection, localized tube–ball pieces, Hall reindexing, and finite incidence counting.
+A Lean 4 formalization of dyadic estimates for the Kakeya maximal-function problem. This branch proves a conditional logarithmic endpoint for the project's unit-length Euclidean cylinders. **The only unproved estimate in the endpoint is the ordered overlap inequality used in the application of Lemma 4.8.**
 
-**Status:** The analytic endpoint is conditional on geometric and incidence hypotheses. This repository does not establish the unconditional Kakeya conjecture.
+## Endpoint theorem
 
-## Build
+Let $n\ge 3$, $p=n/(n-1)$, and let $T_1^\delta,\ldots,T_N^\delta$ be unit-length cylinders of radius $\delta>0$ in $\mathbb R^n$, with $N\ge 2$. Their unit direction vectors satisfy $\lVert v_i-v_j\rVert\ge\delta$ for $i\ne j$. Fix $A>0$ with $\delta N^{1/(n-1)}\le A$. Write $M(x)=\sum_{i=1}^N\mathbf 1_{T_i^\delta}(x)$.
 
-Use the Lean toolchain and dependencies pinned by the repository:
+Under the Lemma 4.8 application below, `Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound` proves
+
+$$
+\lVert M\rVert_{L^p(\mathbb R^n)}
+\le C(n,A,K)\,(\ln N)^{(n-1)/n}.
+$$
+
+The constant is uniform in $N$ and $\delta$ for fixed $n,A,K$. In Lean the dimension is written as $n=d+2$, with $d\ge1$.
+
+## Exact application of Lemma 4.8
+
+Set $q=2^m$, $F_m=\{x:q\le M(x)<2q\}$, and $\rho=Aq^{-1/(n-1)}$. At each level with $q\ge8$ and $\rho\le1$, let $B$ be the greedy-selected parent tube indices. A retained piece $P_i$ is the intersection of its parent's greedy gain with the selected ball enlarged to radius $3\rho$. Define its incidence set using the original tubes,
+
+$$
+I_i=\{\ell\in\{1,\ldots,N\}:T_\ell^\delta\cap P_i\ne\varnothing\}.
+$$
+
+After accounting for the selected parent labels, let $R$ index the remaining pieces with $2|I_i|\le N$. For each $c\in B$, let $R_c$ contain the labels in $R$ with parent $c$. Order the labels by greedy parent selection and then by ball index within each parent.
+
+The assumption `TubeFamily.OverlapApplication K` is the following inequality, with the **same** $K\ge0$ at every such level.
+
+$$
+\sum_{c\in B}\sum_{i\in R_c}
+  \sum_{\substack{j\in R\\i<j}} |I_i\cap I_j|
+\;\le\;
+K\sum_{c\in B}\sum_{i\in R_c}|I_i|.
+$$
+
+The inner sum includes every later regular label, including labels with a different parent. Lean proves the fixed-parent overlap estimate in Lemma 4.8. Its application to the displayed sum is the conditional step on page 15 of the manuscript.
+
+## From overlap to the endpoint
+
+Each regular piece contains a point of $F_m$, so $q\le |I_i|$. Counting first and second moments of the incidence degrees, then applying Cauchy–Schwarz, gives $q|R|\le (1+2K)N$. For the exceptional pieces, which satisfy $2|I_i|>N$, the formalization applies the proved fixed-parent estimate separately within each parent class. Adding the greedy parent count gives an $O_{n,A,K}(N/q)$ bound for the complete retained family.
+
+The same triple-radius pieces cover the greedy gains and enter the piece-volume estimate. Their count and mass capture give a uniform bound on $q^p|F_m|$. The remaining small levels use the finite-volume estimate. Summing the dyadic levels gives the logarithmic moment bound and taking the $p$th root gives the endpoint above.
+
+## Build and check
+
+From a checkout of this branch, use the pinned Lean 4.35.0 toolchain. To fetch the mathlib cache and build the endpoint module, run
 
 ```sh
-git clone https://github.com/joas165/KakeyaProject.git
-cd KakeyaProject
 lake exe cache get
-lake build
-lake env lean Audit.lean
+lake build Kakeya.Ninety109Endpoint
 ```
 
-To build the exceptional-budget endpoint alone:
+Run `lake build` for the whole project. To inspect the endpoint signature and its axiom dependencies, run this in a Lean file in the project.
 
-```sh
-lake build Kakeya.Ninety21ExceptionalPerLevelEndpoint
+```lean
+import Kakeya.Ninety109Endpoint
+
+#check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound
+#print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound
 ```
 
-## Theorem 4.6 counting route
+The axiom check reports `propext`, `Classical.choice`, and `Quot.sound`. The overlap assumption appears explicitly as the argument `happ : f.OverlapApplication K` in the theorem signature.
 
-For a finite family of tubes \(T_1^\delta,\dots,T_N^\delta\) in \(\mathbb R^n\), with \(n\ge3\), write \(q=2^m\) and
+## Source files
 
-\[
-F_m=\left\{x:q\le\sum_{i=1}^N\mathbf1_{T_i^\delta}(x)<2q\right\}.
-\]
-
-The construction uses the same family of retained trimmed pieces throughout. It partitions the remaining pieces into regular and exceptional families, \(\mathcal P_m^{\mathrm{reg}}\) and \(\mathcal P_m^{\mathrm{exc}}\). Selected indices remain original tube indices; exceptional pieces receive **formal auxiliary labels**, not geometric auxiliary tubes.
-
-The regular lower-fiber condition, `hFiberLower`, concerns only the \(N\) original tube indices. When supplied, it gives the conditional counting bound
-
-\[
-q|D_m|\le 3N+q|\mathcal P_m^{\mathrm{exc}}|.
-\]
-
-## Exceptional per-level bound
-
-`Kakeya/Ninety21ExceptionalPerLevelEndpoint.lean` connects angular packing for unit directions to the exceptional budget at each dyadic level:
-
-\[
-q|\mathcal P_m^{\mathrm{exc}}|\le C_{\mathrm{exc}}N.
-\]
-
-This estimate uses the stated separation, canonical-radius, total-scale, and concrete retained-family hypotheses. In particular, `ConcreteGreedyVitaliCandidates.per_level_inputs_of_unit_directions` accepts the required angular smallness and direction-population inequalities as inputs.
-
-The parameter-selection lemma `angular_packing_parameters_of_card_bound` replaces those two independent inequalities by a direction-count condition. For \(n=k+2\), assume
-
-\[
-0<\varepsilon\le\tfrac12,\qquad N\ge8\cdot5^{n-1}.
-\]
-
-Taking \(\theta=\varepsilon\) and \(c=N\varepsilon^{n-1}\) gives
-
-\[
-8\cdot5^{n-1}\theta^{n-1}\le c\le N\varepsilon^{n-1}.
-\]
-
-`ConcreteGreedyVitaliCandidates.per_level_inputs_of_unit_directions_card_bound` applies this choice. It still requires the other explicit geometric and large-level construction data; the direction-count hypothesis is **not** proved for every configuration.
-
-Combining the exceptional estimate with the conditional regular lower-fiber bound gives
-
-\[
-q|D_m|\le(3+C_{\mathrm{exc}})N.
-\]
-
-The per-level analytic endpoint uses this uniform count before summing over dyadic levels, so the resulting **conditional** moment estimate has one logarithm from the number of levels. Levels below the large-level cutoff are handled by the finite-mass bound.
-
-## Relevant modules
-
-| File | Role |
+| Module | Contents |
 | --- | --- |
-| `Kakeya/Ninety21ExceptionalPerLevelEndpoint.lean` | Angular parameter selection, exceptional per-level counting, and conditional analytic endpoint. |
-| `Kakeya/Ninety21Theorem46Endpoint.lean` | Theorem 4.6 counting and mass-transport interfaces. |
-| `Kakeya/Ninety21Theorem46Hall.lean` | Regular representative matching and formal exceptional labels. |
-| `Kakeya/Ninety21CompactGreedyPackingIntegration.lean` | Concrete greedy–Vitali geometry and packing inputs. |
-| `Audit.lean` | Axiom-dependency checks for selected declarations. |
-
-## Remaining proof obligations
-
-The regular-only `hFiberLower` estimate is deferred. An unconditional endpoint also requires the remaining geometric, normalization, and measure-theoretic hypotheses to be established for the intended tube configurations. A successful Lean build checks the stated theorems **under their explicit hypotheses**.
+| [Ninety109FixedParentOverlap](Kakeya/Ninety109FixedParentOverlap.lean) | Fixed-parent geometry, the ordered overlap inequality, and the incidence second-moment estimate |
+| [Ninety109RegularPieceCount](Kakeya/Ninety109RegularPieceCount.lean) | Regular-piece count from the overlap application |
+| [Ninety109RetainedCover](Kakeya/Ninety109RetainedCover.lean) | Triple-radius retained pieces and coverage of the greedy gains |
+| [Ninety109ExceptionalCount](Kakeya/Ninety109ExceptionalCount.lean) | Exceptional-piece count at each relevant level |
+| [Ninety109TubeFamily](Kakeya/Ninety109TubeFamily.lean) | Euclidean tube family, canonical retained pieces, and volume estimates |
+| [Ninety109Endpoint](Kakeya/Ninety109Endpoint.lean) | Concrete overlap hypothesis, dyadic level bound, moment bound, and natural-log norm bound |
