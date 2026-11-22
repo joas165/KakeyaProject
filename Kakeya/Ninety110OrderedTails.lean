@@ -15,9 +15,9 @@ def orderedTail (R : Finset L) (I : L → Finset T) (i : L) (k : ℕ) : Finset T
 def laterPieceIncidences (R : Finset L) (I : L → Finset T) (i : L) (ℓ : T) : Finset L :=
   R.filter fun j => i ≤ j ∧ ℓ ∈ I j
 
-theorem orderedTail_subset_geometricHits [Fintype T]
+theorem orderedTail_subset_geometricHits {B : Type*} [Fintype T]
     (R : Finset L) (I : L → Finset T) (i : L) (k : ℕ)
-    (S : T → Finset L)
+    (S : T → Finset B)
     (hcount : ∀ ℓ ∈ I i, (laterPieceIncidences R I i ℓ).card ≤ (S ℓ).card) :
     orderedTail R I i k ⊆ Finset.univ.filter (fun ℓ => k ≤ (S ℓ).card) := by
   classical
@@ -25,9 +25,9 @@ theorem orderedTail_subset_geometricHits [Fintype T]
   obtain ⟨hi, hk⟩ := Finset.mem_filter.mp hℓ
   exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, hk.trans (hcount ℓ hi)⟩
 
-theorem orderedTail_card_le_geometricHits [Fintype T]
+theorem orderedTail_card_le_geometricHits {B : Type*} [Fintype T]
     (R : Finset L) (I : L → Finset T) (i : L) (k : ℕ)
-    (S : T → Finset L)
+    (S : T → Finset B)
     (hcount : ∀ ℓ ∈ I i, (laterPieceIncidences R I i ℓ).card ≤ (S ℓ).card) :
     ((orderedTail R I i k).card : ℝ) ≤
       ((Finset.univ.filter (fun ℓ => k ≤ (S ℓ).card)).card : ℝ) := by
@@ -37,16 +37,17 @@ theorem orderedTail_eq_inter_selection2 [Fintype T]
     (R : Finset L) (I : L → Finset T) (i : L) (k : ℕ) :
     orderedTail R I i k = I i ∩
       Finset.univ.filter (fun ℓ => k ≤ (laterPieceIncidences R I i ℓ).card) := by
+  classical
   ext ℓ
   constructor
   · intro h
-    rcases Finset.mem_filter.mp h with ⟨hi, hk⟩
+    obtain ⟨hi, hk⟩ := Finset.mem_filter.mp h
     exact Finset.mem_inter.mpr
       ⟨hi, Finset.mem_filter.mpr ⟨Finset.mem_univ _, hk⟩⟩
   · intro h
-    rcases Finset.mem_inter.mp h with ⟨hi, hg⟩
+    obtain ⟨hi, hs⟩ := Finset.mem_inter.mp h
     exact Finset.mem_filter.mpr
-      ⟨hi, (Finset.mem_filter.mp hg).2⟩
+      ⟨hi, (Finset.mem_filter.mp hs).2⟩
 
 theorem orderedTail_subset_laterIncidences [Fintype T]
     (R : Finset L) (I : L → Finset T) (i : L) (k : ℕ) :
@@ -144,7 +145,9 @@ theorem orderedTailApplication_of_geometric_bound {d : ℕ} [Fintype T]
   exact (orderedTail_card_le_geometricHits R I i k (S i) (hcount i hi)).trans
     (hgeometric i hi k hk)
 
-open Classical in
+section FixedTubeTail
+attribute [local instance] Classical.propDecidable
+
 theorem ordered_tail_card_of_fixed_tube_vitali_ball_tail {d : ℕ} [Fintype T]
     (p v : T → Space (d + 2)) (t : T) (δ ρ : ℝ)
     (hδ : 0 < δ) (hδρ : δ ≤ ρ) (hu : ∀ ℓ, ‖v ℓ‖ = 1)
@@ -165,7 +168,8 @@ theorem ordered_tail_card_of_fixed_tube_vitali_ball_tail {d : ℕ} [Fintype T]
         q * ((k : ℝ) ^ (d + 1))⁻¹ := by
   classical
   let S := fun ℓ : T => J.filter fun b =>
-    (unitTube (p ℓ) (v ℓ) δ ∩ unitTube (p t) (v t) δ ∩ Metric.ball (center b) (3 * ρ)).Nonempty
+    (unitTube (p ℓ) (v ℓ) δ ∩ unitTube (p t) (v t) δ ∩
+      Metric.ball (center b) (3 * ρ)).Nonempty
   calc
     ((orderedTail R I i k).card : ℝ) ≤
         ((Finset.univ.filter (fun ℓ => k ≤ (S ℓ).card)).card : ℝ) :=
@@ -173,10 +177,53 @@ theorem ordered_tail_card_of_fixed_tube_vitali_ball_tail {d : ℕ} [Fintype T]
     _ ≤ _ := fixed_tube_vitali_ball_tail p v t δ ρ hδ hδρ hu hsep
       J center hball hk C q hq hscale
 
+end FixedTubeTail
+
+theorem ordered_tail_card_of_forward_ball_hits {d : ℕ} {B : Type*}
+    [Finite T]
+    (p v : T → Space (d + 2)) (t : T) (δ ρ : ℝ)
+    (hδ : 0 < δ) (hδρ : δ ≤ ρ) (hu : ∀ ℓ, ‖v ℓ‖ = 1)
+    (hsep : ∀ ℓ s, ℓ ≠ s → δ ≤ dist (v ℓ) (v s))
+    (R : Finset L) (I : L → Finset T) (i : L)
+    (J : Finset B) (center : B → Space (d + 2)) (ballOf : L → B)
+    (hball : ∀ r ∈ J, ∀ s ∈ J, r ≠ s →
+      Disjoint (Metric.ball (center r) ρ) (Metric.ball (center s) ρ))
+    (hforward : ∀ ℓ ∈ I i, ∀ j ∈ laterPieceIncidences R I i ℓ,
+      ballOf j ∈ J ∧
+        (unitTube (p ℓ) (v ℓ) δ ∩ unitTube (p t) (v t) δ ∩
+          Metric.ball (center (ballOf j)) (3 * ρ)).Nonempty)
+    (hinj : ∀ j ∈ R, ∀ j' ∈ R, ballOf j = ballOf j' → j = j')
+    {k : ℕ} (hk : multipleThreshold d ≤ k)
+    (C q : ℝ) (hq : 0 < q)
+    (hscale : ρ = C * q ^ (-(1 : ℝ) / (d + 1))) :
+    ((orderedTail R I i k).card : ℝ) ≤
+      (2 * (258 * (binCapacity d : ℝ)) ^ (d + 1) * (C ^ (d + 1))⁻¹) *
+        q * ((k : ℝ) ^ (d + 1))⁻¹ := by
+  classical
+  letI : Fintype T := Fintype.ofFinite T
+  let S := fun ℓ : T => J.filter fun b =>
+    (unitTube (p ℓ) (v ℓ) δ ∩ unitTube (p t) (v t) δ ∩
+      Metric.ball (center b) (3 * ρ)).Nonempty
+  have hcount : ∀ ℓ ∈ I i,
+      (laterPieceIncidences R I i ℓ).card ≤ (S ℓ).card := by
+    intro ℓ hℓ
+    apply Finset.card_le_card_of_injOn ballOf
+    · intro j hj
+      exact Finset.mem_filter.mpr (hforward ℓ hℓ j hj)
+    · intro j hj j' hj' he
+      exact hinj j (Finset.mem_filter.mp hj).1
+        j' (Finset.mem_filter.mp hj').1 he
+  calc
+    ((orderedTail R I i k).card : ℝ) ≤
+        ((Finset.univ.filter fun ℓ : T => k ≤ (S ℓ).card).card : ℝ) :=
+      orderedTail_card_le_geometricHits R I i k S hcount
+    _ ≤ _ := fixed_tube_vitali_ball_tail p v t δ ρ hδ hδρ hu hsep
+      J center hball hk C q hq hscale
+
 noncomputable def tailOverlapConstant (d : ℕ) (K : ℝ≥0) : ℝ≥0 :=
   ⟨multipleThreshold d + (K : ℝ) * ∑' k : ℕ, ((k : ℝ) ^ (d + 1))⁻¹, by
     have : 0 ≤ ∑' k : ℕ, ((k : ℝ) ^ (d + 1))⁻¹ :=
-      tsum_nonneg (fun k : ℕ => show 0 ≤ ((k : ℝ) ^ (d + 1))⁻¹ by positivity)
+      tsum_nonneg (fun k : ℕ => by positivity)
     positivity⟩
 
 theorem ordered_overlap_of_tails {d : ℕ} (hd : 1 ≤ d) (K : ℝ≥0) (q : ℝ)

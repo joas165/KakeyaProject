@@ -1,6 +1,6 @@
 # KakeyaProject
 
-A Lean 4 formalization of dyadic estimates for the Kakeya maximal-function problem. This branch proves a conditional logarithmic endpoint for the project's unit-length Euclidean cylinders. **The endpoint theorem is conditional on the stated ordered-tail chain. Its first inequality is proved by set inclusion; its second inequality is the sole unproved incidence estimate.**
+A Lean 4 formalization of dyadic estimates for the Kakeya maximal-function problem. This branch proves a conditional logarithmic endpoint for the project's unit-length Euclidean cylinders. **The build is complete. The endpoint theorem is conditional on the stated ordered-tail chain. Its first inequality is proved by set inclusion; its second inequality is the sole unproved incidence estimate.**
 
 ## Endpoint theorem
 
@@ -37,10 +37,12 @@ $$
 The endpoint theorem assumes the following chain, uniformly for every regular label $i\in R$, every $k\ge k_0(n)$, and every relevant level $q\ge8$ with radius at most one:
 $$
 \boxed{
-\left|\left\{\ell\in I_i:\#\{j\in R:i\le j,\ \ell\in I_j\}\ge k\right\}\right|
-\le
-\left|\{\ell\in\{1,\ldots,N\}:|S_i(\ell)|\ge k\}\right|
-\le Kqk^{1-n}
+\begin{aligned}
+&\left|\left\{\ell\in I_i:\#\{j\in R:i\le j,\ \ell\in I_j\}\ge k\right\}\right|\\
+&\qquad\le
+\left|\{\ell\in\{1,\ldots,N\}:|S_i(\ell)|\ge k\}\right|\\
+&\qquad\le Kqk^{1-n}.
+\end{aligned}
 }
 $$
 Here $K$ is uniform in the dyadic level, and the labels $j$ range over all of $R$, including labels from different parents. The exponent is $1-n=-(d+1)$.
@@ -62,11 +64,13 @@ so **Selection 2 directly implies Selection 1**:
 $$
 |A_{i,k}|\le |G_{i,k}|\le Kqk^{1-n}.
 $$
-No extra assumption about the parent of $j$ occurs in this set inclusion.
+The inclusion is unconditional. The fixed-parent estimate counts hits only from
+labels with a common parent. The set $G_{i,k}$ also counts hits across different
+parents, and membership in $G_{i,k}$ alone gives no intersection with $P_i$.
 
-In `Ninety110OrderedTails`, `orderedTail_eq_inter_selection2` proves the
-identity, `orderedTail_subset_laterIncidences` proves the inclusion, and
-`orderedTail_card_le_selection2` proves the cardinal inequality.
+In `Ninety110OrderedTails`, `orderedTail_eq_inter_selection2` now proves the
+identity unconditionally, `orderedTail_subset_laterIncidences` proves the subset inclusion,
+and `orderedTail_card_le_selection2` proves the first inequality of the ordered-tail chain.
 `orderedTailApplication_of_selection2` combines the inequality with the
 Selection 2 estimate. At the concrete level,
 `regularApplication_of_selection2` and
@@ -82,8 +86,9 @@ pieces at every relevant dyadic level. The main endpoint theorem
 `regularApplication_of_tail_chain` and
 `TubeFamily.overlapApplication_of_tail_chain` to supply the existing counting
 argument. The previously established `orderedTail_card_le_selection2` proves
-the first inequality outright. The second inequality is conditional: its
-global geometric estimate has not been established in these files.
+the first inequality outright from the subset inclusion. The second inequality of the
+ordered-tail chain is conditional: its global geometric estimate has not been
+established in these files.
 
 The earlier `TubeFamily.logarithmic_norm_bound_of_selection2` theorem remains
 available and has the same conclusion from the second inequality alone.
