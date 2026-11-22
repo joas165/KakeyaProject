@@ -27,7 +27,7 @@ theorem isCompact_unitTube {n : ℕ} (p u : Space n) (δ : ℝ) : IsCompact (uni
   rw [he]
   exact h.image hc
 
-variable {T : Type*} [Fintype T] [Nonempty T] {d : ℕ}
+variable {T : Type*} [Fintype T] [DecidableEq T] [Nonempty T] {d : ℕ}
 
 structure TubeFamily (T : Type*) [Fintype T] (d : ℕ) (A : ℝ≥0) where
   center : T → Space (d + 2)
