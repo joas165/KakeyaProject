@@ -1216,59 +1216,138 @@
 	 	The claim follows from Cauchy--Schwarz,
 	 	$(\sum_{\ell\in U}d_\ell)^2\le |U|\sum_{\ell\in U}d_\ell^2$.
 	 \end{proof}
-	 \begin{lemma}[Overlap along a fixed parent tube] \label{lem:overlap-fixed-parent}
-	 	Let \(n\ge 3\), let \(T_b^\delta\) be a fixed parent tube, and let
-	 	\(B_r=B(b_r,\rho)\), \(r\in J_b\), be pairwise disjoint balls,
-	 	where \(\delta\le\rho\le 1\). Suppose that
+	 
+	 \begin{lemma}[Angular concentration of multiple incidences] \label{lem:overlap-fixed-parent}
+	 	Let \(n\ge3\), and let \(T_i^\delta\) be a
+	 	fixed tube of unit length with direction
+	 	\(\omega_c\). Let
 	 	\[
-	 	\varnothing\ne P_r\subseteq T_b^\delta\cap 3B_r\cap F_m,
-	 	\qquad
-	 	I_r=\{\ell:T_\ell^\delta\cap P_r\ne\varnothing\},
+	 	B_j=B(b_j,\rho),\qquad j\in J,
 	 	\]
-	 	and that the original tube directions are \(\delta\)-separated.
-	 	Then, for every \(s\in J_b\),
+	 	be pairwise disjoint balls, where
+	 	\(\delta\le\rho\le1\).
+	 	
+	 	Suppose that the original tube directions
+	 	\(\omega_1,\ldots,\omega_N\) are
+	 	\(\delta\)-separated. For \(k\ge2\), define
 	 	\[
-	 	\sum_{\substack{r\in J_b\\r\ne s}} |I_r\cap I_s|
-	 	\lesssim_n |I_s|+\rho^{-(n-1)}.
+	 	A_{i,k}:=
+	 	\left\{
+	 	\ell\in\{1,\ldots,N\}:
+	 	\#\left\{
+	 	j\in J:
+	 	T_\ell^\delta\cap T_i^\delta
+	 	\cap 3B_j\ne\varnothing
+	 	\right\}\ge k
+	 	\right\}.
 	 	\]
-	 	In particular, at scale \(\rho=Cq^{-1/(n-1)}\), the sum is
-	 	\(O_{n,C}(|I_s|)\).
+	 	
+	 	There exist dimensional constants
+	 	\(k_0\) and \(C_n\) such that, for
+	 	every \(k\ge k_0\) and
+	 	\(\ell\in E_{c,k}\),
+	 	\[
+	 	\angle(\omega_\ell,\omega_c)
+	 	\le C_n\frac{\delta}{k\rho}.
+	 	\]
+	 	Consequently,
+	 	\[
+	 	|A_{c,k}|
+	 	\lesssim_n (k\rho)^{1-n}.
+	 	\]
+	 	
+	 	In particular, if
+	 	\[
+	 	\rho=Cq^{-1/(n-1)},
+	 	\]
+	 	then
+	 	\[
+	 	|A_{i,k}|
+	 	\lesssim_{n,C}qk^{1-n},
+	 	\qquad k\ge k_0.
+	 	\]
 	 \end{lemma}
 	 
 	 \begin{proof}
-	 	Let \(t_r\) be the axial coordinate of the projection of \(b_r\)
-	 	onto the parent axis. Since \(3B_r\) meets \(T_b^\delta\), every
-	 	center lies within \(4\rho\) of that axis. Disjointness and volume
-	 	packing therefore give \(O_n(1)\) centers in each axial interval
-	 	of length \(\rho\). In particular, the terms with
-	 	\(|t_r-t_s|<10\rho\) contribute \(O_n(|I_s|)\).
+	 	Fix \(\ell\in A_{i,k}\). By definition,
+	 	there are at least \(k\) distinct
+	 	indices \(j\in J\) such that
+	 	\[
+	 	T_\ell^\delta\cap T_i^\delta
+	 	\cap 3B_j\ne\varnothing.
+	 	\]
 	 	
-	 	Now suppose \(k\rho\le |t_r-t_s|<(k+1)\rho\), with \(k\ge 10\).
-	 	For \(\ell\in I_r\cap I_s\), choose
-	 	\(x\in P_r\cap T_\ell^\delta\) and \(y\in P_s\cap T_\ell^\delta\).
-	 	Their axial separation is at least \((k-6)\rho\).
-	 	Since both points lie within \(\delta\) of each of the two axes,
-	 	the line through \(x,y\) makes angle \(O(\delta/(k\rho))\)
-	 	with each axis. Thus the direction of \(T_\ell^\delta\) lies
-	 	in a cap of this angular radius about the unoriented parent direction.
-	 	By \(\delta\)-separation,
+	 	Since these enlarged balls meet
+	 	\(T_i^\delta\), their centers lie
+	 	within \(4\rho\) of its axis.
+	 	The disjointness of the balls and
+	 	volume packing imply that at most
+	 	\(O_n(1)\) of their centers can have
+	 	axial projections in an interval
+	 	of length \(\rho\).
+	 	
+	 	Thus, for sufficiently large \(k\),
+	 	there exist two of the intersected
+	 	balls, say \(B_r\) and \(B_s\), whose
+	 	centers have axial separation at least
+	 	\(c_n k\rho\).
+	 	
+	 	Choose
 	 	\[
-	 	|I_r\cap I_s|
-	 	\lesssim_n \bigl(1+(k\rho)^{-1}\bigr)^{n-1}
-	 	\lesssim_n (k\rho)^{-(n-1)},
+	 	x\in T_\ell^\delta\cap T_i^\delta
+	 	\cap 3B_r,
+	 	\qquad
+	 	y\in T_\ell^\delta\cap T_i^\delta
+	 	\cap 3B_s.
 	 	\]
-	 	where \(k\rho=O(1)\) since the parent tube has bounded length.
-	 	There are \(O_n(1)\) indices \(r\) in each such shell. Hence
+	 	Since the axial coordinates of \(x\)
+	 	and \(y\) differ from those of their
+	 	respective ball centers by at most
+	 	\(3\rho\), increasing \(k_0\) if
+	 	necessary gives
 	 	\[
-	 	\sum_{\substack{r\in J_b\\ |t_r-t_s|\ge 10\rho}}
-	 	|I_r\cap I_s|
-	 	\lesssim_n \rho^{-(n-1)}
-	 	\sum_{k\ge 10} k^{-(n-1)}
-	 	\lesssim_n \rho^{-(n-1)}.
+	 	|x-y|\gtrsim_n k\rho.
 	 	\]
-	 	Finally, \(P_s\ne\varnothing\) and \(P_s\subseteq F_m\) imply
-	 	\(|I_s|\ge q\), while \(\rho^{-(n-1)}=C^{-(n-1)}q\).
+	 	
+	 	Both points lie within \(\delta\)
+	 	of the axes of \(T_\ell^\delta\)
+	 	and \(T_i^\delta\). Therefore, their
+	 	direction vectors differ by an angle
+	 	satisfying
+	 	\[
+	 	\angle(\omega_\ell,\omega_c)
+	 	\lesssim_n\frac{\delta}{|x-y|}
+	 	\lesssim_n\frac{\delta}{k\rho}.
+	 	\]
+	 	
+	 	Hence every \(\ell\in E_{c,k}\) has
+	 	direction in an angular cap of radius
+	 	\(O_n(\delta/(k\rho))\) centered at
+	 	the unoriented direction of
+	 	\(T_i^\delta\).
+	 	
+	 	By the \(\delta\)-separation of the
+	 	original directions,
+	 	\[
+	 	|A_{i,k}|
+	 	\lesssim_n
+	 	\left(1+\frac1{k\rho}\right)^{n-1}.
+	 	\]
+	 	Since all relevant balls meet a
+	 	unit-length tube, \(k\rho=O_n(1)\)
+	 	whenever \(A_{i,k}\ne\varnothing\).
+	 	Consequently,
+	 	\[
+	 	|A_{i,k}|
+	 	\lesssim_n (k\rho)^{1-n}.
+	 	\]
+	 	
+	 	Substituting
+	 	\(\rho=Cq^{-1/(n-1)}\) completes
+	 	the proof.
 	 \end{proof}
+	 
+
 Next we show a key inequality
 \begin{equation} \label{eq:key-bound}
 	\sum_{r \in I_r}|I_r| \lesssim N.
@@ -1301,11 +1380,90 @@ We have
 \end{align*}
 where $b<c$ means that $T_b^\delta$ precedes $T_c^\delta$ in the greedy
 selection order.
+
+\begin{lemma}
+	Let
+	\[
+	R=\bigsqcup_{c\in B}R_c,
+	\]
+	and, for each \(i\in R\) and \(k\ge2\), define
+	\[
+	A_{i,k}:=
+	\left\{
+	\ell\in I_i:
+	\#\{j\in R:i\le j,\ \ell\in I_j\}\ge k
+	\right\}.
+	\]
+	Then
+	\[
+	\sum_{c\in B}\sum_{i\in R_c}
+	\sum_{\substack{j\in R\\i<j}}|I_i\cap I_j|
+	=
+	\sum_{c\in B}\sum_{i\in R_c}
+	\sum_{k\ge2}|A_{i,k}|.
+	\]
+\end{lemma}
+
+\begin{proof}
+	Fix \(i\in R\). Counting the pairs
+	\((j,\ell)\) satisfying \(j>i\) and
+	\(\ell\in I_i\cap I_j\) in two ways gives
+	\[
+	\sum_{\substack{j\in R\\i<j}}|I_i\cap I_j|
+	=
+	\sum_{\ell\in I_i}
+	\#\{j\in R:i<j,\ \ell\in I_j\}.
+	\]
+	
+	For each \(\ell\in I_i\), write
+	\[
+	d_i(\ell):=
+	\#\{j\in R:i\le j,\ \ell\in I_j\}.
+	\]
+	Since \(\ell\in I_i\), the number of indices
+	\(j>i\) such that \(\ell\in I_j\) is
+	\(d_i(\ell)-1\).
+	
+	By the definition of \(A_{i,k}\),
+	\[
+	\ell\in A_{i,k}
+	\quad\Longleftrightarrow\quad
+	2\le k\le d_i(\ell).
+	\]
+	Consequently,
+	\[
+	d_i(\ell)-1
+	=
+	\sum_{k\ge2}\mathbf{1}_{A_{i,k}}(\ell).
+	\]
+	
+	Interchanging the finite sums yields
+	\[
+	\begin{aligned}
+		\sum_{\substack{j\in R\\i<j}}|I_i\cap I_j|
+		&=\sum_{\ell\in I_i}(d_i(\ell)-1)\\
+		&=\sum_{\ell\in I_i}
+		\sum_{k\ge2}\mathbf{1}_{A_{i,k}}(\ell)\\
+		&=\sum_{k\ge2}|A_{i,k}|.
+	\end{aligned}
+	\]
+	Summing this identity over \(i\in R_c\)
+	and \(c\in B\) completes the proof.
+\end{proof}
+
+
 Moreover from the lemma \ref{lem:overlap-fixed-parent} 
-\[ 
-\sum_{c \in B}\sum_{i\in R_c}\sum_{\substack{j\in R\\ i <j}} |I_i\cap I_j|  \lesssim \sum_{c \in B}\sum_{i \in R_c}|I_i| = \sum_{i \in R}|I_i| ,
-\]
-where we applied the lemma to every parent $P_i$ considered as a tube.
+\begin{align*}
+\sum_{c \in B}\sum_{i\in R_c}\sum_{\substack{j\in R\\ i <j}} |I_i\cap I_j|  &= 
+\sum_{c\in B}\sum_{i\in R_c}
+\sum_{k\ge2}|A_{i,k}| \\
+&\lesssim \sum_{c\in B}\sum_{i\in R_c}
+\sum_{k\ge2}qk^{1-n} \\
+&\lesssim \sum_{c \in B}\sum_{i \in R_c}|I_i|  \\
+&= \sum_{i \in R}|I_i|
+,
+\end{align*}
+where we applied the lemma \ref{lem:overlap-fixed-parent} to every parent $P_i$ considered as a tube.
 So 
 \[
 \bigl(\sum_{r\in R}|I_r|\bigr)^2 \lesssim |U|\sum_{\substack{r,s\in R\\r<s}}|I_r\cap I_s| \lesssim N\sum_{i \in R}|I_i|. 	 

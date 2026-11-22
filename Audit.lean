@@ -496,7 +496,26 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.per_level_inputs_of_unit_directions
 #print axioms Kakeya.Ninety21.angular_packing_parameters_of_card_bound
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.per_level_inputs_of_unit_directions_card_bound
--- Lemma 4.8 and the ordered overlap application.
+-- Lemmas 4.8 and 4.9.
+#print axioms Kakeya.Ninety109.multiple_hits_angle
+#print axioms Kakeya.Ninety109.multiple_hits_card
+#print axioms Kakeya.Ninety109.multiple_hits_card_dyadic
+#print axioms Kakeya.Ninety109.fixed_tube_vitali_ball_tail
+#print axioms Kakeya.Ninety109.triple_hit_of_coverPiece_incidence
+#print axioms Kakeya.Ninety109.fixed_tube_vitali_piece_tail
+#print axioms Kakeya.Ninety109.TubeFamily.regular_tail_card_along_parent
+#print axioms Kakeya.Ninety109.orderedTail_subset_geometricHits
+#print axioms Kakeya.Ninety109.orderedTail_card_le_geometricHits
+#print axioms Kakeya.Ninety109.orderedTail_eq_inter_selection2
+#print axioms Kakeya.Ninety109.orderedTail_subset_laterIncidences
+#print axioms Kakeya.Ninety109.orderedTail_card_le_selection2
+#print axioms Kakeya.Ninety109.OrderedTailChainApplication
+#print axioms Kakeya.Ninety109.orderedTailApplication_of_tail_chain
+#print axioms Kakeya.Ninety109.orderedTailApplication_of_selection2
+#print axioms Kakeya.Ninety109.orderedTailApplication_of_geometric_bound
+#print axioms Kakeya.Ninety109.ordered_tail_card_of_fixed_tube_vitali_ball_tail
+#print axioms Kakeya.Ninety109.ordered_overlap_eq_sum_tails
+#print axioms Kakeya.Ninety109.ordered_overlap_of_tails
 #print axioms Kakeya.Ninety109.fixed_parent_overlap
 #print axioms Kakeya.Ninety109.fixed_parent_overlap_dyadic
 #print axioms Kakeya.Ninety109.OrderedOverlapBound
@@ -506,9 +525,21 @@ the audited declarations and print their axiom dependencies.
 -- Retained pieces and the conditional logarithmic endpoint.
 #print axioms Kakeya.Ninety109.greedyUnion_subset_coverPieces
 #print axioms Kakeya.Ninety109.TubeFamily.piece_volume
+#print axioms Kakeya.Ninety109.regularTailChain
+#print axioms Kakeya.Ninety109.regularApplication_of_tail_chain
+#print axioms Kakeya.Ninety109.regularSelection2
+#print axioms Kakeya.Ninety109.regularApplication_of_selection2
+#print axioms Kakeya.Ninety109.TubeFamily.TailChainApplication
+#print axioms Kakeya.Ninety109.TubeFamily.overlapApplication_of_tail_chain
+#print axioms Kakeya.Ninety109.TubeFamily.Selection2Application
+#print axioms Kakeya.Ninety109.TubeFamily.overlapApplication_of_selection2
 #print axioms Kakeya.Ninety109.TubeFamily.OverlapApplication
 #print axioms Kakeya.Ninety109.TubeFamily.level_bound
 #print axioms Kakeya.Ninety109.TubeFamily.moment_bound
 #print axioms Kakeya.Ninety109.TubeFamily.norm_bound
 #check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound
 #print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound
+#check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_tail_chain
+#print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_tail_chain
+#check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_selection2
+#print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_selection2

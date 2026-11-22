@@ -1,5 +1,6 @@
 module
 
+public import Kakeya.Ninety110MultipleIncidences
 public import Kakeya.Ninety109RegularPieceCount
 public import Kakeya.Ninety21ExceptionalPerLevelEndpoint
 
@@ -19,6 +20,44 @@ abbrev CoverLabel (m : DyadicIndex (Fintype.card T)) :=
 def coverPiece (m : DyadicIndex (Fintype.card T)) (p : CoverLabel v m) : Set X :=
   v.retained.gain m (v.retained.tubeOf m p) ∩
     Metric.ball (v.centers m (v.retained.ballOf m p)) (3 * v.radius m)
+
+omit [BorelSpace X] in
+theorem triple_hit_of_coverPiece_incidence (m) (j : CoverLabel v m) (ℓ : T)
+    (h : ℓ ∈ incidence tubes (coverPiece v m) j) :
+    (tubes ℓ ∩ tubes (v.retained.tubeOf m j) ∩
+      Metric.ball (v.centers m (v.retained.ballOf m j)) (3 * v.radius m)).Nonempty := by
+  classical
+  obtain ⟨x, hxℓ, hxj⟩ := (Finset.mem_filter.mp h).2
+  exact ⟨x, ⟨hxℓ, v.retained.gain_subset_parentTube m _ hxj.1⟩, hxj.2⟩
+
+open Classical in
+theorem fixed_tube_vitali_piece_tail {d : ℕ} {p u : T → Space (d + 2)} {δ : ℝ}
+    {g : ConcreteTubeBallGeometry (fun ℓ => unitTube (p ℓ) (u ℓ) δ)}
+    (v : ConcreteGreedyVitaliCandidates _ g) (m : DyadicIndex (Fintype.card T))
+    (i : T) (hi : i ∈ g.B m) (hδ : 0 < δ) (hδρ : δ ≤ v.radius m)
+    (hu : ∀ ℓ, ‖u ℓ‖ = 1) (hsep : ∀ a b, a ≠ b → δ ≤ dist (u a) (u b))
+    {k : ℕ} (hk : multipleThreshold d ≤ k) (C q : ℝ) (hq : 0 < q)
+    (hscale : v.radius m = C * q ^ (-(1 : ℝ) / (d + 1))) :
+    let tube := fun ℓ => unitTube (p ℓ) (u ℓ) δ
+    ((Finset.univ.filter fun ℓ : T => k ≤ ((v.selected m i).filter fun b =>
+      ∃ j : CoverLabel v m, v.retained.tubeOf m j = i ∧ v.retained.ballOf m j = b ∧
+        ℓ ∈ incidence tube (coverPiece v m) j).card).card : ℝ) ≤
+      (2 * (258 * (binCapacity d : ℝ)) ^ (d + 1) * (C ^ (d + 1))⁻¹) *
+        q * ((k : ℝ) ^ (d + 1))⁻¹ := by
+  classical
+  apply le_trans _ (fixed_tube_vitali_ball_tail p u i δ (v.radius m) hδ hδρ hu hsep
+    (v.selected m i) (v.centers m) (fun r hr s hs hrs =>
+      (congrArg₂ (fun a b : Set (Space (d + 2)) => Disjoint a b)
+        (v.hBall m r) (v.hBall m s)).mp (v.selected_disjoint m i hi r hr s hs hrs))
+    hk C q hq hscale)
+  apply Nat.cast_le.mpr
+  apply Finset.card_le_card
+  intro ℓ hℓ
+  apply Finset.mem_filter.mpr
+  refine ⟨Finset.mem_univ _, (Finset.mem_filter.mp hℓ).2.trans (Finset.card_le_card ?_)⟩
+  intro b hb
+  obtain ⟨hb, j, hj, hbj, hhit⟩ := Finset.mem_filter.mp hb
+  exact Finset.mem_filter.mpr ⟨hb, hj ▸ hbj ▸ triple_hit_of_coverPiece_incidence v m j ℓ hhit⟩
 
 omit [BorelSpace X] in
 theorem coverPiece_nonempty (m) (p : CoverLabel v m) : (coverPiece v m p).Nonempty := by

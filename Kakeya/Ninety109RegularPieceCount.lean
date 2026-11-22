@@ -22,7 +22,7 @@ noncomputable abbrev regularLabelOfIndex (a : Paper46ConstructionData μ tubes (
 noncomputable def regularIncidence (a : Paper46ConstructionData μ tubes (d + 2) s m) :=
   incidence tubes (fun r => s.retainedPiece m (Sum.inr (regularLabelOfIndex a r).val))
 
-private theorem retained_incidence_lower
+theorem retained_incidence_lower
     (p : {i : T // i ∈ s.B m} ⊕ {l : L // l ∈ s.P m}) :
     dyadicScale (Fintype.card T) m ≤ ((incidence tubes (s.retainedPiece m) p).card : ℝ) := by
   classical

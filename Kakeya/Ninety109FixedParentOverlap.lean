@@ -15,12 +15,12 @@ noncomputable def incidence {X T L : Type*} [Fintype T]
     (tube : T → Set X) (P : L → Set X) (r : L) : Finset T :=
   Finset.univ.filter fun ℓ => (tube ℓ ∩ P r).Nonempty
 
-private theorem axis_dist {n : ℕ} (p u : Space n) (hu : ‖u‖ = 1) (a b : ℝ) :
+theorem axis_dist {n : ℕ} (p u : Space n) (hu : ‖u‖ = 1) (a b : ℝ) :
     dist (p + a • u) (p + b • u) = |a - b| := by
   rw [dist_eq_norm, add_sub_add_left_eq_sub, ← sub_smul, norm_smul, hu, mul_one,
     Real.norm_eq_abs]
 
-private theorem shell_packing {d : ℕ} {L : Type*} (J : Finset L)
+theorem shell_packing {d : ℕ} {L : Type*} (J : Finset L)
     (p u : Space (d + 1)) (hu : ‖u‖ = 1) (center : L → Space (d + 1))
     (t : L → ℝ) (a ρ : ℝ) (hρ : 0 < ρ)
     (hclose : ∀ r ∈ J, dist (center r) (p + t r • u) ≤ 4 * ρ)

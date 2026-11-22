@@ -82,7 +82,8 @@ theorem exceptional_cover_count (hd : 1 ≤ d) (A : ℝ≥0) (hδ : 0 < δ)
           _ (hsel hx) _ (hsel hy) hneq
         exact (congrArg₂ (fun a b : Set (Space (d + 2)) => Disjoint a b)
           (v.hBall m (v.retained.ballOf m (Sum.inr x)))
-          (v.hBall m (v.retained.ballOf m (Sum.inr y)))).mp h) (fun z _ => coverPiece_nonempty v m (Sum.inr z)) (by
+          (v.hBall m (v.retained.ballOf m (Sum.inr y)))).mp h)
+          (fun z _ => coverPiece_nonempty v m (Sum.inr z)) (by
         intro x hx z hz
         have hgain := hz.1
         exact ⟨⟨par hx ▸ v.retained.gain_subset_parentTube m _ hgain, hz.2⟩,
