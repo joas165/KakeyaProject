@@ -401,15 +401,9 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamily_hStages
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactMaximalUnusedGains
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofCompactMaximalUnusedGains_selection
--- Empty-gain localization and padded finite-net indexing.
+-- Empty-gain localization.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.selected_empty_of_gain_empty
 #print axioms Kakeya.Ninety21.greedyFiniteNet_empty_of_gain_empty
-#print axioms Kakeya.Ninety21.vitaliPaddedCenterEquiv
-#print axioms Kakeya.Ninety21.vitaliPaddedCenter
-#print axioms Kakeya.Ninety21.vitaliPaddedCandidates
-#print axioms Kakeya.Ninety21.vitaliPadded_fallback_not_candidate
-#print axioms Kakeya.Ninety21.vitaliPadded_index_exists
-#print axioms Kakeya.Ninety21.vitaliPadded_indexed_cover
 #print axioms Kakeya.Ninety21.ConcreteTubeBallGeometry.ofGreedyNetFamilyAllowEmpty
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.ofGreedyNetFamilyAllowEmpty
 -- Greedy–Vitali concrete bounds.
@@ -421,7 +415,6 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclideanTubeBallBounds
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.euclideanTubeBallBounds_radius
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.retained_label_ball_occupied
-#print axioms Kakeya.Ninety21.vitaliPaddedCenter_on_level_of_genuine
 #print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius
 #print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius_pos
 #print axioms Kakeya.Ninety21.canonicalGreedyVitaliRadius_scale
@@ -503,3 +496,19 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.per_level_inputs_of_unit_directions
 #print axioms Kakeya.Ninety21.angular_packing_parameters_of_card_bound
 #print axioms Kakeya.Ninety21.ConcreteGreedyVitaliCandidates.per_level_inputs_of_unit_directions_card_bound
+-- Lemma 4.8 and the ordered overlap application.
+#print axioms Kakeya.Ninety109.fixed_parent_overlap
+#print axioms Kakeya.Ninety109.fixed_parent_overlap_dyadic
+#print axioms Kakeya.Ninety109.OrderedOverlapBound
+#print axioms Kakeya.Ninety109.incidence_sum_of_ordered_overlap
+#print axioms Kakeya.Ninety109.regular_label_count_of_ordered_overlap
+#print axioms Kakeya.Ninety109.exceptional_cover_count
+-- Retained pieces and the conditional logarithmic endpoint.
+#print axioms Kakeya.Ninety109.greedyUnion_subset_coverPieces
+#print axioms Kakeya.Ninety109.TubeFamily.piece_volume
+#print axioms Kakeya.Ninety109.TubeFamily.OverlapApplication
+#print axioms Kakeya.Ninety109.TubeFamily.level_bound
+#print axioms Kakeya.Ninety109.TubeFamily.moment_bound
+#print axioms Kakeya.Ninety109.TubeFamily.norm_bound
+#check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound
+#print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound
