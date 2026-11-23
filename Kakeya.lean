@@ -57,4 +57,7 @@ public import Kakeya.Ninety21QuantitativeCapPacking
 public import Kakeya.Ninety21OrthogonalChartCoordinates
 public import Kakeya.Ninety21ActualAngularPackingEndpoint
 public import Kakeya.Ninety21ExceptionalPerLevelEndpoint
+public import Kakeya.Ninety109FixedParentOverlap
+public import Kakeya.Ninety109RegularPieceCount
+public import Kakeya.Ninety109Endpoint
 @[expose] public section

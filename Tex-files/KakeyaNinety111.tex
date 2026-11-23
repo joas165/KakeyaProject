@@ -1185,70 +1185,302 @@
 		
 		This completes the proof.
 	\end{proof}
-	
+	Define
+	\[
+	I_r:=\{i\in\{1,\ldots,N\}: T_i^\delta\cap P_r \ne\varnothing\}.
+	\]
+	We need the following lemma.
+	 \begin{lemma}[Lower bound for the incidence union]
+	 	\label{lem:incidence-union-lower-bound}
+	 	Let $R$ be a finite set of representative labels and let
+	 	$I_r\subseteq\{1,\ldots,N\}$ for each $r\in R$. If
+	 	$U=\bigcup_{r\in R}I_r$ is nonempty, then
+	 	\[
+	 	|U|\ge
+	 	\frac{\bigl(\sum_{r\in R}|I_r|\bigr)^2}
+	 	{\displaystyle\sum_{r\in R}|I_r|
+	 		+2\sum_{\substack{r,s\in R\\r<s}}|I_r\cap I_s|}.
+	 	\]
+	 \end{lemma}
+	 
+	 \begin{proof}
+	 	For $\ell\in U$, put $d_\ell=\#\{r\in R:\ell\in I_r\}$.
+	 	Counting incidences gives $\sum_{\ell\in U}d_\ell=\sum_{r\in R}|I_r|$.
+	 	Since $\ell$ belongs to $\binom{d_\ell}{2}$ unordered pairs of
+	 	distinct incidence sets, we have
+	 	\[
+	 	\sum_{\ell\in U}d_\ell^2
+	 	=\sum_{\ell\in U}\left(d_\ell+2\binom{d_\ell}{2}\right)
+	 	=\sum_{r\in R}|I_r|+2\sum_{\substack{r,s\in R\\r<s}}|I_r\cap I_s|.
+	 	\]
+	 	The claim follows from Cauchy--Schwarz,
+	 	$(\sum_{\ell\in U}d_\ell)^2\le |U|\sum_{\ell\in U}d_\ell^2$.
+	 \end{proof}
+	 
+	 \begin{lemma}[Angular concentration of multiple incidences] \label{lem:overlap-fixed-parent}
+	 	Let \(n\ge3\), and let \(T_i^\delta\) be a
+	 	fixed tube of unit length with direction
+	 	\(\omega_c\). Let
+	 	\[
+	 	B_j=B(b_j,\rho),\qquad j\in J,
+	 	\]
+	 	be pairwise disjoint balls, where
+	 	\(\delta\le\rho\le1\).
+	 	
+	 	Suppose that the original tube directions
+	 	\(\omega_1,\ldots,\omega_N\) are
+	 	\(\delta\)-separated. For \(k\ge2\), define
+	 	\[
+	 	A_{i,k}:=
+	 	\left\{
+	 	\ell\in\{1,\ldots,N\}:
+	 	\#\left\{
+	 	j\in J:
+	 	T_\ell^\delta\cap T_i^\delta
+	 	\cap 3B_j\ne\varnothing
+	 	\right\}\ge k
+	 	\right\}.
+	 	\]
+	 	
+	 	There exist dimensional constants
+	 	\(k_0\) and \(C_n\) such that, for
+	 	every \(k\ge k_0\) and
+	 	\(\ell\in E_{c,k}\),
+	 	\[
+	 	\angle(\omega_\ell,\omega_c)
+	 	\le C_n\frac{\delta}{k\rho}.
+	 	\]
+	 	Consequently,
+	 	\[
+	 	|A_{c,k}|
+	 	\lesssim_n (k\rho)^{1-n}.
+	 	\]
+	 	
+	 	In particular, if
+	 	\[
+	 	\rho=Cq^{-1/(n-1)},
+	 	\]
+	 	then
+	 	\[
+	 	|A_{i,k}|
+	 	\lesssim_{n,C}qk^{1-n},
+	 	\qquad k\ge k_0.
+	 	\]
+	 \end{lemma}
+	 
+	 \begin{proof}
+	 	Fix \(\ell\in A_{i,k}\). By definition,
+	 	there are at least \(k\) distinct
+	 	indices \(j\in J\) such that
+	 	\[
+	 	T_\ell^\delta\cap T_i^\delta
+	 	\cap 3B_j\ne\varnothing.
+	 	\]
+	 	
+	 	Since these enlarged balls meet
+	 	\(T_i^\delta\), their centers lie
+	 	within \(4\rho\) of its axis.
+	 	The disjointness of the balls and
+	 	volume packing imply that at most
+	 	\(O_n(1)\) of their centers can have
+	 	axial projections in an interval
+	 	of length \(\rho\).
+	 	
+	 	Thus, for sufficiently large \(k\),
+	 	there exist two of the intersected
+	 	balls, say \(B_r\) and \(B_s\), whose
+	 	centers have axial separation at least
+	 	\(c_n k\rho\).
+	 	
+	 	Choose
+	 	\[
+	 	x\in T_\ell^\delta\cap T_i^\delta
+	 	\cap 3B_r,
+	 	\qquad
+	 	y\in T_\ell^\delta\cap T_i^\delta
+	 	\cap 3B_s.
+	 	\]
+	 	Since the axial coordinates of \(x\)
+	 	and \(y\) differ from those of their
+	 	respective ball centers by at most
+	 	\(3\rho\), increasing \(k_0\) if
+	 	necessary gives
+	 	\[
+	 	|x-y|\gtrsim_n k\rho.
+	 	\]
+	 	
+	 	Both points lie within \(\delta\)
+	 	of the axes of \(T_\ell^\delta\)
+	 	and \(T_i^\delta\). Therefore, their
+	 	direction vectors differ by an angle
+	 	satisfying
+	 	\[
+	 	\angle(\omega_\ell,\omega_c)
+	 	\lesssim_n\frac{\delta}{|x-y|}
+	 	\lesssim_n\frac{\delta}{k\rho}.
+	 	\]
+	 	
+	 	Hence every \(\ell\in E_{c,k}\) has
+	 	direction in an angular cap of radius
+	 	\(O_n(\delta/(k\rho))\) centered at
+	 	the unoriented direction of
+	 	\(T_i^\delta\).
+	 	
+	 	By the \(\delta\)-separation of the
+	 	original directions,
+	 	\[
+	 	|A_{i,k}|
+	 	\lesssim_n
+	 	\left(1+\frac1{k\rho}\right)^{n-1}.
+	 	\]
+	 	Since all relevant balls meet a
+	 	unit-length tube, \(k\rho=O_n(1)\)
+	 	whenever \(A_{i,k}\ne\varnothing\).
+	 	Consequently,
+	 	\[
+	 	|A_{i,k}|
+	 	\lesssim_n (k\rho)^{1-n}.
+	 	\]
+	 	
+	 	Substituting
+	 	\(\rho=Cq^{-1/(n-1)}\) completes
+	 	the proof.
+	 \end{proof}
+	 
+
+Next we show a key inequality
+\begin{equation} \label{eq:key-bound}
+	\sum_{r \in I_r}|I_r| \lesssim N.
+\end{equation}
+We split by cases. 
+If
+\[
+\sum_{1\leq i < j} |I_i \cap I_j| \leq \sum_{r\in R}|I_r|, 
+\]
+then 
+\ref{lem:incidence-union-lower-bound} implies 
+\[
+\sum_{r\in R}|I_r| \lesssim |U| \leq N, 
+\]
+at once.
+So we may assume
+\[
+\sum_{1\leq i < j} |I_i \cap I_j| > \sum_{r\in R}|I_r|. 
+\]
+We want to prove that 
+\[
+\sum_{1\leq i < j} |I_i \cap I_j| \lesssim \sum_{r\in R}|I_r|. 
+\]
+We have
+\begin{align*}
+	\sum_{\substack{i,j\in R\\ i<j}} |I_i\cap I_j|
+	&=
+	\sum_{c \in B}\sum_{i\in R_c}\sum_{\substack{j\in R\\ i <j}} |I_i\cap I_j|
+	,
+\end{align*}
+where $b<c$ means that $T_b^\delta$ precedes $T_c^\delta$ in the greedy
+selection order.
+
+\begin{lemma}
 	Let
 	\[
-	\mathcal A
-	:=
-	\{(\ell,j):\ell\in B',\ 1\le j\le m_\ell\}
+	R=\bigsqcup_{c\in B}R_c,
 	\]
-	be the set of selected tube-ball pairs.
-	Redefine the bijective re-indexing for the Vitali- balls in accordance with the theorem \ref{thm:restricted-bijection}:
+	and, for each \(i\in R\) and \(k\ge2\), define
 	\[
-	\kappa:\mathcal A\longrightarrow D,
-	\qquad
-	(\ell,j)\longmapsto \kappa(\ell,j),
+	A_{i,k}:=
+	\left\{
+	\ell\in I_i:
+	\#\{j\in R:i\le j,\ \ell\in I_j\}\ge k
+	\right\}.
 	\]
-	with inverse
+	Then
 	\[
-	\kappa^{-1}(\kappa_0)
+	\sum_{c\in B}\sum_{i\in R_c}
+	\sum_{\substack{j\in R\\i<j}}|I_i\cap I_j|
 	=
-	(\ell(k_0),j(\kappa_0)),
-	\qquad \kappa_0 \in D'
+	\sum_{c\in B}\sum_{i\in R_c}
+	\sum_{k\ge2}|A_{i,k}|.
 	\]
-	In particular,
+\end{lemma}
+
+\begin{proof}
+	Fix \(i\in R\). Counting the pairs
+	\((j,\ell)\) satisfying \(j>i\) and
+	\(\ell\in I_i\cap I_j\) in two ways gives
 	\[
-	b_{\kappa(\ell,j)}=b_{\ell,j},
-	\qquad
-	b_{\kappa_0}=b_{\ell(\kappa_0),j(\kappa_0)}.
-	\] 
-	So we have
-	\[
-	\begin{aligned}
-	\#\{\ell \in B \sqcup \sigma \mathcal P: \Phi(\ell) = r\} 
-	= 1, 
-	\end{aligned}
+	\sum_{\substack{j\in R\\i<j}}|I_i\cap I_j|
+	=
+	\sum_{\ell\in I_i}
+	\#\{j\in R:i<j,\ \ell\in I_j\}.
 	\]
-	for all $r \in  B \sqcup \mathcal P,$
-	using the mapping given by the theorem \ref{thm:restricted-bijection},
-	We extend the bijection $\Phi$ to the original tube
-	indices $\ell=1,\ldots,N$ by the incidence rule
+	
+	For each \(\ell\in I_i\), write
 	\[
-	\widehat{\Phi}(\ell)=r
+	d_i(\ell):=
+	\#\{j\in R:i\le j,\ \ell\in I_j\}.
+	\]
+	Since \(\ell\in I_i\), the number of indices
+	\(j>i\) such that \(\ell\in I_j\) is
+	\(d_i(\ell)-1\).
+	
+	By the definition of \(A_{i,k}\),
+	\[
+	\ell\in A_{i,k}
 	\quad\Longleftrightarrow\quad
-	T_\ell^\delta\cap P_r\cap G_r\ne\varnothing,
-	\qquad r\in D.
+	2\le k\le d_i(\ell).
 	\]
-	Here $T_\ell^\delta$ is an original, untrimmed tube,
-	whereas $P_r\subseteq F_m\cap G_r$ is a retained
-	localized piece.
-	The uniqueness of the target $r$ follows from the greedy selection \ref{thm:greedy-selection}.  
-	Thus, by double counting,
+	Consequently,
+	\[
+	d_i(\ell)-1
+	=
+	\sum_{k\ge2}\mathbf{1}_{A_{i,k}}(\ell).
+	\]
+	
+	Interchanging the finite sums yields
 	\[
 	\begin{aligned}
-		q|\mathcal P|
-		&\leq 
-	    \sum_{r \in \sigma \mathcal P}
-		\#\{\ell \in \{1,\ldots,N+M\}: \Phi(\ell) = r\}  \\
-		&= 
-		\sum_{r = 1}^{N+M}
-		\#\{\ell \in \sigma \mathcal P: \Phi(\ell) = r\}  \\
-		&\leq N + M \\
-		&\lesssim N
-		,
+		\sum_{\substack{j\in R\\i<j}}|I_i\cap I_j|
+		&=\sum_{\ell\in I_i}(d_i(\ell)-1)\\
+		&=\sum_{\ell\in I_i}
+		\sum_{k\ge2}\mathbf{1}_{A_{i,k}}(\ell)\\
+		&=\sum_{k\ge2}|A_{i,k}|.
 	\end{aligned}
 	\]
-	So we have $|\mathcal P| \lesssim 2^{-m}N.$
+	Summing this identity over \(i\in R_c\)
+	and \(c\in B\) completes the proof.
+\end{proof}
+
+
+Moreover from the lemma \ref{lem:overlap-fixed-parent} 
+\begin{align*}
+\sum_{c \in B}\sum_{i\in R_c}\sum_{\substack{j\in R\\ i <j}} |I_i\cap I_j|  &= 
+\sum_{c\in B}\sum_{i\in R_c}
+\sum_{k\ge2}|A_{i,k}| \\
+&\lesssim \sum_{c\in B}\sum_{i\in R_c}
+\sum_{k\ge2}qk^{1-n} \\
+&\lesssim \sum_{c \in B}\sum_{i \in R_c}|I_i|  \\
+&= \sum_{i \in R}|I_i|
+,
+\end{align*}
+where we applied the lemma \ref{lem:overlap-fixed-parent} to every parent $P_i$ considered as a tube.
+So using lemma \ref{lem:incidence-union-lower-bound} 
+\[
+\bigl(\sum_{r\in R}|I_r|\bigr)^2 \lesssim |U|\sum_{\substack{r,s\in R\\r<s}}|I_r\cap I_s| \lesssim N\sum_{i \in R}|I_i|. 	 
+\]
+which after a little algebra is the key bound \eqref{eq:key-bound}.   
+Hence,
+\[
+\begin{aligned}
+	q|\mathcal P|
+	\leq  \sum_{r \in R}|\{i\in\{1,\ldots,N\}: T_i^\delta\cap P_r\ne\varnothing\}| 
+	\lesssim N.
+\end{aligned}
+\]
+	So we have 
+	\[
+	|\mathcal P| = |\mathcal P_{reg}| + |\mathcal P_{exec}| \lesssim 2^{-m}N.
+	\]
 	So we have 
 	\begin{equation}
 		|F_m| \lesssim \sum_ {j=1}^{|\mathcal P|}|T^\delta_j(a_j) \cap B(b_{j},3C2^{-m/(n-1)}) \cap G_j \cap F_m| \lesssim \delta^{n-1}|\mathcal P|2^{-m/(n-1)} \lesssim 2^{-mn/(n-1)} 
@@ -1301,50 +1533,56 @@
 	measure-theoretic structure is not used below; only a nonnegative weight
 	$c_P$ associated with each $P\in\calP$ is needed.
 	
-	\begin{theorem}[Selection comparison]\label{thm:comparison}
-		For each $j\in\{1,\ldots,N\}$, let $\calP_j\subseteq\calP$ be an
-		original incidence family. Assign weights $c_P\geq 0$ and put
-		\[
-		w_j:=\sum_{P\in\calP_j}c_P,
-		\qquad
-		r_P:=\#\bigl\{j\in\{1,\ldots,N\}:P\in\calP_j\bigr\}.
-		\]
-		Suppose that, for some $q\geq1$ and $C>0$,
-		\[
-		r_P\leq Cq\qquad(P\in\calP).
-		\]
-		Let $A\subseteq\{1,\ldots,N\}$ be a selected family such that every
-		piece belongs to at least one selected incidence family:
-		\[
-		s_P:=\#\{j\in A:P\in\calP_j\}\geq1
-		\qquad(P\in\calP).
-		\]
-		Then
-		\begin{equation}\label{eq:selection-comparison}
-			\boxed{\displaystyle
-				\sum_{j=1}^{N}w_j\leq Cq\sum_{j\in A}w_j.}
-		\end{equation}
-	\end{theorem}
 	
-	\begin{proof}
-		For each $P\in\calP$, the assumptions give
-		$r_P\leq Cq\leq Cq\,s_P$. As $c_P\geq0$, finite double counting yields
-		\begin{align*}
-			\sum_{j=1}^{N}w_j
-			&=\sum_{j=1}^{N}\sum_{P\in\calP_j}c_P
-			=\sum_{P\in\calP}r_Pc_P\\
-			&\leq Cq\sum_{P\in\calP}s_Pc_P
-			=Cq\sum_{j\in A}\sum_{P\in\calP_j}c_P
-			=Cq\sum_{j\in A}w_j.
-		\end{align*}
-	\end{proof}
-	
-	\noindent
-	In particular, if each piece belongs to \emph{exactly one} selected
-	family, then $s_P=1$; however, the proof only requires $s_P\geq1$.
-	An upper bound $s_P\leq1$ alone does not establish
-	\eqref{eq:selection-comparison}.
-	
+   \begin{theorem}[Two-sided selection comparison for distinct representatives]
+   	\label{thm:selection-comparison-sigma}
+   	Let $q=2^m$, and let $\mathcal P$ be a finite family of nonempty
+   	pieces contained in $F_m$. Let
+   	\[
+   	\sigma:\mathcal P\longrightarrow\{1,\ldots,N\}
+   	\]
+   	be injective, with $P\cap T_{\sigma(P)}^\delta\ne\varnothing$
+   	for every $P\in\mathcal P$. Assume that at most $Cq$ original tubes
+   	meet each piece.
+   	
+   	For nonnegative weights $c_P$, define
+   	\[
+   	w_i
+   	=\sum_{\substack{P\in\mathcal P\\
+   			P\cap T_i^\delta\ne\varnothing}}c_P,
+   	\qquad
+   	\widetilde w_r
+   	=\sum_{\substack{P\in\mathcal P\\ \sigma(P)=r}}c_P
+   	\quad\bigl(r\in\sigma(\mathcal P)\bigr).
+   	\]
+   	Then
+   	\begin{equation}
+   		\label{eq:selection-comparison-sigma}
+   		q\sum_{r\in\sigma(\mathcal P)}\widetilde w_r
+   		\le \sum_{i=1}^{N}w_i
+   		\le Cq\sum_{r\in\sigma(\mathcal P)}\widetilde w_r.
+   	\end{equation}
+   \end{theorem}
+   
+   \begin{proof}
+   	Each $r\in\sigma(\mathcal P)$ represents a unique piece $P_r$.
+   	Hence $\widetilde w_r=c_{P_r}$ and
+   	\[
+   	\sum_{r\in\sigma(\mathcal P)}\widetilde w_r
+   	=\sum_{P\in\mathcal P}c_P.
+   	\]
+   	For $P\in\mathcal P$, write
+   	\[
+   	I(P)=\{i\in\{1,\ldots,N\}:P\cap T_i^\delta\ne\varnothing\}.
+   	\]
+   	Choose $x\in P$. Since $x\in F_m$, at least $q$ original tubes
+   	contain $x$, so $q\le |I(P)|\le Cq$. Finite double counting gives
+   	\[
+   	\sum_{i=1}^{N}w_i=\sum_{P\in\mathcal P}|I(P)|c_P.
+   	\]
+   	The result follows by multiplying the bounds on $|I(P)|$ by $c_P$
+   	and summing over $\mathcal P$.
+   \end{proof}
 	\section{Lower intersection incidence}
 	
 	Let $P$, $J$ and $X$ be sets, and let
