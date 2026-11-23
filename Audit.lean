@@ -503,6 +503,8 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety109.multiple_hits_card
 #print axioms Kakeya.Ninety109.multiple_hits_card_dyadic
 #print axioms Kakeya.Ninety109.fixed_tube_vitali_ball_tail
+#print axioms Kakeya.Ninety109.triple_vitali_ball_overlap_bound
+#print axioms Kakeya.Ninety109.fixed_tube_vitali_ball_tail_with_bounded_overlap
 #print axioms Kakeya.Ninety109.triple_hit_of_coverPiece_incidence
 #print axioms Kakeya.Ninety109.fixed_tube_vitali_piece_tail
 #print axioms Kakeya.Ninety109.TubeFamily.regular_tail_card_along_parent
@@ -571,5 +573,3 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_tail_chain
 #check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_selection2
 #print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_selection2
-#check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_parent_subset
-#print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_parent_subset
