@@ -534,19 +534,22 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety109.incidence_sum_of_ordered_overlap
 #print axioms Kakeya.Ninety109.regular_label_count_of_ordered_overlap
 #print axioms Kakeya.Ninety109.exceptional_cover_count
--- Lemma 4.8 full-tube tail and conditional piece-to-tube inclusion.
+-- Lemma 4.8 fixed-parent tail and inclusion using globally indexed balls.
 #check Kakeya.Ninety109.TubeFamily.fixedParentTubeTail
 #print axioms Kakeya.Ninety109.TubeFamily.fixedParentTubeTail
 #check Kakeya.Ninety109.TubeFamily.fixed_parent_tube_tail_card
 #print axioms Kakeya.Ninety109.TubeFamily.fixed_parent_tube_tail_card
-#check Kakeya.Ninety109.TubeFamily.regular_tail_card_of_subset_inclusion
-#print axioms Kakeya.Ninety109.TubeFamily.regular_tail_card_of_subset_inclusion
+#check Kakeya.Ninety109.TubeFamily.regular_tail_card_of_parent_subset_inclusion
+#print axioms Kakeya.Ninety109.TubeFamily.regular_tail_card_of_parent_subset_inclusion
+#print axioms Kakeya.Ninety109.TubeFamily.retainedPiece_subset_global_vitali_ball
+#check Kakeya.Ninety109.TubeFamily.R_c_orderedTail_subset_of_global_vitali_balls
+#print axioms Kakeya.Ninety109.TubeFamily.R_c_orderedTail_subset_of_global_vitali_balls
 #check Kakeya.Ninety109.TubeFamily.ParentSubsetApplication
 #print axioms Kakeya.Ninety109.TubeFamily.ParentSubsetApplication
-#check Kakeya.Ninety109.TubeFamily.regularApplication_of_parent_subset
-#print axioms Kakeya.Ninety109.TubeFamily.regularApplication_of_parent_subset
-#check Kakeya.Ninety109.TubeFamily.overlapApplication_of_parent_subset
-#print axioms Kakeya.Ninety109.TubeFamily.overlapApplication_of_parent_subset
+#check Kakeya.Ninety109.TubeFamily.parentTailApplication_of_parent_subset
+#print axioms Kakeya.Ninety109.TubeFamily.parentTailApplication_of_parent_subset
+#check Kakeya.Ninety109.TubeFamily.parentTailApplication_of_ball_map
+#print axioms Kakeya.Ninety109.TubeFamily.parentTailApplication_of_ball_map
 -- Retained pieces and the conditional logarithmic endpoint.
 #print axioms Kakeya.Ninety109.greedyUnion_subset_coverPieces
 #print axioms Kakeya.Ninety109.TubeFamily.piece_volume

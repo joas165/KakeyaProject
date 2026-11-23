@@ -18,6 +18,41 @@ noncomputable def multipleHits {X T L : Type*} [Fintype T]
     (tube : T → Set X) (i : T) (ball : L → Set X) (J : Finset L) (k : ℕ) : Finset T :=
   Finset.univ.filter fun l => k ≤ (J.filter fun j => (tube l ∩ tube i ∩ ball j).Nonempty).card
 
+theorem triple_vitali_ball_overlap_bound {d : ℕ} {L : Type*}
+    (J : Finset L) (center : L → Space (d + 2)) (ρ : ℝ) (hρ : 0 < ρ)
+    (hball : ∀ r ∈ J, ∀ s ∈ J, r ≠ s →
+      Disjoint (Metric.ball (center r) ρ) (Metric.ball (center s) ρ))
+    (x : Space (d + 2)) :
+    ((J.filter fun b => x ∈ Metric.ball (center b) (3 * ρ)).card : ℝ) ≤
+      7 ^ (d + 2) := by
+  classical
+  let S := J.filter fun b => x ∈ Metric.ball (center b) (3 * ρ)
+  have hsep : ∀ r ∈ S, ∀ s ∈ S, r ≠ s →
+      ρ ≤ dist (center r) (center s) := by
+    intro r hr s hs hrs
+    have hrJ : r ∈ J := (Finset.mem_filter.mp hr).1
+    have hsJ : s ∈ J := (Finset.mem_filter.mp hs).1
+    by_contra h
+    have hlt : dist (center r) (center s) < ρ := lt_of_not_ge h
+    exact Set.disjoint_left.mp (hball r hrJ s hsJ hrs)
+      (Metric.mem_ball.mpr (by simpa [dist_comm] using hlt))
+      (Metric.mem_ball_self hρ)
+  have hnear : ∀ r ∈ S, ‖center r - x‖ ≤ 3 * ρ := by
+    intro r hr
+    have hmem : x ∈ Metric.ball (center r) (3 * ρ) :=
+      (Finset.mem_filter.mp hr).2
+    have hdist : dist (center r) x < 3 * ρ := by
+      simpa [dist_comm] using (Metric.mem_ball.mp hmem)
+    simpa [dist_eq_norm] using le_of_lt hdist
+  have hpack := finite_euclidean_projected_packing
+    (fun r => center r - x) S ρ (3 * ρ) hρ (by positivity)
+    (by simpa using hsep)
+    (by simpa using hnear)
+  have he : 1 + 2 * (3 * ρ) / ρ = (7 : ℝ) := by
+    field_simp
+    ring
+  simpa only [he] using hpack
+
 theorem multiple_hits_concentration {d : ℕ} {T L : Type*} [Fintype T]
     (p v : T → Space (d + 2)) (i : T) (δ ρ : ℝ) (hδ : 0 < δ) (hδρ : δ ≤ ρ)
     (hu : ∀ l, ‖v l‖ = 1) (J : Finset L) (center : L → Space (d + 2))
@@ -219,6 +254,26 @@ theorem fixed_tube_vitali_ball_tail (C q : ℝ) (hq : 0 < q)
       ≤ (2 * (258 * (binCapacity d : ℝ)) ^ (d + 1) * (C ^ (d + 1))⁻¹) *
         q * ((k : ℝ) ^ (d + 1))⁻¹ := by
   exact multiple_hits_card_dyadic p v i δ ρ hδ hδρ hu hsep J center hball hk C q hq hscale
+
+
+include hδ hδρ hu hsep hball hk in
+theorem fixed_tube_vitali_ball_tail_with_bounded_overlap (C q : ℝ) (hq : 0 < q)
+    (hscale : ρ = C * q ^ (-(1 : ℝ) / (d + 1))) :
+    (∀ x : Space (d + 2),
+      ((J.filter fun b => x ∈ Metric.ball (center b) (3 * ρ)).card : ℝ) ≤
+        7 ^ (d + 2)) ∧
+    (let tube := fun a => unitTube (p a) (v a) δ
+     ((Finset.univ.filter fun ℓ : T => k ≤
+        (J.filter fun b =>
+          (tube ℓ ∩ tube i ∩ Metric.ball (center b) (3 * ρ)).Nonempty).card).card : ℝ) ≤
+       (2 * (258 * (binCapacity d : ℝ)) ^ (d + 1) * (C ^ (d + 1))⁻¹) *
+         q * ((k : ℝ) ^ (d + 1))⁻¹) := by
+  constructor
+  · intro x
+    exact triple_vitali_ball_overlap_bound J center ρ
+      (hδ.trans_le hδρ) hball x
+  · exact fixed_tube_vitali_ball_tail p v i δ ρ hδ hδρ hu hsep
+      J center hball hk C q hq hscale
 
 end
 

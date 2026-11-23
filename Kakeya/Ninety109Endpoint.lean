@@ -322,8 +322,16 @@ noncomputable def fixedParentTailConstant (d : ℕ) (A : ℝ≥0) : ℝ≥0 :=
 
 noncomputable def globalVitaliBalls
     (m : DyadicIndex (Fintype.card T)) :=
-  (f.pieces.B m).biUnion fun c =>
-    (f.candidates f.supportVolume).selected m c
+  let v := f.candidates f.supportVolume
+  Finset.univ.image fun p : CoverLabel v m => v.retained.ballOf m p
+
+theorem retainedPiece_subset_global_vitali_ball
+    (m : DyadicIndex (Fintype.card T)) (p : CoverLabel (f.candidates f.supportVolume) m) :
+    let v := f.candidates f.supportVolume
+    let b := v.retained.ballOf m p
+    b ∈ f.globalVitaliBalls m ∧
+      f.pieces.retainedPiece m p ⊆ Metric.ball (v.centers m b) (3 * v.radius m) := by
+  exact ⟨Finset.mem_image.mpr ⟨p, Finset.mem_univ _, rfl⟩, fun _ hx => hx.2⟩
 
 def GlobalVitaliDisjoint : Prop :=
   ∀ m : DyadicIndex (Fintype.card T),
@@ -373,36 +381,44 @@ theorem fixed_parent_tube_tail_card
   exact ht
 
 open Classical in
-theorem regular_tail_card_of_subset_inclusion
+theorem R_c_orderedTail_subset_of_global_vitali_balls
     (m : DyadicIndex (Fintype.card T))
     (i : PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m)
-    (hballs : f.GlobalVitaliDisjoint)
-    {k : ℕ} (hk : multipleThreshold d ≤ k)
-    (hsubset :
-      letI := f.regularOrder m
-      orderedTail (Finset.univ : Finset
-        (PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m))
-        (incidence f.tube (fun j =>
-          f.pieces.retainedPiece m (Sum.inr j.val))) i k ⊆
-        f.fixedParentTubeTail m i k) :
+    (k : ℕ) :
     letI := f.regularOrder m
     let L := PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m
-    let I := incidence f.tube (fun j : L =>
-      f.pieces.retainedPiece m (Sum.inr j.val))
-    ((orderedTail (Finset.univ : Finset L) I i k).card : ℝ) ≤
-      (fixedParentTailConstant d A : ℝ) *
-        dyadicScale (Fintype.card T) m * ((k : ℝ) ^ (d + 1))⁻¹ := by
-  classical
+    let c := f.pieces.parent m i.val
+    let R := Finset.univ.filter (fun j : L => f.pieces.parent m j.val = c)
+    let I := incidence f.tube (fun j : L => f.pieces.retainedPiece m (Sum.inr j.val))
+    orderedTail R I i k ⊆ f.fixedParentTubeTail m i k := by
   let := f.regularOrder m
-  have ht := f.fixed_parent_tube_tail_card m i hballs hk
   let L := PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m
-  let I := incidence f.tube (fun j : L =>
-    f.pieces.retainedPiece m (Sum.inr j.val))
-  have hle :
-      ((orderedTail (Finset.univ : Finset L) I i k).card : ℝ) ≤
-        ((f.fixedParentTubeTail m i k).card : ℝ) := by
-    exact_mod_cast Finset.card_le_card hsubset
-  exact hle.trans ht
+  let c := f.pieces.parent m i.val
+  let R := Finset.univ.filter (fun j : L => f.pieces.parent m j.val = c)
+  let I := incidence f.tube (fun j : L => f.pieces.retainedPiece m (Sum.inr j.val))
+  let v := f.candidates f.supportVolume
+  let b := fun j : L => v.retained.ballOf m (Sum.inr j.val)
+  dsimp only
+  intro ℓ hℓ
+  obtain ⟨_, hk_le⟩ := Finset.mem_filter.mp hℓ
+  refine Finset.mem_filter.mpr ⟨Finset.mem_univ ℓ, hk_le.trans ?_⟩
+  refine Finset.card_le_card_of_injOn b ?_ ?_
+  · intro j hj
+    obtain ⟨hjR, _, hℓj⟩ := Finset.mem_filter.mp hj
+    have hj_par : f.pieces.parent m j.val = c :=
+      (Finset.mem_filter.mp hjR).2
+    obtain ⟨_, hhit⟩ := f.regular_parent_forward_hit m c j ℓ hj_par hℓj
+    have hmem_global : b j ∈ f.globalVitaliBalls m :=
+      (f.retainedPiece_subset_global_vitali_ball m (Sum.inr j.val)).1
+    exact Finset.mem_filter.mpr ⟨hmem_global, hhit⟩
+  · intro x hx y hy hxy
+    have hx_par : f.pieces.parent m x.val = c :=
+      (Finset.mem_filter.mp (Finset.mem_filter.mp hx).1).2
+    have hy_par : f.pieces.parent m y.val = c :=
+      (Finset.mem_filter.mp (Finset.mem_filter.mp hy).1).2
+    apply Subtype.ext
+    apply Subtype.ext
+    exact Prod.ext (hx_par.trans hy_par.symm) (congrArg Fin.val hxy)
 
 noncomputable def ParentSubsetApplication : Prop := by
   classical
@@ -410,38 +426,103 @@ noncomputable def ParentSubsetApplication : Prop := by
     8 ≤ dyadicScale (Fintype.card T) m →
     (f.candidates f.supportVolume).radius m ≤ 1 →
     letI := f.regularOrder m
-    ∀ (i : PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m)
-      (k : ℕ), multipleThreshold d ≤ k →
-      orderedTail (Finset.univ : Finset
-        (PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m))
-        (incidence f.tube (fun j =>
-          f.pieces.retainedPiece m (Sum.inr j.val))) i k ⊆
-        f.fixedParentTubeTail m i k
+    let L := PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m
+    ∀ (i : L) (k : ℕ), multipleThreshold d ≤ k →
+      let c := f.pieces.parent m i.val
+      let R := Finset.univ.filter (fun j : L => f.pieces.parent m j.val = c)
+      let I := incidence f.tube (fun j : L => f.pieces.retainedPiece m (Sum.inr j.val))
+      orderedTail R I i k ⊆ f.fixedParentTubeTail m i k
 
-theorem regularApplication_of_parent_subset
-    (hballs : f.GlobalVitaliDisjoint)
+open Classical in
+theorem regular_tail_card_of_parent_subset_inclusion
     (m : DyadicIndex (Fintype.card T))
+    (i : PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m)
+    (hballs : f.GlobalVitaliDisjoint)
+    {k : ℕ} (hk : multipleThreshold d ≤ k)
     (hsubset :
       letI := f.regularOrder m
-      ∀ (i : PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m)
-        (k : ℕ), multipleThreshold d ≤ k →
-        orderedTail (Finset.univ : Finset
-          (PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m))
-          (incidence f.tube (fun j =>
-            f.pieces.retainedPiece m (Sum.inr j.val))) i k ⊆
-          f.fixedParentTubeTail m i k) :
+      let L := PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m
+      let c := f.pieces.parent m i.val
+      let R := Finset.univ.filter (fun j : L => f.pieces.parent m j.val = c)
+      let I := incidence f.tube (fun j : L =>
+        f.pieces.retainedPiece m (Sum.inr j.val))
+      orderedTail R I i k ⊆ f.fixedParentTubeTail m i k) :
     letI := f.regularOrder m
-    regularApplication f.pieces (fixedParentTailConstant d A) m := by
+    let L := PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m
+    let c := f.pieces.parent m i.val
+    let R := Finset.univ.filter (fun j : L => f.pieces.parent m j.val = c)
+    let I := incidence f.tube (fun j : L =>
+      f.pieces.retainedPiece m (Sum.inr j.val))
+    ((orderedTail R I i k).card : ℝ) ≤
+      (fixedParentTailConstant d A : ℝ) *
+        dyadicScale (Fintype.card T) m * ((k : ℝ) ^ (d + 1))⁻¹ := by
   classical
   let := f.regularOrder m
-  change OrderedTailApplication d (fixedParentTailConstant d A)
-    (dyadicScale (Fintype.card T) m)
-    (Finset.univ : Finset
-      (PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m))
-    (incidence f.tube (fun j =>
-      f.pieces.retainedPiece m (Sum.inr j.val)))
-  intro i _ k hk
-  exact f.regular_tail_card_of_subset_inclusion m i hballs hk (hsubset i k hk)
+  let L := PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m
+  let c := f.pieces.parent m i.val
+  let R := Finset.univ.filter (fun j : L => f.pieces.parent m j.val = c)
+  let I := incidence f.tube (fun j : L =>
+    f.pieces.retainedPiece m (Sum.inr j.val))
+  have ht := f.fixed_parent_tube_tail_card m i hballs hk
+  have hle : ((orderedTail R I i k).card : ℝ) ≤ ((f.fixedParentTubeTail m i k).card : ℝ) := by
+    exact_mod_cast Finset.card_le_card hsubset
+  exact hle.trans ht
+
+open Classical in
+theorem parentTailApplication_of_parent_subset
+    (hballs : f.GlobalVitaliDisjoint)
+    (m : DyadicIndex (Fintype.card T))
+    (hq8 : 8 ≤ dyadicScale (Fintype.card T) m)
+    (hR1 : (f.candidates f.supportVolume).radius m ≤ 1)
+    (hsubset : f.ParentSubsetApplication) :
+    letI := f.regularOrder m
+    let L := PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m
+    ∀ i : L,
+      let c := f.pieces.parent m i.val
+      let R := Finset.univ.filter (fun j : L => f.pieces.parent m j.val = c)
+      let I := incidence f.tube (fun j : L =>
+        f.pieces.retainedPiece m (Sum.inr j.val))
+      OrderedTailApplication d (fixedParentTailConstant d A)
+        (dyadicScale (Fintype.card T) m) R I := by
+  let := f.regularOrder m
+  let L := PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m
+  dsimp only
+  intro i
+  let c := f.pieces.parent m i.val
+  let R := Finset.univ.filter (fun j : L => f.pieces.parent m j.val = c)
+  let I := incidence f.tube (fun j : L =>
+    f.pieces.retainedPiece m (Sum.inr j.val))
+  intro j hj k hk
+  have hp : f.pieces.parent m j.val = c := (Finset.mem_filter.mp hj).2
+  have h := f.regular_tail_card_of_parent_subset_inclusion m j hballs hk
+    (hsubset m hq8 hR1 j k hk)
+  simpa only [hp] using h
+
+open Classical in
+theorem parentTailApplication_of_ball_map
+    (hballs : f.GlobalVitaliDisjoint)
+    (m : DyadicIndex (Fintype.card T))
+    (i : PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m) :
+    letI := f.regularOrder m
+    let L := PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m
+    let c := f.pieces.parent m i.val
+    let R := Finset.univ.filter (fun j : L => f.pieces.parent m j.val = c)
+    let I := incidence f.tube (fun j : L =>
+      f.pieces.retainedPiece m (Sum.inr j.val))
+    ∀ _hi : i ∈ R, ∀ k : ℕ, multipleThreshold d ≤ k →
+      ((orderedTail R I i k).card : ℝ) ≤
+        (fixedParentTailConstant d A : ℝ) *
+          dyadicScale (Fintype.card T) m * ((k : ℝ) ^ (d + 1))⁻¹ := by
+  let := f.regularOrder m
+  let L := PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m
+  let c := f.pieces.parent m i.val
+  let R := Finset.univ.filter (fun j : L => f.pieces.parent m j.val = c)
+  let I := incidence f.tube (fun j : L =>
+    f.pieces.retainedPiece m (Sum.inr j.val))
+  dsimp only
+  intro _ k hk
+  exact f.regular_tail_card_of_parent_subset_inclusion m i hballs hk
+    (f.R_c_orderedTail_subset_of_global_vitali_balls m i k)
 
 def OverlapApplication (K : ℝ≥0) : Prop :=
   ∀ m, 8 ≤ dyadicScale (Fintype.card T) m →
@@ -472,13 +553,6 @@ theorem overlapApplication_of_selection2 (K : ℝ≥0)
   intro m hq8 hR1
   let := f.regularOrder m
   exact regularApplication_of_selection2 f.pieces K m (hselection2 m hq8 hR1)
-
-theorem overlapApplication_of_parent_subset
-    (hballs : f.GlobalVitaliDisjoint)
-    (hsubset : f.ParentSubsetApplication) :
-    f.OverlapApplication (fixedParentTailConstant d A) := by
-  intro m hq8 hR1
-  exact f.regularApplication_of_parent_subset hballs m (hsubset m hq8 hR1)
 
 noncomputable def largeLevelConstant (d : ℕ) (A K : ℝ≥0) : ℝ :=
   (1 / (1 - Real.exp (-1))) * volumeCoefficient d *
@@ -685,18 +759,6 @@ theorem logarithmic_norm_bound_of_selection2 (hd : 1 ≤ d) (hN : 2 ≤ Fintype.
       (2 ^ p * levelConstant d A K * (2 / Real.log 2)) ^ p⁻¹ *
         (Real.log (Fintype.card T)) ^ p⁻¹ := by
   exact f.logarithmic_norm_bound hd hN (f.overlapApplication_of_selection2 K hselection2)
-
-theorem logarithmic_norm_bound_of_parent_subset
-    (hd : 1 ≤ d) (hN : 2 ≤ Fintype.card T)
-    (hballs : f.GlobalVitaliDisjoint)
-    (hsubset : f.ParentSubsetApplication) :
-    let p := ((d + 2 : ℕ) : ℝ) / (((d + 2 : ℕ) : ℝ) - 1)
-    (∫ x, tubeMultiplicity f.tube x ^ p) ^ p⁻¹ ≤
-      (2 ^ p * levelConstant d A (fixedParentTailConstant d A) *
-        (2 / Real.log 2)) ^ p⁻¹ *
-        (Real.log (Fintype.card T)) ^ p⁻¹ := by
-  exact f.logarithmic_norm_bound hd hN
-    (f.overlapApplication_of_parent_subset hballs hsubset)
 
 end TubeFamily
 end Kakeya.Ninety109
