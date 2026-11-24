@@ -573,3 +573,17 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_tail_chain
 #check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_selection2
 #print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_selection2
+
+-- Selected Vitali ball indices and the two-hypothesis endpoint.
+#check Kakeya.Ninety109.selectedVitaliBallIndices
+#print axioms Kakeya.Ninety109.retained_ball_image_eq_selected
+#print axioms Kakeya.Ninety109.TubeFamily.globalVitaliBalls_eq_selected
+#check Kakeya.Ninety109.TubeFamily.SelectedVitaliDisjoint
+#print axioms Kakeya.Ninety109.TubeFamily.globalVitaliDisjoint_of_selected
+#print axioms Kakeya.Ninety109.TubeFamily.fixed_parent_tube_tail_card_of_selected_disjoint
+#print axioms Kakeya.Ninety109.TubeFamily.selected_ball_tail_le_incidence_card
+#check Kakeya.Ninety109.TubeFamily.angularTail
+#check Kakeya.Ninety109.TubeFamily.RegularTailSubsetSelectedBalls
+#print axioms Kakeya.Ninety109.TubeFamily.overlapApplication_of_selected_ball_subset
+#check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_selected_ball_subset
+#print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_selected_ball_subset

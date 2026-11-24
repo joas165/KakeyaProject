@@ -1320,7 +1320,7 @@
 	 	\lesssim_n\frac{\delta}{k\rho}.
 	 	\]
 	 	
-	 	Hence every \(\ell\in E_{c,k}\) has
+	 	Hence every \(\ell\in A_{i,k}\) has
 	 	direction in an angular cap of radius
 	 	\(O_n(\delta/(k\rho))\) centered at
 	 	the unoriented direction of
@@ -1388,7 +1388,7 @@ selection order.
 	\]
 	and, for each \(i\in R\) and \(k\ge2\), define
 	\[
-	A_{i,k}:=
+	E_{i,k}:=
 	\left\{
 	\ell\in I_i:
 	\#\{j\in R:i\le j,\ \ell\in I_j\}\ge k
@@ -1400,7 +1400,7 @@ selection order.
 	\sum_{\substack{j\in R\\i<j}}|I_i\cap I_j|
 	=
 	\sum_{c\in B}\sum_{i\in R_c}
-	\sum_{k\ge2}|A_{i,k}|.
+	\sum_{k\ge2}|E_{i,k}|.
 	\]
 \end{lemma}
 
@@ -1424,9 +1424,9 @@ selection order.
 	\(j>i\) such that \(\ell\in I_j\) is
 	\(d_i(\ell)-1\).
 	
-	By the definition of \(A_{i,k}\),
+	By the definition of \(E_{i,k}\),
 	\[
-	\ell\in A_{i,k}
+	\ell\in E_{i,k}
 	\quad\Longleftrightarrow\quad
 	2\le k\le d_i(\ell).
 	\]
@@ -1434,7 +1434,7 @@ selection order.
 	\[
 	d_i(\ell)-1
 	=
-	\sum_{k\ge2}\mathbf{1}_{A_{i,k}}(\ell).
+	\sum_{k\ge2}\mathbf{1}_{E_{i,k}}(\ell).
 	\]
 	
 	Interchanging the finite sums yields
@@ -1443,32 +1443,51 @@ selection order.
 		\sum_{\substack{j\in R\\i<j}}|I_i\cap I_j|
 		&=\sum_{\ell\in I_i}(d_i(\ell)-1)\\
 		&=\sum_{\ell\in I_i}
-		\sum_{k\ge2}\mathbf{1}_{A_{i,k}}(\ell)\\
-		&=\sum_{k\ge2}|A_{i,k}|.
+		\sum_{k\ge2}\mathbf{1}_{E_{i,k}}(\ell)\\
+		&=\sum_{k\ge2}|E_{i,k}|.
 	\end{aligned}
 	\]
 	Summing this identity over \(i\in R_c\)
 	and \(c\in B\) completes the proof.
 \end{proof}
-
+	For \(i\in R_c\) and \(k\ge 2\), define
+\[
+I_{i,k}:=
+\left\{\ell\in\{1,\ldots,N\}:
+T_\ell^\delta\cap P_i\ne\varnothing
+\ \text{and}\
+\#\{b\in J_m:T_\ell^\delta\cap T_{c(i)}^\delta\cap 3B_b\ne\varnothing\}\ge k
+\right\}.
+\]
+For every \(i\in R\) and \(k\ge 2\),
+\[
+E_{i,k}\subseteq A_{i,k}
+\quad\Longleftrightarrow\quad
+E_{i,k}\subseteq I_{i,k}.
+\]
+By definition, \(E_{i,k}\subseteq I_{i}\), so the equivalence follows
+by intersecting \(A_{i,k}\) with \(I_i\).
 
 Moreover from the lemma \ref{lem:overlap-fixed-parent} 
 \begin{align*}
-\sum_{c \in B}\sum_{i\in R_c}\sum_{\substack{j\in R\\ i <j}} |I_i\cap I_j|  &= 
-\sum_{c\in B}\sum_{i\in R_c}
-\sum_{k\ge2}|A_{i,k}| \\
-&\lesssim \sum_{c\in B}\sum_{i\in R_c}
-\sum_{k\ge2}qk^{1-n} \\
-&\lesssim \sum_{c \in B}\sum_{i \in R_c}|I_i|  \\
-&= \sum_{i \in R}|I_i|
-,
+	\sum_{c \in B}\sum_{i\in R_c}\sum_{\substack{j\in R\\ i <j}} |I_i\cap I_j|  &= 
+	\sum_{c\in B}\sum_{i\in R_c}
+	\sum_{k\ge2}|E_{i,k}| \\
+	&\leq 
+	\sum_{c\in B}\sum_{i\in R_c}
+	\sum_{k\ge2}|A_{i,k}| \\
+	&\lesssim \sum_{c\in B}\sum_{i\in R_c}
+	\sum_{k\ge2}qk^{1-n} \\
+	&\lesssim \sum_{c \in B}\sum_{i \in R_c}|I_i|  \\
+	&= \sum_{i \in R}|I_i|
+	,
 \end{align*}
-where we applied the lemma \ref{lem:overlap-fixed-parent} to every parent $P_i$ considered as a tube.
+where we applied the lemma \ref{lem:overlap-fixed-parent}. 
 So using lemma \ref{lem:incidence-union-lower-bound} 
-\[
+\[ 
 \bigl(\sum_{r\in R}|I_r|\bigr)^2 \lesssim |U|\sum_{\substack{r,s\in R\\r<s}}|I_r\cap I_s| \lesssim N\sum_{i \in R}|I_i|. 	 
 \]
-which after a little algebra is the key bound \eqref{eq:key-bound}.   
+which after a little algebra is the key bound \eqref{eq:key-bound}.  
 Hence,
 \[
 \begin{aligned}
