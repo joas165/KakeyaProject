@@ -11,10 +11,28 @@ import Kakeya.Ninety110OrderedTails
 import Kakeya.Ninety109Endpoint
 
 /-!
-# Axiom audit
-Run `lake build` followed by `lake env lean Audit.lean` to check
-the audited declarations and print their axiom dependencies.
+# Kakeya endpoint axiom audit
+
+Run `lake build` and `lake env lean Audit.lean` from the repository root.
+The first section checks the page 16 endpoint. The remaining sections audit
+the geometric, counting, and analytic declarations used throughout the project.
 -/
+
+-- The global counting identity is proved for every finite ordered label set.
+#print axioms Kakeya.Ninety109.global_overlap_eq_sum_tails
+
+-- Print the equality and its level conditions alongside the endpoint signature.
+#print Kakeya.Ninety109.SecondOverlapEquality
+#print Kakeya.Ninety109.TubeFamily.SecondEqualityApplication
+#print axioms Kakeya.Ninety109.global_tail_card_of_secondEquality
+#print axioms Kakeya.Ninety109.TubeFamily.overlapApplication_of_secondEquality
+#check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_secondEquality
+#print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_secondEquality
+
+-- The endpoint also accepts an estimate on the total of the global tails.
+#print axioms Kakeya.Ninety109.TubeFamily.orderedOverlapApplication_of_globalTailSumBound
+#print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_globalTailSumBound
+
 -- Conditional analytic setup and finite tube multiplicity.
 #print axioms Kakeya.Conditional.chi
 #print axioms Kakeya.Conditional.chi_integrable
