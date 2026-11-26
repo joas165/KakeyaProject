@@ -1,6 +1,6 @@
 # KakeyaProject
 
-This project formalizes dyadic incidence estimates for the Kakeya maximal function in Lean 4. On `feat/second-equality-endpoint`, the logarithmic endpoint for tube multiplicity follows from the **second equality on page 16** of the manuscript. The first equality is a proved counting identity. So the proof is conditional only on equation (8) of the manuscript.
+This project formalizes dyadic incidence estimates for the Kakeya maximal function in Lean 4. The logarithmic endpoint for tube multiplicity follows from the **second equality on page 16** of the manuscript. The first equality is a proved counting identity. So the proof is conditional only on equation (8) of the manuscript.
 
 ## The two equalities
 
