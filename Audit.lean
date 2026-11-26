@@ -11,10 +11,28 @@ import Kakeya.Ninety110OrderedTails
 import Kakeya.Ninety109Endpoint
 
 /-!
-# Axiom audit
-Run `lake build` followed by `lake env lean Audit.lean` to check
-the audited declarations and print their axiom dependencies.
+# Kakeya endpoint axiom audit
+
+Run `lake build` and `lake env lean Audit.lean` from the repository root.
+The first section checks the page 16 endpoint. The remaining sections audit
+the geometric, counting, and analytic declarations used throughout the project.
 -/
+
+-- The global counting identity is proved for every finite ordered label set.
+#print axioms Kakeya.Ninety109.global_overlap_eq_sum_tails
+
+-- Print the equality and its level conditions alongside the endpoint signature.
+#print Kakeya.Ninety109.SecondOverlapEquality
+#print Kakeya.Ninety109.TubeFamily.SecondEqualityApplication
+#print axioms Kakeya.Ninety109.global_tail_card_of_secondEquality
+#print axioms Kakeya.Ninety109.TubeFamily.overlapApplication_of_secondEquality
+#check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_secondEquality
+#print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_secondEquality
+
+-- The endpoint also accepts an estimate on the total of the global tails.
+#print axioms Kakeya.Ninety109.TubeFamily.orderedOverlapApplication_of_globalTailSumBound
+#print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_globalTailSumBound
+
 -- Conditional analytic setup and finite tube multiplicity.
 #print axioms Kakeya.Conditional.chi
 #print axioms Kakeya.Conditional.chi_integrable
@@ -573,17 +591,3 @@ the audited declarations and print their axiom dependencies.
 #print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_tail_chain
 #check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_selection2
 #print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_selection2
-
--- Selected Vitali ball indices and the two-hypothesis endpoint.
-#check Kakeya.Ninety109.selectedVitaliBallIndices
-#print axioms Kakeya.Ninety109.retained_ball_image_eq_selected
-#print axioms Kakeya.Ninety109.TubeFamily.globalVitaliBalls_eq_selected
-#check Kakeya.Ninety109.TubeFamily.SelectedVitaliDisjoint
-#print axioms Kakeya.Ninety109.TubeFamily.globalVitaliDisjoint_of_selected
-#print axioms Kakeya.Ninety109.TubeFamily.fixed_parent_tube_tail_card_of_selected_disjoint
-#print axioms Kakeya.Ninety109.TubeFamily.selected_ball_tail_le_incidence_card
-#check Kakeya.Ninety109.TubeFamily.angularTail
-#check Kakeya.Ninety109.TubeFamily.RegularTailSubsetSelectedBalls
-#print axioms Kakeya.Ninety109.TubeFamily.overlapApplication_of_selected_ball_subset
-#check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_selected_ball_subset
-#print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_selected_ball_subset

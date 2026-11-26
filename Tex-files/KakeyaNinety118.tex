@@ -92,7 +92,7 @@
 		Then we have that
 		\[
 		\left\| \sum_{\omega \in \Omega} \mathbf{1}_{T_\omega(a_\omega)}(x)
-		\right\|_{n/(n-1)} \lesssim (\ln N)^{(n-1)/n}.
+		\right\|_{n/(n-1)} \lesssim (\ln N)^{2(n-1)/n}.
 		\]
 	\end{theorem}
 	
@@ -1216,138 +1216,7 @@
 	 	The claim follows from Cauchy--Schwarz,
 	 	$(\sum_{\ell\in U}d_\ell)^2\le |U|\sum_{\ell\in U}d_\ell^2$.
 	 \end{proof}
-	 
-	 \begin{lemma}[Angular concentration of multiple incidences] \label{lem:overlap-fixed-parent}
-	 	Let \(n\ge3\), and let \(T_i^\delta\) be a
-	 	fixed tube of unit length with direction
-	 	\(\omega_c\). Let
-	 	\[
-	 	B_j=B(b_j,\rho),\qquad j\in J,
-	 	\]
-	 	be pairwise disjoint balls, where
-	 	\(\delta\le\rho\le1\).
-	 	
-	 	Suppose that the original tube directions
-	 	\(\omega_1,\ldots,\omega_N\) are
-	 	\(\delta\)-separated. For \(k\ge2\), define
-	 	\[
-	 	A_{i,k}:=
-	 	\left\{
-	 	\ell\in\{1,\ldots,N\}:
-	 	\#\left\{
-	 	j\in J:
-	 	T_\ell^\delta\cap T_i^\delta
-	 	\cap 3B_j\ne\varnothing
-	 	\right\}\ge k
-	 	\right\}.
-	 	\]
-	 	
-	 	There exist dimensional constants
-	 	\(k_0\) and \(C_n\) such that, for
-	 	every \(k\ge k_0\) and
-	 	\(\ell\in E_{c,k}\),
-	 	\[
-	 	\angle(\omega_\ell,\omega_c)
-	 	\le C_n\frac{\delta}{k\rho}.
-	 	\]
-	 	Consequently,
-	 	\[
-	 	|A_{c,k}|
-	 	\lesssim_n (k\rho)^{1-n}.
-	 	\]
-	 	
-	 	In particular, if
-	 	\[
-	 	\rho=Cq^{-1/(n-1)},
-	 	\]
-	 	then
-	 	\[
-	 	|A_{i,k}|
-	 	\lesssim_{n,C}qk^{1-n},
-	 	\qquad k\ge k_0.
-	 	\]
-	 \end{lemma}
-	 
-	 \begin{proof}
-	 	Fix \(\ell\in A_{i,k}\). By definition,
-	 	there are at least \(k\) distinct
-	 	indices \(j\in J\) such that
-	 	\[
-	 	T_\ell^\delta\cap T_i^\delta
-	 	\cap 3B_j\ne\varnothing.
-	 	\]
-	 	
-	 	Since these enlarged balls meet
-	 	\(T_i^\delta\), their centers lie
-	 	within \(4\rho\) of its axis.
-	 	The disjointness of the balls and
-	 	volume packing imply that at most
-	 	\(O_n(1)\) of their centers can have
-	 	axial projections in an interval
-	 	of length \(\rho\).
-	 	
-	 	Thus, for sufficiently large \(k\),
-	 	there exist two of the intersected
-	 	balls, say \(B_r\) and \(B_s\), whose
-	 	centers have axial separation at least
-	 	\(c_n k\rho\).
-	 	
-	 	Choose
-	 	\[
-	 	x\in T_\ell^\delta\cap T_i^\delta
-	 	\cap 3B_r,
-	 	\qquad
-	 	y\in T_\ell^\delta\cap T_i^\delta
-	 	\cap 3B_s.
-	 	\]
-	 	Since the axial coordinates of \(x\)
-	 	and \(y\) differ from those of their
-	 	respective ball centers by at most
-	 	\(3\rho\), increasing \(k_0\) if
-	 	necessary gives
-	 	\[
-	 	|x-y|\gtrsim_n k\rho.
-	 	\]
-	 	
-	 	Both points lie within \(\delta\)
-	 	of the axes of \(T_\ell^\delta\)
-	 	and \(T_i^\delta\). Therefore, their
-	 	direction vectors differ by an angle
-	 	satisfying
-	 	\[
-	 	\angle(\omega_\ell,\omega_c)
-	 	\lesssim_n\frac{\delta}{|x-y|}
-	 	\lesssim_n\frac{\delta}{k\rho}.
-	 	\]
-	 	
-	 	Hence every \(\ell\in A_{i,k}\) has
-	 	direction in an angular cap of radius
-	 	\(O_n(\delta/(k\rho))\) centered at
-	 	the unoriented direction of
-	 	\(T_i^\delta\).
-	 	
-	 	By the \(\delta\)-separation of the
-	 	original directions,
-	 	\[
-	 	|A_{i,k}|
-	 	\lesssim_n
-	 	\left(1+\frac1{k\rho}\right)^{n-1}.
-	 	\]
-	 	Since all relevant balls meet a
-	 	unit-length tube, \(k\rho=O_n(1)\)
-	 	whenever \(A_{i,k}\ne\varnothing\).
-	 	Consequently,
-	 	\[
-	 	|A_{i,k}|
-	 	\lesssim_n (k\rho)^{1-n}.
-	 	\]
-	 	
-	 	Substituting
-	 	\(\rho=Cq^{-1/(n-1)}\) completes
-	 	the proof.
-	 \end{proof}
-	 
-
+		 
 Next we show a key inequality
 \begin{equation} \label{eq:key-bound}
 	\sum_{r \in I_r}|I_r| \lesssim N.
@@ -1381,7 +1250,7 @@ We have
 where $b<c$ means that $T_b^\delta$ precedes $T_c^\delta$ in the greedy
 selection order.
 
-\begin{lemma}
+\begin{lemma} \label{lem:decomposition}
 	Let
 	\[
 	R=\bigsqcup_{c\in B}R_c,
@@ -1450,42 +1319,148 @@ selection order.
 	Summing this identity over \(i\in R_c\)
 	and \(c\in B\) completes the proof.
 \end{proof}
-	For \(i\in R_c\) and \(k\ge 2\), define
-\[
-I_{i,k}:=
-\left\{\ell\in\{1,\ldots,N\}:
-T_\ell^\delta\cap P_i\ne\varnothing
-\ \text{and}\
-\#\{b\in J_m:T_\ell^\delta\cap T_{c(i)}^\delta\cap 3B_b\ne\varnothing\}\ge k
-\right\}.
-\]
-For every \(i\in R\) and \(k\ge 2\),
-\[
-E_{i,k}\subseteq A_{i,k}
-\quad\Longleftrightarrow\quad
-E_{i,k}\subseteq I_{i,k}.
-\]
-By definition, \(E_{i,k}\subseteq I_{i}\), so the equivalence follows
-by intersecting \(A_{i,k}\) with \(I_i\).
 
-Moreover from the lemma \ref{lem:overlap-fixed-parent} 
+Fix an integer \(k\ge1\). For each \(c\in B\), let
+\[
+d_c(\ell):=\#\{i\in R_c:\ell\in I_i\}.
+\]
+When the later labels in \(E_{i,k}\) are counted within the parent
+class \(R_c\) containing \(i\), we have
+\[
+\sum_{i\in R}|E_{i,k}|
+=
+\sum_{\ell=1}^{N}\sum_{c\in B}
+\bigl(d_c(\ell)-k+1\bigr)_+,
+\qquad (x)_+:=\max\{x,0\}.
+\]
+Indeed, fix \(\ell\) and \(c\), and list the labels \(i\in R_c\)
+with \(\ell\in I_i\) as \(i_1<\cdots<i_d\), where \(d=d_c(\ell)\).
+For each \(j\), exactly \(d-j+1\) of these labels are at least \(i_j\).
+Thus \(\ell\in E_{i_j,k}\) if and only if \(j\le d-k+1\), so
+\(\ell\) belongs to exactly \((d-k+1)_+\) such tails in \(R_c\).
+Summing over \(\ell\) and \(c\) gives the identity, since
+\(R=\bigsqcup_{c\in B}R_c\).
+Hence,
+\begin{equation} \label{eq:composition}
+\begin{aligned}
+\sum_k\sum_{i\in R}|E_{i,k}|
+&=
+\sum_k\sum_{c\in B}\sum_{\ell=1}^{N}
+\bigl(d_c(\ell)-k+1\bigr)_+ \\
+&=
+\sum_{c\in B}\sum_{\ell=1}^{N}
+\sum_{2 \leq k \leq d_c(\ell)}\bigl(d_c(\ell)-k+1\bigr)_+ \\
+&=
+\sum_{c\in B}\sum_{\ell=1}^{N}
+\frac{d_c(\ell)(d_c(\ell) - 1)}{2} \\
+&=
+\sum_{c\in B}\sum_{\ell=1}^{N}
+\frac{d_c(\ell)(d_c(\ell) - 1)}{2} \\
+&=\sum_{c\in B}\sum_{\ell=1}^{N}\sum_{\substack{i,j\in R_c\\i<j}}
+\mathbf 1_{I_i}(\ell)\mathbf 1_{I_j}(\ell) \\
+&=\sum_{c\in B}\sum_{\substack{i,j\in R_c\\i<j}}
+|I_i \cap I_j|
+\end{aligned} 
+\end{equation}
+We will control the last term using the following lemma. \begin{lemma}[Fixed-parent overlap] 		\label{lem:fixed-parent-overlap}
+	Let \(n\ge3\) and \(0<\delta\le\rho\le1\). Let
+	\(T_1^\delta,\ldots,T_N^\delta\) be unit-length tubes of radius
+	\(\delta\) with \(\delta\)-separated directions. Fix a parent tube
+	\(T_c^\delta\). Let \(B_r=B(b_r,\rho)\), \(r\in R_c\), be pairwise
+	disjoint balls, and suppose that
+	\[
+	P_r\subseteq T_c^\delta\cap 3B_r,
+	\qquad
+	I_r:=\{\ell\in\{1,\ldots,N\}:T_\ell^\delta\cap P_r\ne\varnothing\}.
+	\]
+	Then for every \(s\in R_c\),
+	\[
+	\sum_{\substack{r\in R_c\\r\ne s}}|I_r\cap I_s|
+	\lesssim_n |I_s|+\rho^{1-n}.
+	\]
+	In particular, if \(\rho=Cq^{-1/(n-1)}\) and \(|I_s|\ge q\), then
+	\[
+	\sum_{\substack{r\in R_c\\r\ne s}}|I_r\cap I_s|
+	\lesssim_{n,C}|I_s|.
+	\]
+\end{lemma}
+
+\begin{proof}
+	Fix \(s\in R_c\) and write
+	\[
+	d_c(\ell):=\#\{r\in R_c:\ell\in I_r\}.
+	\]
+	Each \(\ell\in I_s\) occurs in exactly \(d_c(\ell)-1\) other sets
+	\(I_r\). Hence
+	\begin{equation}
+		\label{eq:fixed-parent-overlap-tails}
+		\sum_{\substack{r\in R_c\\r\ne s}}|I_r\cap I_s|
+		=
+		\sum_{\ell\in I_s}\bigl(d_c(\ell)-1\bigr)
+		=
+		\sum_{k\ge2}\#\{\ell\in I_s:d_c(\ell)\ge k\}.
+	\end{equation}
+	
+	Fix \(\ell\in I_s\). For each \(r\) counted by \(d_c(\ell)\), choose
+	\(x_r\in T_\ell^\delta\cap P_r\), and let \(y_r\) be its orthogonal
+	projection onto the parent axis. Let \(L_\ell\) be the length of the
+	smallest segment containing all the \(y_r\), and let \(\theta_\ell\)
+	be the acute angle between the two tube axes, allowing
+	\(\theta_\ell=0\). Since the parent tube has unit length,
+	\(L_\ell\lesssim1\). Moreover, each \(y_r\) lies within \(2\delta\)
+	of the axis of \(T_\ell^\delta\). Projecting the difference of the
+	two extreme points onto the orthogonal complement of that axis gives
+	\[
+	L_\ell\sin\theta_\ell\le4\delta.
+	\]
+	
+	Since \(x_r\in3B_r\) and \(|x_r-y_r|\le\delta\le\rho\), every
+	corresponding ball \(B_r\) lies in the \(5\rho\)-neighborhood of
+	the segment containing the \(y_r\). By disjointness and volume comparison,
+	\[
+	d_c(\ell)\rho^n
+	\lesssim_n (L_\ell+\rho)\rho^{n-1}.
+	\]
+	Thus, if \(d_c(\ell)\ge k\) and \(k\ge k_0(n)\) for a sufficiently
+	large \(k_0(n)\), then \(L_\ell\gtrsim_n k\rho\). It follows that
+	\[
+	k\rho\lesssim_n1,
+	\qquad
+	\sin\theta_\ell\lesssim_n\frac{\delta}{k\rho}.
+	\]
+	By \(\delta\)-separation, packing the directions in the two antipodal
+	caps about the parent direction gives, whenever the tail is nonempty,
+	\[
+	\#\{\ell\in I_s:d_c(\ell)\ge k\}
+	\lesssim_n
+	\left(1+\frac{1}{k\rho}\right)^{n-1}
+	\lesssim_n (k\rho)^{1-n}.
+	\]
+	
+	In \eqref{eq:fixed-parent-overlap-tails}, the levels \(2\le k<k_0(n)\)
+	contribute \(O_n(|I_s|)\). Since \(n\ge3\), the remaining levels
+	contribute at most
+	\[
+	C_n\rho^{1-n}\sum_{k\ge k_0(n)}k^{1-n}
+	\lesssim_n \rho^{1-n}.
+	\]
+	This proves the first estimate. Finally, if
+	\(\rho=Cq^{-1/(n-1)}\) and \(q\le|I_s|\), then
+	\(\rho^{1-n}=C^{1-n}q\le C^{1-n}|I_s|\), proving the second.
+\end{proof}
+
+Moreover, from the equation \eqref{eq:composition} and the lemma \ref{lem:fixed-parent-overlap}, we have  that 
 \begin{align*}
-	\sum_{c \in B}\sum_{i\in R_c}\sum_{\substack{j\in R\\ i <j}} |I_i\cap I_j|  &= 
-	\sum_{c\in B}\sum_{i\in R_c}
-	\sum_{k\ge2}|E_{i,k}| \\
-	&\leq 
-	\sum_{c\in B}\sum_{i\in R_c}
-	\sum_{k\ge2}|A_{i,k}| \\
-	&\lesssim \sum_{c\in B}\sum_{i\in R_c}
-	\sum_{k\ge2}qk^{1-n} \\
-	&\lesssim \sum_{c \in B}\sum_{i \in R_c}|I_i|  \\
-	&= \sum_{i \in R}|I_i|
-	,
+\sum_{i\in R}\sum_{\substack{j\in R\\ i <j}} |I_i\cap I_j| = \sum_k\sum_{i\in R}|E_{i,k}|
+= \sum_{c \in B}
+\sum_{\substack{r\in R_c\\r\ne s}}|I_r\cap I_s|
+\lesssim_{n,C}\sum_{c \in B}|I_c|
+\leq \sum_{i \in R}|I_i|.
 \end{align*}
-where we applied the lemma \ref{lem:overlap-fixed-parent}. 
+
 So using lemma \ref{lem:incidence-union-lower-bound} 
 \[ 
-\bigl(\sum_{r\in R}|I_r|\bigr)^2 \lesssim |U|\sum_{\substack{r,s\in R\\r<s}}|I_r\cap I_s| \lesssim N\sum_{i \in R}|I_i|. 	 
+\bigl(\sum_{r\in R}|I_r|\bigr)^2 \lesssim |U|(\sum_{\substack{r,s\in R\\r<s}}|I_r\cap I_s|) \lesssim N\sum_{i \in R}|I_i|. 	 
 \]
 which after a little algebra is the key bound \eqref{eq:key-bound}.  
 Hence,
@@ -1498,15 +1473,15 @@ Hence,
 \]
 	So we have 
 	\[
-	|\mathcal P| = |\mathcal P_{reg}| + |\mathcal P_{exec}| \lesssim 2^{-m}N.
+	|\mathcal P| = |\mathcal P_{reg}| + |\mathcal P_{exec}| \lesssim 2^{-m}.
 	\]
 	So we have 
 	\begin{equation}
-		|F_m| \lesssim \sum_ {j=1}^{|\mathcal P|}|T^\delta_j(a_j) \cap B(b_{j},3C2^{-m/(n-1)}) \cap G_j \cap F_m| \lesssim \delta^{n-1}|\mathcal P|2^{-m/(n-1)} \lesssim 2^{-mn/(n-1)} 
+		|F_m| \lesssim \sum_ {j=1}^{|\mathcal P|}|T^\delta_j(a_j) \cap B(b_{j},3C2^{-m/(n-1)}) \cap G_j \cap F_m| \lesssim \delta^{n-1}|\mathcal P|2^{-m/(n-1)} \lesssim 2^{-mn/(n-1)}.
 	\end{equation}
 	So the Theorem~\ref{thm:main} holds after a simple calculation from \eqref{eq:final1}, \eqref{eq:final2},\eqref{eq:final3}, and above:
 	\[
-	\ln N \sim \sum_m 2^{-m(2-n/(n-1))} 2^{m}2^{-m/(n-1)}
+	(\ln N)^2 \sim \ln N\sum_m 2^{-m(2-n/(n-1))} 2^{m}2^{-m/(n-1)}
 	\gtrsim \left\| \sum_{i=1}^{N} \mathbf{1}_{T_i(a_i)}(x)
 	\right\|_{n/(n-1)}^{n/(n-1)}.
 	\] 

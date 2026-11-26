@@ -65,17 +65,22 @@ theorem regularApplication_of_selection2
     Finset.univ (incidence tubes (fun i : PaperRegularLabel μ tubes (d + 2) s m =>
       s.retainedPiece m (Sum.inr i.val))) hselection2
 
-private theorem complete_count (hd : 1 ≤ d) (s : RetainedDyadicData (K := L) μ tubes (d + 2))
+noncomputable def regularOrderedOverlap (s : RetainedDyadicData (K := L) μ tubes (d + 2))
+    (C : ℝ≥0) (m : DyadicIndex (Fintype.card T))
+    [LinearOrder (PaperRegularLabel μ tubes (d + 2) s m)] : Prop := by
+  classical
+  exact OrderedOverlapBound C (s.B m) Finset.univ
+    (fun i : PaperRegularLabel μ tubes (d + 2) s m => s.parent m i.val)
+    (incidence tubes (fun i => s.retainedPiece m (Sum.inr i.val)))
+
+private theorem complete_count (s : RetainedDyadicData (K := L) μ tubes (d + 2))
     (A K : ℝ≥0) (m : DyadicIndex (Fintype.card T))
-    [LinearOrder (PaperRegularLabel μ tubes (d + 2) s m)] (h : regularApplication s K m)
+    [LinearOrder (PaperRegularLabel μ tubes (d + 2) s m)] (ho : regularOrderedOverlap s (tailOverlapConstant d K) m)
     (he : dyadicScale (Fintype.card T) m * (paperExceptionalPieces μ tubes (d + 2) s m).card ≤
       4 * (1 + 2 * dyadicOverlapConstant d A) * Fintype.card T) :
     dyadicScale (Fintype.card T) m * ((s.B m).card + ((s.P m).card : ℝ)) ≤
       (7 + 2 * (tailOverlapConstant d K : ℝ) + 8 * dyadicOverlapConstant d A) * Fintype.card T := by
   classical
-  have ho := ordered_overlap_of_tails hd K _ (s.B m) Finset.univ
-    (fun i : PaperRegularLabel μ tubes (d + 2) s m => s.parent m i.val) _
-    (fun i _ => retained_incidence_lower (s := s) (m := m) (Sum.inr i.val)) h
   have hr := regular_label_count_of_ordered_overlap (s := s) _ ho
   have hreg := hr.1.trans hr.2
   have hp := paper_regular_exceptional_card μ tubes (d + 2) s m
@@ -126,34 +131,6 @@ private theorem level_budget [IsFiniteMeasure μ]
       exact mul_le_mul (mul_le_mul_of_nonneg_left s.hNormalization hcoef)
         (s.hRadiusScale m) (mul_nonneg (Real.rpow_nonneg hq.le _) (s.hRadiusNonneg m))
         (mul_nonneg hcoef hZ)
-
-/-- The union of the selected ball indices over the greedy parents. -/
-noncomputable def selectedVitaliBallIndices [MetricSpace X]
-    {g : ConcreteTubeBallGeometry tubes} (v : ConcreteGreedyVitaliCandidates tubes g)
-    (m : DyadicIndex (Fintype.card T)) :=
-  (g.B m).biUnion (v.selected m)
-
-/-- Projecting all retained labels to their ball indices recovers the Vitali selection. -/
-theorem retained_ball_image_eq_selected [MetricSpace X] [BorelSpace X]
-    {g : ConcreteTubeBallGeometry tubes} (v : ConcreteGreedyVitaliCandidates tubes g)
-    (m : DyadicIndex (Fintype.card T)) :
-    (Finset.univ.image fun p : CoverLabel v m => v.retained.ballOf m p) =
-      selectedVitaliBallIndices v m := by
-  classical
-  ext i
-  constructor
-  · intro hi
-    obtain ⟨p, _, rfl⟩ := Finset.mem_image.mp hi
-    let c := v.retained.tubeOf m p
-    exact Finset.mem_biUnion.mpr ⟨c,
-      v.parent_associated_mem_original m c _ ⟨p, rfl, rfl⟩,
-      v.parent_associated_mem_selected m c _ ⟨p, rfl, rfl⟩⟩
-  · intro hi
-    obtain ⟨c, hc, hi⟩ := Finset.mem_biUnion.mp hi
-    have hcover := g.occupiedVitali_mem_coverIndices v.selected m c hc i hi
-      (v.selected_occupied m c hc i hi)
-    obtain ⟨p, _, hp⟩ := Finset.mem_image.mp hcover
-    exact Finset.mem_image.mpr ⟨p, Finset.mem_univ _, hp⟩
 
 namespace TubeFamily
 
@@ -352,10 +329,6 @@ noncomputable def globalVitaliBalls
     (m : DyadicIndex (Fintype.card T)) :=
   let v := f.candidates f.supportVolume
   Finset.univ.image fun p : CoverLabel v m => v.retained.ballOf m p
-
-theorem globalVitaliBalls_eq_selected (m : DyadicIndex (Fintype.card T)) :
-    f.globalVitaliBalls m = selectedVitaliBallIndices (f.candidates f.supportVolume) m :=
-  retained_ball_image_eq_selected (f.candidates f.supportVolume) m
 
 theorem retainedPiece_subset_global_vitali_ball
     (m : DyadicIndex (Fintype.card T)) (p : CoverLabel (f.candidates f.supportVolume) m) :
@@ -562,6 +535,23 @@ def OverlapApplication (K : ℝ≥0) : Prop :=
     letI := f.regularOrder m
     regularApplication f.pieces K m
 
+def OrderedOverlapApplication (C : ℝ≥0) : Prop :=
+  ∀ m, 8 ≤ dyadicScale (Fintype.card T) m →
+    (f.candidates f.supportVolume).radius m ≤ 1 →
+    letI := f.regularOrder m
+    regularOrderedOverlap f.pieces C m
+
+theorem orderedOverlapApplication_of_tails (hd : 1 ≤ d) {K : ℝ≥0}
+    (h : f.OverlapApplication K) : f.OrderedOverlapApplication (tailOverlapConstant d K) := by
+  classical
+  intro m hq hr
+  let := f.regularOrder m
+  exact ordered_overlap_of_tails hd K _ (f.pieces.B m) Finset.univ
+    (fun i : PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m =>
+      f.pieces.parent m i.val) _
+    (fun i _ => retained_incidence_lower (s := f.pieces) (m := m) (Sum.inr i.val))
+    (h m hq hr)
+
 def Selection2Application (K : ℝ≥0) : Prop :=
   ∀ m, 8 ≤ dyadicScale (Fintype.card T) m →
     (f.candidates f.supportVolume).radius m ≤ 1 →
@@ -586,92 +576,13 @@ theorem overlapApplication_of_selection2 (K : ℝ≥0)
   let := f.regularOrder m
   exact regularApplication_of_selection2 f.pieces K m (hselection2 m hq8 hR1)
 
-def SelectedVitaliDisjoint : Prop :=
-  ∀ m : DyadicIndex (Fintype.card T),
-      let v := f.candidates f.supportVolume
-      ∀ r ∈ selectedVitaliBallIndices v m, ∀ s ∈ selectedVitaliBallIndices v m,
-        r ≠ s → Disjoint (Metric.ball (v.centers m r) (v.radius m))
-          (Metric.ball (v.centers m s) (v.radius m))
-
-theorem globalVitaliDisjoint_of_selected (hballs : f.SelectedVitaliDisjoint) :
-    f.GlobalVitaliDisjoint := by
-  intro m
-  dsimp only
-  intro r hr s hs hrs
-  rw [f.globalVitaliBalls_eq_selected m] at hr hs
-  exact hballs m r hr s hs hrs
-
-/-- The fixed-tube geometric tail for the globally selected Vitali indices. -/
-theorem fixed_parent_tube_tail_card_of_selected_disjoint
-    (hballs : f.SelectedVitaliDisjoint) (m : DyadicIndex (Fintype.card T))
-    (i : PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m)
-    {k : ℕ} (hk : multipleThreshold d ≤ k) :
-    ((f.fixedParentTubeTail m i k).card : ℝ) ≤
-      (fixedParentTailConstant d A : ℝ) *
-        dyadicScale (Fintype.card T) m * ((k : ℝ) ^ (d + 1))⁻¹ :=
-  f.fixed_parent_tube_tail_card m i (f.globalVitaliDisjoint_of_selected hballs) hk
-
-/-- The incidence-restricted angular tail indexed by the selected ball set. -/
-theorem selected_ball_tail_le_incidence_card
-    (hballs : f.SelectedVitaliDisjoint) (m : DyadicIndex (Fintype.card T))
-    (i : PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m)
-    {k : ℕ} (hk : multipleThreshold d ≤ k) :
-    let v := f.candidates f.supportVolume
-    let R := selectedVitaliBallIndices v m
-    let c := f.pieces.parent m i.val
-    let I := incidence f.tube (f.pieces.retainedPiece m) (Sum.inr i.val)
-    ((I.filter fun ℓ => k ≤ (R.filter fun b =>
-      (f.tube ℓ ∩ f.tube c ∩ Metric.ball (v.centers m b) (3 * v.radius m)).Nonempty).card).card : ℝ) ≤
-        (fixedParentTailConstant d A : ℝ) * I.card * ((k : ℝ) ^ (d + 1))⁻¹ := by
-  classical
-  dsimp only
-  rw [← f.globalVitaliBalls_eq_selected m]
-  apply le_trans _ ((f.fixed_parent_tube_tail_card_of_selected_disjoint hballs m i hk).trans ?_)
-  · apply Nat.cast_le.mpr
-    apply Finset.card_le_card
-    intro ℓ hℓ
-    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, (Finset.mem_filter.mp hℓ).2⟩
-  · exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left
-      (retained_incidence_lower (s := f.pieces) (m := m) (Sum.inr i.val))
-      (fixedParentTailConstant d A).coe_nonneg) (by positivity)
-
-/-- In the angular concentration lemma, the geometric tail contains all original
-tube indices with at least k triple intersections along the fixed tube. -/
-noncomputable def angularTail (m : DyadicIndex (Fintype.card T)) (c : T) (k : ℕ) : Finset T :=
-  let v := f.candidates f.supportVolume
-  let R := selectedVitaliBallIndices v m
-  Finset.univ.filter fun ℓ : T =>
-    k ≤ (R.filter fun b => (f.tube ℓ ∩ f.tube c ∩
-      Metric.ball (v.centers m b) (3 * v.radius m)).Nonempty).card
-
-/-- The ordered tail in the counting identity is contained in the angular
-concentration set for the fixed parent tube. -/
-def RegularTailSubsetSelectedBalls : Prop :=
-  ∀ m : DyadicIndex (Fintype.card T), 8 ≤ dyadicScale (Fintype.card T) m →
-    (f.candidates f.supportVolume).radius m ≤ 1 →
-    letI := f.regularOrder m
-    let L := PaperRegularLabel f.supportVolume f.tube (d + 2) f.pieces m
-    let I := incidence f.tube (fun j : L => f.pieces.retainedPiece m (Sum.inr j.val))
-    ∀ (i : L) (k : ℕ), multipleThreshold d ≤ k →
-      orderedTail Finset.univ I i k ⊆ f.angularTail m (f.pieces.parent m i.val) k
-
-theorem overlapApplication_of_selected_ball_subset
-    (hsubset : f.RegularTailSubsetSelectedBalls) (hballs : f.SelectedVitaliDisjoint) :
-    f.OverlapApplication (fixedParentTailConstant d A) := by
-  intro m hq hρ
-  let := f.regularOrder m
-  intro i _ k hk
-  apply le_trans (Nat.cast_le.mpr (Finset.card_le_card (hsubset m hq hρ i k hk)))
-  simpa only [angularTail, fixedParentTubeTail, f.globalVitaliBalls_eq_selected] using
-    f.fixed_parent_tube_tail_card_of_selected_disjoint hballs m i hk
-
 noncomputable def largeLevelConstant (d : ℕ) (A K : ℝ≥0) : ℝ :=
   (1 / (1 - Real.exp (-1))) * volumeCoefficient d *
     (7 + 2 * (tailOverlapConstant d K : ℝ) + 8 * dyadicOverlapConstant d A) * (A : ℝ) ^ (d + 1) * A
 
 set_option maxHeartbeats 1000000 in
 open Classical in
-private theorem large_level_bound (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.OverlapApplication K)
+private theorem large_level_bound (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.OrderedOverlapApplication (tailOverlapConstant d K))
     (m : DyadicIndex (Fintype.card T)) (hq8 : 8 ≤ dyadicScale (Fintype.card T) m)
     (hR1 : (f.candidates f.supportVolume).radius m ≤ 1) :
     dyadicScale (Fintype.card T) m ^ (1 + (1 : ℝ) / (((d + 2 : ℕ) : ℝ) - 1)) *
@@ -689,7 +600,7 @@ private theorem large_level_bound (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.Overlap
       congr 2
       push_cast
       ring_nf)
-  have hc := complete_count hd f.pieces A K m (happ m hq8 hR1) he
+  have hc := complete_count f.pieces A K m (happ m hq8 hR1) he
   have hK : 0 ≤ dyadicOverlapConstant d A := by
     unfold dyadicOverlapConstant overlapConstant
     have hseries : 0 ≤ ∑' k : ℕ, ((k : ℝ) ^ (d + 1))⁻¹ := tsum_nonneg fun _ => by positivity
@@ -774,7 +685,7 @@ noncomputable def levelConstant (d : ℕ) (A K : ℝ≥0) : ℝ :=
       (2 * (1 + A) * tripleRadiusTransverseCoefficient d * (A : ℝ) ^ (d + 1)))
 
 open Classical in
-theorem level_bound (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.OverlapApplication K)
+theorem level_bound_of_orderedOverlap (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.OrderedOverlapApplication (tailOverlapConstant d K))
     (m : DyadicIndex (Fintype.card T)) :
     dyadicScale (Fintype.card T) m ^ (1 + (1 : ℝ) / (((d + 2 : ℕ) : ℝ) - 1)) *
       Conditional.mass f.supportVolume (concreteDyadicBand f.tube m) ≤ levelConstant d A K := by
@@ -797,7 +708,14 @@ theorem level_bound (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.OverlapApplication K)
       (div_nonneg zero_le_one hden.le) f.measurable m _ (lt_of_not_ge h)).trans
     exact mul_le_mul_of_nonneg_left f.support_mass_le (by positivity)
 
-theorem moment_bound (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.OverlapApplication K) :
+open Classical in
+theorem level_bound (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.OverlapApplication K)
+    (m : DyadicIndex (Fintype.card T)) :
+    dyadicScale (Fintype.card T) m ^ (1 + (1 : ℝ) / (((d + 2 : ℕ) : ℝ) - 1)) *
+      Conditional.mass f.supportVolume (concreteDyadicBand f.tube m) ≤ levelConstant d A K := by
+  exact f.level_bound_of_orderedOverlap hd (f.orderedOverlapApplication_of_tails hd happ) m
+
+theorem moment_bound_of_orderedOverlap (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.OrderedOverlapApplication (tailOverlapConstant d K)) :
     let p := ((d + 2 : ℕ) : ℝ) / (((d + 2 : ℕ) : ℝ) - 1)
     (∫ x, tubeMultiplicity f.tube x ^ p) ≤
       2 ^ p * levelConstant d A K * ((Nat.log 2 (Fintype.card T) + 1 : ℕ) : ℝ) := by
@@ -807,7 +725,7 @@ theorem moment_bound (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.OverlapApplication K
   have hp : p ≠ 0 := (div_pos (by positivity) hden).ne'
   have h := Eighty9.logarithmic_moment_from_level_budgets f.supportVolume f.tube
     ((1 : ℝ) / (((d + 2 : ℕ) : ℝ) - 1)) (levelConstant d A K)
-    (div_nonneg zero_le_one hden.le) f.measurable (f.level_bound hd happ)
+    (div_nonneg zero_le_one hden.le) f.measurable (f.level_bound_of_orderedOverlap hd happ)
   rw [(Conditional.dimension_exponents (d + 2) (by omega)).1] at h
   have hs : ∀ x, x ∉ ⋃ i, f.tube i → tubeMultiplicity f.tube x ^ p = 0 := by
     intro x hx
@@ -815,17 +733,29 @@ theorem moment_bound (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.OverlapApplication K
     simp [tubeMultiplicity_eq_count, finiteTubeCount, hnone, Real.zero_rpow hp]
   exact (setIntegral_eq_integral_of_forall_compl_eq_zero (μ := volume) hs).symm.le.trans h
 
-theorem norm_bound (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.OverlapApplication K) :
+theorem moment_bound (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.OverlapApplication K) :
+    let p := ((d + 2 : ℕ) : ℝ) / (((d + 2 : ℕ) : ℝ) - 1)
+    (∫ x, tubeMultiplicity f.tube x ^ p) ≤
+      2 ^ p * levelConstant d A K * ((Nat.log 2 (Fintype.card T) + 1 : ℕ) : ℝ) := by
+  exact f.moment_bound_of_orderedOverlap hd (f.orderedOverlapApplication_of_tails hd happ)
+
+theorem norm_bound_of_orderedOverlap (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.OrderedOverlapApplication (tailOverlapConstant d K)) :
     let p := ((d + 2 : ℕ) : ℝ) / (((d + 2 : ℕ) : ℝ) - 1)
     (∫ x, tubeMultiplicity f.tube x ^ p) ^ p⁻¹ ≤
       (2 ^ p * levelConstant d A K * ((Nat.log 2 (Fintype.card T) + 1 : ℕ) : ℝ)) ^ p⁻¹ := by
   have hden : 0 < (((d + 2 : ℕ) : ℝ) - 1) := by push_cast; linarith [Nat.cast_nonneg (α := ℝ) d]
   exact Real.rpow_le_rpow
     (integral_nonneg fun x => Real.rpow_nonneg (tubeMultiplicity_nonneg _ _) _)
-    (f.moment_bound hd happ) (inv_nonneg.mpr (div_nonneg (Nat.cast_nonneg _) hden.le))
+    (f.moment_bound_of_orderedOverlap hd happ) (inv_nonneg.mpr (div_nonneg (Nat.cast_nonneg _) hden.le))
 
-theorem logarithmic_norm_bound (hd : 1 ≤ d) (hN : 2 ≤ Fintype.card T)
-    {K : ℝ≥0} (happ : f.OverlapApplication K) :
+theorem norm_bound (hd : 1 ≤ d) {K : ℝ≥0} (happ : f.OverlapApplication K) :
+    let p := ((d + 2 : ℕ) : ℝ) / (((d + 2 : ℕ) : ℝ) - 1)
+    (∫ x, tubeMultiplicity f.tube x ^ p) ^ p⁻¹ ≤
+      (2 ^ p * levelConstant d A K * ((Nat.log 2 (Fintype.card T) + 1 : ℕ) : ℝ)) ^ p⁻¹ := by
+  exact f.norm_bound_of_orderedOverlap hd (f.orderedOverlapApplication_of_tails hd happ)
+
+theorem logarithmic_norm_bound_of_orderedOverlap (hd : 1 ≤ d) (hN : 2 ≤ Fintype.card T)
+    {K : ℝ≥0} (happ : f.OrderedOverlapApplication (tailOverlapConstant d K)) :
     let p := ((d + 2 : ℕ) : ℝ) / (((d + 2 : ℕ) : ℝ) - 1)
     (∫ x, tubeMultiplicity f.tube x ^ p) ^ p⁻¹ ≤
       (2 ^ p * levelConstant d A K * (2 / Real.log 2)) ^ p⁻¹ *
@@ -849,12 +779,20 @@ theorem logarithmic_norm_bound (hd : 1 ≤ d) (hN : 2 ≤ Fintype.card T)
   have hbase : 0 ≤ (2 : ℝ) ^ p * levelConstant d A K := by positivity
   have hn : 0 < (((d + 2 : ℕ) : ℝ) - 1) := by push_cast; linarith [Nat.cast_nonneg (α := ℝ) d]
   have hpow : 0 ≤ p⁻¹ := inv_nonneg.mpr (div_nonneg (Nat.cast_nonneg _) hn.le)
-  apply (f.norm_bound hd happ).trans
+  apply (f.norm_bound_of_orderedOverlap hd happ).trans
   change _ ≤ ((2:ℝ) ^ p * levelConstant d A K * (2 / Real.log 2)) ^ p⁻¹ * (Real.log N) ^ p⁻¹
   rw [← Real.mul_rpow (by positivity) (Real.log_natCast_nonneg N)]
   apply Real.rpow_le_rpow (by positivity) _ hpow
   simpa only [mul_assoc] using mul_le_mul_of_nonneg_left hlevels hbase
 
+
+theorem logarithmic_norm_bound (hd : 1 ≤ d) (hN : 2 ≤ Fintype.card T)
+    {K : ℝ≥0} (happ : f.OverlapApplication K) :
+    let p := ((d + 2 : ℕ) : ℝ) / (((d + 2 : ℕ) : ℝ) - 1)
+    (∫ x, tubeMultiplicity f.tube x ^ p) ^ p⁻¹ ≤
+      (2 ^ p * levelConstant d A K * (2 / Real.log 2)) ^ p⁻¹ *
+        (Real.log (Fintype.card T)) ^ p⁻¹ := by
+  exact f.logarithmic_norm_bound_of_orderedOverlap hd hN (f.orderedOverlapApplication_of_tails hd happ)
 theorem logarithmic_norm_bound_of_tail_chain (hd : 1 ≤ d) (hN : 2 ≤ Fintype.card T)
     {K : ℝ≥0} (hchain : f.TailChainApplication K) :
     let p := ((d + 2 : ℕ) : ℝ) / (((d + 2 : ℕ) : ℝ) - 1)
@@ -870,17 +808,6 @@ theorem logarithmic_norm_bound_of_selection2 (hd : 1 ≤ d) (hN : 2 ≤ Fintype.
       (2 ^ p * levelConstant d A K * (2 / Real.log 2)) ^ p⁻¹ *
         (Real.log (Fintype.card T)) ^ p⁻¹ := by
   exact f.logarithmic_norm_bound hd hN (f.overlapApplication_of_selection2 K hselection2)
-
-/-- Logarithmic endpoint from the regular tail inclusion and global disjointness
-of the selected Vitali balls. -/
-theorem logarithmic_norm_bound_of_selected_ball_subset
-    (hd : 1 ≤ d) (hN : 2 ≤ Fintype.card T)
-    (hsubset : f.RegularTailSubsetSelectedBalls) (hballs : f.SelectedVitaliDisjoint) :
-    let p := ((d + 2 : ℕ) : ℝ) / (((d + 2 : ℕ) : ℝ) - 1)
-    (∫ x, tubeMultiplicity f.tube x ^ p) ^ p⁻¹ ≤
-      (2 ^ p * levelConstant d A (fixedParentTailConstant d A) * (2 / Real.log 2)) ^ p⁻¹ *
-        (Real.log (Fintype.card T)) ^ p⁻¹ :=
-  f.logarithmic_norm_bound hd hN (f.overlapApplication_of_selected_ball_subset hsubset hballs)
 
 end TubeFamily
 end Kakeya.Ninety109
