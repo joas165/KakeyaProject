@@ -1319,27 +1319,26 @@ selection order.
 	Summing this identity over \(i\in R_c\)
 	and \(c\in B\) completes the proof.
 \end{proof}
-
 Fix an integer \(k\ge1\). For each \(c\in B\), let
 \[
-d_c(\ell):=\#\{i\in R_c:\ell\in I_i\}.
+d_c(\ell):=\#\{i\in R_c:\ell\in I_i\},
+\qquad
+d(\ell):=\sum_{c\in B}d_c(\ell).
 \]
-When the later labels in \(E_{i,k}\) are counted within the parent
-class \(R_c\) containing \(i\), we have
+Then
 \[
-\sum_{c \in B}\sum_{i\in R_c}|E_{i,k}|
+\sum_{c\in B}\sum_{i\in R_c}|E_{i,k}|
 =
-\sum_{\ell=1}^{N}\sum_{c\in B}
-\bigl(d_c(\ell)-k+1\bigr)_+,
+\sum_{\ell=1}^{N}\bigl(d(\ell)-k+1\bigr)_+,
 \qquad (x)_+:=\max\{x,0\}.
 \]
-Indeed, fix \(\ell\) and \(c\), and list the labels \(i\in R_c\)
-with \(\ell\in I_i\) as \(i_1<\cdots<i_d\), where \(d=d_c(\ell)\).
-For each \(j\), exactly \(d-j+1\) of these labels are at least \(i_j\).
-Thus \(\ell\in E_{i_j,k}\) if and only if \(j\le d-k+1\), so
-\(\ell\) belongs to exactly \((d-k+1)_+\) such tails in \(R_c\).
-Summing over \(\ell\) and \(c\) gives the identity, since
-\(R=\bigsqcup_{c\in B}R_c\).
+Indeed, fix \(\ell\) and list all labels \(i\in R\) with
+\(\ell\in I_i\) as \(i_1<\cdots<i_d\), where \(d=d(\ell)\).
+Exactly \(d-a+1\) of these labels are at least \(i_a\).
+Thus \(\ell\in E_{i_a,k}\) if and only if \(a\le d-k+1\).
+Consequently, \(\ell\) belongs to exactly \((d-k+1)_+\)
+of the sets \(E_{i,k}\). Summing over \(\ell\) and using
+\(R=\bigsqcup_{c\in B}R_c\) proves the identity.
 Hence,
 \begin{equation} \label{eq:composition}
 \begin{aligned}
