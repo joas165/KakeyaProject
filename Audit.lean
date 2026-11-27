@@ -591,3 +591,12 @@ the geometric, counting, and analytic declarations used throughout the project.
 #print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_tail_chain
 #check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_selection2
 #print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_selection2
+
+-- Page 16 of KakeyaNinety125.
+#check Kakeya.Ninety109.TubeFamily.MaxDegreeApplication
+#print axioms Kakeya.Ninety109.orderedTail_sum_eq_weighted_degrees
+#print axioms Kakeya.Ninety109.degree_threshold_card_split
+#print axioms Kakeya.Ninety109.degree_remainder_eq_empty
+#print axioms Kakeya.Ninety109.orderedTail_eq_of_maxDegree
+#check Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_maxDegree
+#print axioms Kakeya.Ninety109.TubeFamily.logarithmic_norm_bound_of_maxDegree

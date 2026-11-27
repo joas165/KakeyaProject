@@ -61,4 +61,5 @@ public import Kakeya.Ninety109FixedParentOverlap
 public import Kakeya.Ninety109RegularPieceCount
 public import Kakeya.Ninety109Endpoint
 public import Kakeya.Ninety118SecondEquality
+public import Kakeya.Ninety125MaxDegree
 @[expose] public section

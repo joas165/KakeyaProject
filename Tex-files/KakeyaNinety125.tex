@@ -1319,147 +1319,189 @@ selection order.
 	Summing this identity over \(i\in R_c\)
 	and \(c\in B\) completes the proof.
 \end{proof}
-Fix an integer \(k\ge1\). For each \(c\in B\), let
-\[
-d_c(\ell):=\#\{i\in R_c:\ell\in I_i\},
-\qquad
-d(\ell):=\sum_{c\in B}d_c(\ell).
-\]
-Then
-\[
-\sum_{c\in B}\sum_{i\in R_c}|E_{i,k}|
-=
-\sum_{\ell=1}^{N}\bigl(d(\ell)-k+1\bigr)_+,
-\qquad (x)_+:=\max\{x,0\}.
-\]
-Indeed, fix \(\ell\) and list all labels \(i\in R\) with
-\(\ell\in I_i\) as \(i_1<\cdots<i_d\), where \(d=d(\ell)\).
-Exactly \(d-a+1\) of these labels are at least \(i_a\).
-Thus \(\ell\in E_{i_a,k}\) if and only if \(a\le d-k+1\).
-Consequently, \(\ell\) belongs to exactly \((d-k+1)_+\)
-of the sets \(E_{i,k}\). Summing over \(\ell\) and using
-\(R=\bigsqcup_{c\in B}R_c\) proves the identity.
-Hence,
-\begin{equation} \label{eq:composition}
-\begin{aligned}
-\sum_k\sum_{c \in B}\sum_{i\in R_c}|E_{i,k}|
-&=
-\sum_k\sum_{c\in B}\sum_{\ell=1}^{N}
-\bigl(d_c(\ell)-k+1\bigr)_+ \\
-&=
-\sum_{c\in B}\sum_{\ell=1}^{N}
-\sum_{2 \leq k \leq d_c(\ell)}\bigl(d_c(\ell)-k+1\bigr)_+ \\
-&=
-\sum_{c\in B}\sum_{\ell=1}^{N}
-\frac{d_c(\ell)(d_c(\ell) - 1)}{2} \\
-&=
-\sum_{c\in B}\sum_{\ell=1}^{N}
-\frac{d_c(\ell)(d_c(\ell) - 1)}{2} \\
-&=\sum_{c\in B}\sum_{\ell=1}^{N}\sum_{\substack{i,j\in R_c\\i<j}}
-\mathbf 1_{I_i}(\ell)\mathbf 1_{I_j}(\ell) \\
-&=\sum_{c\in B}\sum_{\substack{i,j\in R_c\\i<j}}
-|I_i \cap I_j|
-\end{aligned} 
-\end{equation}
-We will control the last term using the following lemma. \begin{lemma}[Fixed-parent overlap] 		\label{lem:fixed-parent-overlap}
-	Let \(n\ge3\) and \(0<\delta\le\rho\le1\). Let
-	\(T_1^\delta,\ldots,T_N^\delta\) be unit-length tubes of radius
-	\(\delta\) with \(\delta\)-separated directions. Fix a parent tube
-	\(T_c^\delta\). Let \(B_r=B(b_r,\rho)\), \(r\in R_c\), be pairwise
-	disjoint balls, and suppose that
+We will need the following lemma.
+\begin{lemma}[Weighted multiplicity tail identity] \label{lem:weighted-tail-identity}
+	Let \(R=\bigsqcup_{c\in B}R_c\) be a finite totally ordered set
+	of labels, and let \(I_i\subseteq\{1,\ldots,N\}\) for each \(i\in R\).
+	Define the global multiplicity and the ordered tails by
 	\[
-	P_r\subseteq T_c^\delta\cap 3B_r,
+	d(\ell):=\#\{i\in R:\ell\in I_i\},
 	\qquad
-	I_r:=\{\ell\in\{1,\ldots,N\}:T_\ell^\delta\cap P_r\ne\varnothing\}.
+	E_{i,k}:=
+	\bigl\{\ell\in I_i:
+	\#\{j\in R:i\le j,\ \ell\in I_j\}\ge k\bigr\}.
 	\]
-	Then for every \(s\in R_c\),
+	Then
 	\[
-	\sum_{\substack{r\in R_c\\r\ne s}}|I_r\cap I_s|
-	\lesssim_n |I_s|+\rho^{1-n}.
-	\]
-	In particular, if \(\rho=Cq^{-1/(n-1)}\) and \(|I_s|\ge q\), then
-	\[
-	\sum_{\substack{r\in R_c\\r\ne s}}|I_r\cap I_s|
-	\lesssim_{n,C}|I_s|.
+	\sum_{k\ge2}\sum_{c\in B}\sum_{i\in R_c}|E_{i,k}|
+	=
+	\sum_{k\ge2}(k-1)\,
+	\#\{\ell\in\{1,\ldots,N\}:d(\ell)\ge k\}.
 	\]
 \end{lemma}
 
 \begin{proof}
-	Fix \(s\in R_c\) and write
+	Fix \(\ell\) and list the labels containing it as
+	\(i_1<\cdots<i_d\), where \(d=d(\ell)\).
+	At \(i_a\), exactly \(d-a+1\) of these labels remain, including
+	\(i_a\) itself. Thus \(\ell\in E_{i_a,k}\) precisely when
+	\(2\le k\le d-a+1\), among the thresholds \(k\ge2\).
+	Since the sets \(R_c\) partition \(R\), each \(i_a\) is counted
+	once, and the total contribution of \(\ell\) to the left-hand side is
+	\[
+	\sum_{a=1}^{d}(d-a)=\binom{d}{2}.
+	\]
+	On the right-hand side, \(\ell\) contributes \(k-1\) for each
+	\(2\le k\le d\), giving
+	\[
+	\sum_{k=2}^{d}(k-1)=\binom{d}{2}.
+	\]
+	Summing over \(\ell=1,\ldots,N\) proves the identity.
+\end{proof}
+So the previous lemmas gives
+\begin{equation} 
+\label{eq:use-this-important}
+\sum_{c\in B}\sum_{i\in R_c}
+\sum_{\substack{j\in R\\i<j}}|I_i\cap I_j|
+=
+\sum_{c\in B}\sum_{i\in R_c}
+\sum_{k\ge2}|E_{i,k}|.
+= \sum_{k\ge2}(k-1)\,
+\#\{\ell\in\{1,\ldots,N\}:d(\ell)\ge k\}.
+\end{equation}
+For \(k\ge1\), set
+\[
+I_k:=\{\ell\in\{1,\ldots,N\}:d(\ell)\geq  k\},\qquad
+d_k(\ell):=d(\ell)\mathbf{1}_{J_k}(\ell),\qquad
+I_{i,k}:=I_i\cap J_k.
+\]
+Fix \(i\in R\) and \(k\ge1\), and let \(c(i)\) be the parent of \(P_i\).
+Two distinct tubes are \(k\)-linked by \(c(i)\) if each occurs in at
+least \(k\) labels of \(R_{c(i)}\). Set
+\[
+H_{i,k}:=\{\ell\in I_i:d_{c(i)}(\ell)\ge k\},
+\qquad m_{i,k}:=|H_{i,k}|.
+\]
+The number of unordered pairs in \(I_i\) that are \(k\)-linked by
+\(c(i)\) is \(P_{i,k}=\binom{m_{i,k}}{2}\).
+For each \(\ell\in\{1,\ldots,N\}\), choose \(c_\ell\in \{1,\ldots,N\}\) such that
+\[
+d_{c_\ell}(\ell)=\max_{c\in \{1,\ldots,N\}}d_c(\ell).
+\]
+For \(i\in R\) and \(k\ge1\), set
+\[
+H_{i,k}
+:=\{\ell\in I_i:d_{c_\ell}(\ell)\ge k\}
+=\{\ell\in I_i:\max_{c\in \{1,\ldots,N\}}d_c(\ell)\ge k\},
+\qquad m_{i,k}:=|H_{i,k}|.
+\]
+Since \(\max_{c\in B}d_c(\ell)\le d(\ell)\), we have
+\(H_{i,k}\subseteq I_{i,k}\), and hence
+\[
+|I_{i,k}|
+=m_{i,k}
++\#\{\ell\in I_i:\max_{c\in \{1,\ldots,N\}}d_c(\ell)<k\le d(\ell)\}.
+\]
+Recalling 	\[
+d(\ell):=\#\{i\in R:\ell\in I_i\}\]
+the remainder vanishes since $\max_{c\in \{1,\ldots,N\}}d_{c}(\ell) \geq d(\ell) \geq k.$
+
+
+So we have from the lemma above and \eqref{eq:use-this-important} that
+\begin{equation}
+\begin{aligned}	
+	\sum_k\sum_{c\in B}\sum_{i\in R_c}
+	\sum_k|E_{i,k}|
+	&= (k-1)\,
+	\#\{\ell\in\{1,\ldots,N\}:d(\ell)\ge k\} \\
+	&\leq \sum_k\sum_{\ell=1}^N d_k(\ell) \\
+	&= \sum_k\sum_{i \in R}|I_{i,k}| \\
+	&= \sum_{i \in R}\sum_k m_{i,k} \\
+	&\leq \sum_kR \#\{\ell:d_{0}(\ell)\ge k\}.
+\end{aligned}	
+\end{equation}
+We will control the last term using the following lemma. 
+\begin{theorem}[Fixed-parent multiplicity tail]
+	\label{thm:fixed-parent-multiplicity-tail}
+	Let \(n\ge 3\), let \(0<\delta\le \rho\le 1\), and let
+	\(T_1^\delta,\ldots,T_N^\delta\) be unit-length tubes of radius
+	\(\delta\) with \(\delta\)-separated directions. Fix \(c\in B\).
+	Suppose the balls \(B_r=B(b_r,\rho)\), \(r\in R_c\), are pairwise
+	disjoint and
+	\[
+	P_r\subseteq T_c^\delta\cap 3B_r,
+	\qquad
+	\ell\in I_r \;\Longrightarrow\; T_\ell^\delta\cap P_r\ne\varnothing.
+	\]
+	For every \(\ell\in\{1,\ldots,N\}\), define
 	\[
 	d_c(\ell):=\#\{r\in R_c:\ell\in I_r\}.
 	\]
-	Each \(\ell\in I_s\) occurs in exactly \(d_c(\ell)-1\) other sets
-	\(I_r\). Hence
-	\begin{equation}
-		\label{eq:fixed-parent-overlap-tails}
-		\sum_{\substack{r\in R_c\\r\ne s}}|I_r\cap I_s|
-		=
-		\sum_{\ell\in I_s}\bigl(d_c(\ell)-1\bigr)
-		=
-		\sum_{k\ge2}\#\{\ell\in I_s:d_c(\ell)\ge k\}.
-	\end{equation}
-	
-	Fix \(\ell\in I_s\). For each \(r\) counted by \(d_c(\ell)\), choose
-	\(x_r\in T_\ell^\delta\cap P_r\), and let \(y_r\) be its orthogonal
-	projection onto the parent axis. Let \(L_\ell\) be the length of the
-	smallest segment containing all the \(y_r\), and let \(\theta_\ell\)
-	be the acute angle between the two tube axes, allowing
-	\(\theta_\ell=0\). Since the parent tube has unit length,
-	\(L_\ell\lesssim1\). Moreover, each \(y_r\) lies within \(2\delta\)
-	of the axis of \(T_\ell^\delta\). Projecting the difference of the
-	two extreme points onto the orthogonal complement of that axis gives
+	There exists \(k_0=k_0(n)\) such that, for every integer
+	\(k\ge k_0\),
 	\[
-	L_\ell\sin\theta_\ell\le4\delta.
+	\#\{\ell\in\{1,\ldots,N\}:d_c(\ell)\ge k\}
+	\lesssim_n (k\rho)^{1-n}.
 	\]
-	
-	Since \(x_r\in3B_r\) and \(|x_r-y_r|\le\delta\le\rho\), every
-	corresponding ball \(B_r\) lies in the \(5\rho\)-neighborhood of
-	the segment containing the \(y_r\). By disjointness and volume comparison,
+	In particular, if \(\rho=Cq^{-1/(n-1)}\), then
 	\[
-	d_c(\ell)\rho^n
+	\#\{\ell\in\{1,\ldots,N\}:d_c(\ell)\ge k\}
+	\lesssim_{n,C} q\,k^{1-n}.
+	\]
+\end{theorem}
+
+\begin{proof}
+	Fix \(\ell\in\{1,\ldots,N\}\) with \(d_c(\ell)\ge k\).
+	For each \(r\in R_c\) with \(\ell\in I_r\), choose
+	\(x_r\in T_\ell^\delta\cap P_r\), and let \(y_r\) be its
+	orthogonal projection onto the axis of \(T_c^\delta\).
+	Let \(J_\ell\) be the smallest segment containing these projections,
+	and write \(L_\ell=|J_\ell|\). Since \(T_c^\delta\) has unit length,
+	\(L_\ell\lesssim 1\).
+	
+	For each such \(r\), the inclusions \(x_r\in 3B_r\) and
+	\(x_r\in T_c^\delta\) give
+	\[
+	B_r\subseteq \{z:\operatorname{dist}(z,J_\ell)\le 5\rho\}.
+	\]
+	By disjointness and volume comparison,
+	\[
+	k\rho^n
+	\le d_c(\ell)\rho^n
 	\lesssim_n (L_\ell+\rho)\rho^{n-1}.
 	\]
-	Thus, if \(d_c(\ell)\ge k\) and \(k\ge k_0(n)\) for a sufficiently
-	large \(k_0(n)\), then \(L_\ell\gtrsim_n k\rho\). It follows that
+	Choosing \(k_0(n)\) sufficiently large gives
+	\(L_\ell\gtrsim_n k\rho\) for \(k\ge k_0(n)\).
+	
+	Let \(\theta_\ell\) be the acute angle between the axes of
+	\(T_\ell^\delta\) and \(T_c^\delta\). Each endpoint of \(J_\ell\)
+	lies within \(2\delta\) of the axis of \(T_\ell^\delta\).
+	Projecting their difference onto the orthogonal complement of
+	the direction of \(T_\ell^\delta\) gives
 	\[
-	k\rho\lesssim_n1,
+	L_\ell\sin\theta_\ell\le 4\delta,
 	\qquad
-	\sin\theta_\ell\lesssim_n\frac{\delta}{k\rho}.
+	\sin\theta_\ell\lesssim_n \frac{\delta}{k\rho}.
 	\]
-	By \(\delta\)-separation, packing the directions in the two antipodal
-	caps about the parent direction gives, whenever the tail is nonempty,
+	Thus all directions counted by the tail lie in two antipodal caps
+	about the parent direction. If the tail is nonempty, then
+	\(k\rho\lesssim_n L_\ell\lesssim 1\). Packing the
+	\(\delta\)-separated directions in these caps yields
 	\[
-	\#\{\ell\in I_s:d_c(\ell)\ge k\}
+	\#\{\ell\in\{1,\ldots,N\}:d_c(\ell)\ge k\}
 	\lesssim_n
 	\left(1+\frac{1}{k\rho}\right)^{n-1}
 	\lesssim_n (k\rho)^{1-n}.
 	\]
-	
-	In \eqref{eq:fixed-parent-overlap-tails}, the levels \(2\le k<k_0(n)\)
-	contribute \(O_n(|I_s|)\). Since \(n\ge3\), the remaining levels
-	contribute at most
-	\[
-	C_n\rho^{1-n}\sum_{k\ge k_0(n)}k^{1-n}
-	\lesssim_n \rho^{1-n}.
-	\]
-	This proves the first estimate. Finally, if
-	\(\rho=Cq^{-1/(n-1)}\) and \(q\le|I_s|\), then
-	\(\rho^{1-n}=C^{1-n}q\le C^{1-n}|I_s|\), proving the second.
+	Substituting \(\rho=Cq^{-1/(n-1)}\) gives the final estimate.
 \end{proof}
-
-Moreover, from the equation \eqref{eq:composition} and the lemma \ref{lem:fixed-parent-overlap}, we have  that 
-\begin{align*}
-\sum_{i\in R}\sum_{\substack{j\in R\\ i <j}} |I_i\cap I_j| = \sum_k\sum_{c \in B}\sum_{i\in R_c}|E_{i,k}|
-= \sum_{c \in B}
-\sum_{\substack{r\in R_c\\r\ne s}}|I_r\cap I_s|
-\lesssim_{n,C}\sum_{c \in B}|I_c|
-\leq \sum_{i \in R}|I_i|.
-\end{align*}
+So we have 
+\[
+\]
 
 So using lemma \ref{lem:incidence-union-lower-bound} 
 \[ 
-\bigl(\sum_{r\in R}|I_r|\bigr)^2 \lesssim |U|(\sum_{\substack{r,s\in R\\r<s}}|I_r\cap I_s|) \lesssim N\sum_{i \in R}|I_i|. 	 
+\bigl(\sum_{r\in R}|I_r|\bigr)^2 \lesssim |U|(\sum_{\substack{r,s\in R\\r<s}}|I_r\cap I_s|) \leq |U|qR \lesssim N\sum_{i \in R}|I_i|. 	 
 \]
 which after a little algebra is the key bound \eqref{eq:key-bound}.  
 Hence,
