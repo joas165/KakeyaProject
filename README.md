@@ -13,15 +13,17 @@ E_{i,k}=\{\ell\in I_i : \#\{j\in R : i\le j,\ \ell\in I_j\}\ge k\}.
 **First equality (proved).** Each later occurrence of a tube index contributes once to the sum over thresholds. The theorem `global_overlap_eq_sum_tails` gives
 
 ```math
-\sum_{\substack{i,j\in R\\i<j}} |I_i\cap I_j|
-=\sum_{k=2}^{|R|}\sum_{i\in R}|E_{i,k}|.
+\sum_{i\in R}\sum_{j\in R,\,j>i} |I_i\cap I_j|
+=
+\sum_{k=2}^{|R|}\sum_{i\in R}|E_{i,k}|.
 ```
 
 **Second equality (assumed).** At each level with $q\ge8$ and retained ball radius at most $1$, the hypothesis `TubeFamily.SecondEqualityApplication` requires
 
 ```math
 \sum_{k=2}^{|R|}\sum_{i\in R}|E_{i,k}|
-=\sum_{c\in B}\sum_{\substack{r,s\in R_c\\r<s}} |I_r\cap I_s|.
+=
+\sum_{c\in B}\sum_{r\in R_c}\sum_{s\in R_c,\,s>r}|I_r\cap I_s|.
 ```
 
 The right-hand sum counts each unordered pair with the same parent once. This equality is the open hypothesis of the branch theorem.
