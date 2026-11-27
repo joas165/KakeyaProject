@@ -6,23 +6,23 @@ This project formalizes dyadic incidence estimates for the Kakeya maximal functi
 
 Fix a dyadic level $q=2^m$. Let $R$ be the ordered set of regular retained labels, $I_i$ the original tube indices incident to the cover piece of label $i$, and $R_c$ the labels whose parent is $c$. The ordered tail counts later labels throughout $R$ and includes $i$ itself:
 
-$$
+```math
 E_{i,k}=\{\ell\in I_i : \#\{j\in R : i\le j,\ \ell\in I_j\}\ge k\}.
-$$
+```
 
 **First equality (proved).** Each later occurrence of a tube index contributes once to the sum over thresholds. The theorem `global_overlap_eq_sum_tails` gives
 
-$$
+```math
 \sum_{\substack{i,j\in R\\i<j}} |I_i\cap I_j|
 =\sum_{k=2}^{|R|}\sum_{i\in R}|E_{i,k}|.
-$$
+```
 
 **Second equality (assumed).** At each level with $q\ge8$ and retained ball radius at most $1$, the hypothesis `TubeFamily.SecondEqualityApplication` requires
 
-$$
+```math
 \sum_{k=2}^{|R|}\sum_{i\in R}|E_{i,k}|
 =\sum_{c\in B}\sum_{\substack{r,s\in R_c\\r<s}} |I_r\cap I_s|.
-$$
+```
 
 The right-hand sum counts each unordered pair with the same parent once. This equality is the open hypothesis of the branch theorem.
 
@@ -32,10 +32,10 @@ Restricting the later labels to the parent of $i$ gives a comparison set contain
 
 The endpoint proof uses this estimate to count the regular pieces, adds the exceptional-piece budget, and sums the dyadic mass bounds. For a tube family with parameter $A$, dimension $n=d+2\ge3$, $N\ge2$, and $p=n/(n-1)$, the conclusion is
 
-$$
+```math
 \left\|\sum_{\ell=1}^{N}\mathbf 1_{T_\ell^\delta}\right\|_{L^p}
 \le C(n,A)(\log N)^{1/p}.
-$$
+```
 
 | Declaration in `Kakeya.Ninety109` | Source |
 | --- | --- |
