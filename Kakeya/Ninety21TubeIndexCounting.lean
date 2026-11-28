@@ -79,26 +79,26 @@ theorem tube_card_le_of_columns
     D.card ≤ B.card :=
   Finset.card_le_card (tube_indices_subset_of_columns tube gain D B hDisjoint hColumn)
 
-/-- Column coverage follows by choosing the same tube index, whenever that
-index belongs to the selected family and its trimmed tube is nonempty. -/
 theorem tube_columns_of_subset
-    (tube gain : T → Set X) (D B : Finset T)
-    (hsub : D ⊆ B)
+    (tube gain : T → Set X) (D : Finset T)
     (hNonempty : ∀ l ∈ D, (tube l ∩ gain l).Nonempty) :
-    ∀ l ∈ D, ∃ r ∈ B, tubeIncidence tube gain l r := by
+    ∀ l ∈ D, tubeIncidence tube gain l l := by
   intro l hl
-  exact ⟨l, hsub hl, tubeIncidence_self tube gain (hNonempty l hl)⟩
+  exact tubeIncidence_self tube gain (hNonempty l hl)
 
 /-- The selected-tube budget passes to the counted tubes. -/
 theorem scaled_tube_count
     (tube gain : T → Set X) (D B : Finset T)
+    (hsub : D ⊆ B)
     (hDisjoint : ∀ l r, l ≠ r → Disjoint (gain l) (gain r))
-    (hColumn : ∀ l ∈ D, ∃ r ∈ B, tubeIncidence tube gain l r)
+    (hColumn : ∀ l ∈ D, tubeIncidence tube gain l l)
     (q N A : ℝ) (hq : 0 ≤ q)
     (hBudget : q * (B.card : ℝ) ≤ A * N) :
     q * (D.card : ℝ) ≤ A * N := by
+  have hColB : ∀ l ∈ D, ∃ r ∈ B, tubeIncidence tube gain l r :=
+    fun l hl => ⟨l, hsub hl, hColumn l hl⟩
   have hc : (D.card : ℝ) ≤ (B.card : ℝ) := by
-    exact_mod_cast tube_card_le_of_columns tube gain D B hDisjoint hColumn
+    exact_mod_cast tube_card_le_of_columns tube gain D B hDisjoint hColB
   exact (mul_le_mul_of_nonneg_left hc hq).trans hBudget
 
 /-- Adding at most `ceil (4N/q)` labels gives a budget of `7N`, using
@@ -145,7 +145,12 @@ theorem localized_level_bound_of_tube_columns
     (hCapture : level ≤ H * (∑ l ∈ D, mass l))
     (hVolume : ∀ l ∈ D, mass l ≤ V) :
     q * level ≤ A * H * N * V := by
+  have hsub : D ⊆ B :=
+    tube_indices_subset_of_columns tube gain D B hDisjoint hColumn
+  have hColSelf : ∀ l ∈ D, tubeIncidence tube gain l l := fun l hl => by
+    rcases hColumn l hl with ⟨r, _hrB, hinc⟩
+    have hrl : l = r := eq_of_tubeIncidence tube gain hDisjoint hinc
+    simpa [hrl] using hinc
   exact localized_level_bound D mass level H V q N A hH hV hq hCapture hVolume
-    (scaled_tube_count tube gain D B hDisjoint hColumn q N A hq hBudget)
-
+    (scaled_tube_count tube gain D B hsub hDisjoint hColSelf q N A hq hBudget)
 end Kakeya.Ninety21
